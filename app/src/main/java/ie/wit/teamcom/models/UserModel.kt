@@ -14,8 +14,8 @@ data class Account (
     var surname:String = "",
     var email: String = "",
     var image: Int = 0,
-    var loginUsed: String =""
-    ) : Parcelable
+    var loginUsed: String ="",
+    var channels:  ArrayList<Channel> = ArrayList<Channel>()) : Parcelable
 
 {
     @Exclude
@@ -26,7 +26,8 @@ data class Account (
             "surname" to surname,
             "email" to email,
             "image" to image,
-            "loginUsed" to loginUsed
+            "loginUsed" to loginUsed,
+            "channels" to channels
         )
     }
 }

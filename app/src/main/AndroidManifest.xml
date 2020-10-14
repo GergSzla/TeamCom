@@ -14,13 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
+        <activity android:name=".activities.ChannelCreate"></activity>
         <activity
             android:name=".activities.ChannelsListActivity"
-            android:label="@string/title_activity_channels_list">
-
-        </activity>
+            android:label="@string/title_activity_channels_list"></activity>
         <activity android:name=".activities.LoginRegActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

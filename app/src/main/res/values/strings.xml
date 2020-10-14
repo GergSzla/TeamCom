@@ -16,5 +16,11 @@
     <string name="title_activity_channels_list">ChannelsList</string>
     <string name="btnAddNew">Add New</string>
 
+    <!--create_channel-->
+    <string name="hintChannelName">Channel Name</string>
+    <string name="hintChannelDesc">Channel Description</string>
+    <string name="createChannel">Create Channel</string>
+
+
 
 </resources>
