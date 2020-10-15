@@ -94,7 +94,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                     textView2.text = "gdsgs"*/
                 }
                 1 -> {
-                    Toast.makeText(this, "Join Selected", Toast.LENGTH_SHORT).show()
+                    startActivity(intentFor<ChannelJoin>()/*.putExtra("user_key",user)*/)
                 }
             }
         }

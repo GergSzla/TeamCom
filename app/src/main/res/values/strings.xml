@@ -21,6 +21,9 @@
     <string name="hintChannelDesc">Channel Description</string>
     <string name="createChannel">Create Channel</string>
 
+    <!--join_channel-->
+    <string name="hintChannelCode">Channel Invite Code</string>
+    <string name="btnJoinChannel">Join Channel</string>
 
 
 </resources>

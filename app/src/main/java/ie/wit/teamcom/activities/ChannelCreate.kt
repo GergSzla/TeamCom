@@ -22,7 +22,6 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
     var user = Account()
     lateinit var eventListener : ValueEventListener
-    var ref = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().currentUser!!.uid)
     lateinit var app: MainApp
     var orderDateId :Long = 0
 

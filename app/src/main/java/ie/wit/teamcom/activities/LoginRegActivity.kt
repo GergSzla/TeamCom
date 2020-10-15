@@ -24,6 +24,8 @@ import kotlinx.android.synthetic.main.activity_login_reg.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class LoginRegActivity : AppCompatActivity(), AnkoLogger {
@@ -39,7 +41,6 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
         app.auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
-
 
         txtFirstName.isVisible = false
         txtSurname.isVisible = false
