@@ -6,14 +6,16 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
@@ -21,7 +23,6 @@ import ie.wit.teamcom.models.Account
 import kotlinx.android.synthetic.main.activity_login_reg.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.util.*
 
@@ -146,14 +147,24 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
     fun writeNewUserStats(user: Account) {
         val uid = app.auth.currentUser!!.uid
-        val userValues = user.toMap()
 
-        val childUpdates = HashMap<String, Any>()
-        childUpdates["/users/$uid"] = userValues
 
-        app.database.updateChildren(childUpdates)
+        app.database.child("users")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
 
-        startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!snapshot.hasChild(uid)){
+                        val childUpdates = HashMap<String, Any>()
+                        childUpdates["/users/$uid"] = user
+                        app.database.updateChildren(childUpdates)
+                    }
+                    app.database.child("user-stats")
+                        .removeEventListener(this)
+                    startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                }
+            })
     }
 
     private fun googleSignIn() {
