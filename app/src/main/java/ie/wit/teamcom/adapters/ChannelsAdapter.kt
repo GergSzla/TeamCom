@@ -43,6 +43,10 @@ class ChannelsAdapter constructor(var channels: ArrayList<Channel>,
 
             itemView.txtChannelNameCard.text = channel.channelName
             itemView.txtChannelDescCard.text = channel.channelDescription
+
+            itemView.setOnClickListener {
+                listener.onChannelClick(channel)
+            }
         }
     }
 }

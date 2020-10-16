@@ -25,5 +25,33 @@
     <string name="hintChannelCode">Channel Invite Code</string>
     <string name="btnJoinChannel">Join Channel</string>
 
+    <!--Home-->
+    <string name="nav_header_title">TeamCom</string>
+
+    <string name="group_social">Social</string>
+    <string name="menu_news_feed">News Feed</string>
+    <string name="menu_conversations">Conversations</string>
+    <string name="menu_meetings">Meetings</string>
+
+    <string name="group_organizational">Organizational</string>
+    <string name="menu_calendar">Calendar</string>
+    <string name="menu_tasks">Tasks</string>
+    <string name="menu_reminders">Reminders</string>
+
+    <string name="group_channel">Channel</string>
+    <string name="menu_channel_settings">Channel Settings</string>
+    <string name="menu_log">Log</string>
+    <string name="menu_members">Members</string>
+    <string name="menu_support">Support</string>
+
+    <string name="account">Done for today?</string>
+    <string name="menu_logout">Logout</string>
+
+
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

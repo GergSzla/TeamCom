@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ie.wit.teamcom">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-feature android:name="android.hardware.type.watch" />
 
     <application
         android:name=".main.MainApp"
@@ -14,11 +14,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ChannelJoin"></activity>
-        <activity android:name=".activities.ChannelCreate" />
+        <activity
+            android:name=".activities.Home"
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ChannelJoin"
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ChannelCreate"
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ChannelsListActivity"
-            android:label="@string/title_activity_channels_list" />
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_channels_list"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.LoginRegActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_channels_list.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivity
 import java.util.*
 
 
@@ -46,8 +49,8 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         app.storage = FirebaseStorage.getInstance().reference
 
 
-
-        user = intent.getParcelableExtra("user_key")
+        getUser()
+        //user = intent.getParcelableExtra("user_key")
         setSwipeRefresh()
 
 
@@ -60,38 +63,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         ) { _, which ->
             when (which) {
                 0 -> {
-                    startActivity(intentFor<ChannelCreate>().putExtra("user_key",user))
-                    /*val newChannelBuilder: AlertDialog.Builder? = this.let {
-                        AlertDialog.Builder(it)
-                    }
-                    // Get the layout inflater
-                    val inflater = this.layoutInflater
-                    newChannelBuilder?.setTitle("Add New Channel")?.setView(
-                        inflater.inflate(
-                            R.layout.dialog_create_channel,
-                            null
-                        )
-                    )
-                        ?.setPositiveButton("Create",
-                            DialogInterface.OnClickListener { dialog, id ->
-                                createChannel(
-                                    Channel(
-                                        id = UUID.randomUUID().toString(),
-                                        channelName = txtChannelName.text.toString(),
-                                        description = txtChannelDesc.text.toString(),
-                                        image = 0
-                                    )
-                                )
-                            })
-                        ?.setNegativeButton("Cancel",
-                            DialogInterface.OnClickListener { dialog, id ->
-                            })
-                    val dialog: AlertDialog? = newChannelBuilder?.create()
-                    dialog?.show()
-                    val textView: TextView = dialog?.findViewById(R.id.txtChannelName)!!
-                    textView.text = "gsdgs"
-                    val textView2: TextView = dialog?.findViewById(R.id.txtChannelDesc)!!
-                    textView2.text = "gdsgs"*/
+                    startActivity(intentFor<ChannelCreate>()/*.putExtra("user_key",user)*/)
                 }
                 1 -> {
                     startActivity(intentFor<ChannelJoin>()/*.putExtra("user_key",user)*/)
@@ -155,7 +127,12 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         val uidRef = rootRef.child("users").child(uid)
         eventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                user = dataSnapshot.getValue(Account::class.java)!!
+                user.email = dataSnapshot.child("email").value.toString()
+                user.firstName = dataSnapshot.child("firstName").value.toString()
+                user.surname = dataSnapshot.child("surname").value.toString()
+                user.id = dataSnapshot.child("id").value.toString()
+                user.image = dataSnapshot.child("image").value.toString().toInt()
+                user.loginUsed = dataSnapshot.child("loginUsed").value.toString()
 
                 uidRef.removeEventListener(this)
 
@@ -169,7 +146,14 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
     }
 
     override fun onChannelClick(channel: Channel) {
-        TODO("Not yet implemented")
+        startActivity<Home>()
+    }
+
+    private fun navigateTo(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
 }

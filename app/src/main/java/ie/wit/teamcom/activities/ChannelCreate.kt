@@ -34,7 +34,8 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
-        user = intent.getParcelableExtra("user_key")
+        getUser()
+        //user = intent.getParcelableExtra("user_key")
         btnCreateNew.setOnClickListener {
             createChannel(
                 Channel(
@@ -53,7 +54,12 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         val uidRef = rootRef.child("users").child(uid)
         eventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                user = dataSnapshot.getValue(Account::class.java)!!
+                user.email = dataSnapshot.child("email").value.toString()
+                user.firstName = dataSnapshot.child("firstName").value.toString()
+                user.surname = dataSnapshot.child("surname").value.toString()
+                user.id = dataSnapshot.child("id").value.toString()
+                user.image = dataSnapshot.child("image").value.toString().toInt()
+                user.loginUsed = dataSnapshot.child("loginUsed").value.toString()
 
                 uidRef.removeEventListener(this)
 
