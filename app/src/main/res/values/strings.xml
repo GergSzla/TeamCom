@@ -53,5 +53,37 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--fragment_settings-->
+    <string name="txtRoles">Roles</string>
+    <string name="txtMembers">Members</string>
+
+    <!--fragment roles-->
+    <string name="btnAddNewRole">Add New</string>
+
+
+    <!--title Stuff-->
+    <string name="title_settings">Channel Settings</string>
+    <string name="title_roles_settings">Roles</string>
+    <string name="title_members_settings">Members</string>
+
+    <!--fragment_roles-->
+    <string name="permissions">Permissions</string>
+    <string name="editRoleName">Role Name</string>
+    <string name="txtColorCode">Color Code [eg. #643663]</string>
+    <string name="permAdmin">Admin</string>
+    <string name="viewalllogs">View All Logs</string>
+    <string name="manageRoles">Manage Roles</string>
+    <string name="viewTasks">View Tasks</string>
+    <string name="createTasks">Create Tasks</string>
+    <string name="createInvite">Create Channel Invites</string>
+    <string name="createGC">Create Groupchats</string>
+    <string name="permKickUser">Kick Users</string>
+    <string name="permPostOnFeed">Post On News Feed</string>
+    <string name="permCreateGCInvite">Create Groupchat Invite</string>
+    <string name="permAssignTasksToMembers">Assign Tasks To Members</string>
+    <string name="permCreateMeetings">Create Meetings</string>
+    <string name="permRequestMeetings">Request Meetings</string>
+    <string name="permViewDeptLog">View Dept. Logs</string>
+    <string name="addnewrole">Add Role</string>
 
 </resources>

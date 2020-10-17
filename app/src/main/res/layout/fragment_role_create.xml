@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.SettingsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/txtChannelNameSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/permissions"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editRoleName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:hint="@string/editRoleName"
+                android:textSize="20dp" />
+            <EditText
+                android:id="@+id/txtColorCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:hint="@string/txtColorCode"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/permAdmin"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permViewLogs"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/viewalllogs"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permManageRoles"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/manageRoles"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permViewTasks"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/viewTasks"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateTasks"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/createTasks"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateInvite"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/createInvite"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateGroupChats"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/createGC"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permKickUser"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/permKickUser"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permPostOnFeed"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/permPostOnFeed"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateGCInvite"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/permCreateGCInvite"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permAssignTasksToMembers"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/permAssignTasksToMembers"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateMeetings"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/permCreateMeetings"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permRequestMeetings"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/permRequestMeetings"
+                android:textSize="20dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permViewDeptLog"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/permViewDeptLog"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/btnCreateNewRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:padding="10dp"
+                android:text="@string/addnewrole" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

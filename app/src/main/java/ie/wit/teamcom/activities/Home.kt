@@ -18,6 +18,7 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
+import ie.wit.teamcom.models.Channel
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
@@ -32,6 +33,7 @@ class Home : AppCompatActivity(),
     lateinit var ft: FragmentTransaction
     var user = Account()
     lateinit var eventListener : ValueEventListener
+    var channel = Channel()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +58,7 @@ class Home : AppCompatActivity(),
 
         ft = supportFragmentManager.beginTransaction()
         getUser()
+        channel = intent.getParcelableExtra("channel_key")
 
     }
 
@@ -173,7 +176,7 @@ class Home : AppCompatActivity(),
 
             ///Channel
             R.id.nav_channel_settings -> {
-                navigateTo(SettingsFragment.newInstance())
+                navigateTo(SettingsFragment.newInstance(channel))
             }
 
             R.id.nav_log -> {

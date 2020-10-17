@@ -146,7 +146,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
     }
 
     override fun onChannelClick(channel: Channel) {
-        startActivity<Home>()
+        startActivity(intentFor<Home>().putExtra("channel_key",channel))
     }
 
     private fun navigateTo(fragment: Fragment) {
