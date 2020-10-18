@@ -50,8 +50,10 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
 
 
         getUser()
+
         //user = intent.getParcelableExtra("user_key")
         setSwipeRefresh()
+        getAllUserChannels(app.auth.currentUser!!.uid)
 
 
         val builder: AlertDialog.Builder? = this.let {

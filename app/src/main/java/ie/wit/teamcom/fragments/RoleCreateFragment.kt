@@ -186,7 +186,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
 
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
-                    //startActivity(intentFor<ChannelsListActivity>().putExtra("user_key", user))
+                    navigateTo(RoleListFragment.newInstance(currentChannel!!))
                 }
             })
     }

@@ -142,6 +142,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         val uses = dialog.findViewById(R.id.txtUses) as EditText
         create.setOnClickListener {
             createInvite(hrs_active.text.toString(), uses.text.toString())
+            dialog.dismiss()
         }
         cancel.setOnClickListener {
             dialog.dismiss()
@@ -161,6 +162,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         keyGen()
         invite.invite_code = "tc-" + currentChannel.channelName.take(3).toLowerCase() + "@" + key_set
         writeNewInvite()
+
     }
 
     fun generateDateID(hrs : String) {
@@ -305,10 +307,15 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
+                    val child1Updates = HashMap<String, Any>()
+
+                    child1Updates["/invites/${invite.invite_code}/"] = invite
+                    app.database.updateChildren(child1Updates)
                     childUpdates["/channels/${currentChannel.id}/invites/${invite.invite_code}"] = invite
                     childUpdates["/invites/${invite.invite_code}/belongs_to/${currentChannel.id}"] = currentChannel
-
                     app.database.updateChildren(childUpdates)
+
+
 
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
