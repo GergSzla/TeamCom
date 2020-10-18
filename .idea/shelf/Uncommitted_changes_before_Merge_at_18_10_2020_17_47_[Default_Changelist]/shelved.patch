@@ -1,0 +1,145 @@
+Index: app/src/main/res/layout/fragment_role_create.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".fragments.SettingsFragment\">\r\n\r\n    <ScrollView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"vertical\"\r\n            android:padding=\"10dp\">\r\n\r\n            <TextView\r\n                android:id=\"@+id/txtChannelNameSettings\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginBottom=\"20dp\"\r\n                android:fontFamily=\"sans-serif\"\r\n                android:text=\"@string/permissions\"\r\n                android:textSize=\"30sp\"\r\n                android:textStyle=\"bold\" />\r\n\r\n            <EditText\r\n                android:id=\"@+id/editRoleName\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:ems=\"10\"\r\n                android:inputType=\"textPersonName\"\r\n                android:padding=\"10dp\"\r\n                android:hint=\"@string/editRoleName\"\r\n                android:textSize=\"20dp\" />\r\n            <EditText\r\n                android:id=\"@+id/txtColorCode\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:ems=\"10\"\r\n                android:inputType=\"textPersonName\"\r\n                android:padding=\"10dp\"\r\n                android:hint=\"@string/txtColorCode\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permAdmin\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:text=\"@string/permAdmin\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permViewLogs\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/viewalllogs\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permManageRoles\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/manageRoles\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permViewTasks\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/viewTasks\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permCreateTasks\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/createTasks\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permCreateInvite\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/createInvite\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permCreateGroupChats\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/createGC\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permKickUser\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/permKickUser\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permPostOnFeed\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/permPostOnFeed\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permCreateGCInvite\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/permCreateGCInvite\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permAssignTasksToMembers\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/permAssignTasksToMembers\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permCreateMeetings\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/permCreateMeetings\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permRequestMeetings\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/permRequestMeetings\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <androidx.appcompat.widget.SwitchCompat\r\n                android:id=\"@+id/permViewDeptLog\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/permViewDeptLog\"\r\n                android:textSize=\"20dp\" />\r\n\r\n            <Button\r\n                android:id=\"@+id/btnCreateNewRole\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_gravity=\"center_vertical|center_horizontal\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"@string/addnewrole\" />\r\n\r\n\r\n        </LinearLayout>\r\n    </ScrollView>\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_role_create.xml	(revision 8a05278fe94551df20eda9fc6ce96f7e08e14b68)
++++ app/src/main/res/layout/fragment_role_create.xml	(date 1603039490905)
+@@ -172,6 +172,34 @@
+                 android:text="@string/permViewDeptLog"
+                 android:textSize="20dp" />
+ 
++            <RelativeLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:id="@+id/editPressed"
++                android:orientation="horizontal">
++
++                <Button
++                    android:id="@+id/button2"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentTop="true"
++                    android:layout_alignParentEnd="true"
++                    android:layout_marginTop="0dp"
++                    android:layout_marginEnd="10dp"
++                    android:text="@string/editRole" />
++
++                <Button
++                    android:id="@+id/button"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++
++                    android:layout_alignParentTop="true"
++                    android:layout_alignParentStart="true"
++                    android:layout_marginTop="0dp"
++                    android:layout_marginStart="10dp"
++                    android:text="@string/deleteRole" />
++            </RelativeLayout>
++
+             <Button
+                 android:id="@+id/btnCreateNewRole"
+                 android:layout_width="wrap_content"
+Index: app/src/main/java/ie/wit/teamcom/fragments/RoleCreateFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ie.wit.teamcom.fragments\r\n\r\nimport android.os.Bundle\r\nimport android.preference.PreferenceManager\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.FragmentManager\r\nimport com.google.firebase.database.DataSnapshot\r\nimport com.google.firebase.database.DatabaseError\r\nimport com.google.firebase.database.ValueEventListener\r\nimport ie.wit.teamcom.R\r\nimport ie.wit.teamcom.activities.ChannelsListActivity\r\nimport ie.wit.teamcom.main.MainApp\r\nimport ie.wit.teamcom.models.Account\r\nimport ie.wit.teamcom.models.Channel\r\nimport ie.wit.teamcom.models.Role\r\nimport kotlinx.android.synthetic.main.activity_login_reg.*\r\nimport kotlinx.android.synthetic.main.card_role.*\r\nimport kotlinx.android.synthetic.main.fragment_role_create.*\r\nimport kotlinx.android.synthetic.main.fragment_role_create.view.*\r\nimport kotlinx.android.synthetic.main.fragment_role_list.view.*\r\nimport org.jetbrains.anko.AnkoLogger\r\nimport org.jetbrains.anko.intentFor\r\nimport java.util.*\r\n\r\n\r\nclass RoleCreateFragment : Fragment(), AnkoLogger {\r\n    lateinit var app: MainApp\r\n    lateinit var root: View\r\n    var currentChannel: Channel? = null\r\n    var permissionCode: String =\"\"\r\n    var role = Role()\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        app = activity?.application as MainApp\r\n        arguments?.let {\r\n            currentChannel = it.getParcelable(\"channel_key\")\r\n        }\r\n    }\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        root = inflater.inflate(R.layout.fragment_role_create, container, false)\r\n        activity?.title = getString(R.string.title_roles_settings)\r\n\r\n        root.btnCreateNewRole.setOnClickListener {\r\n            if(root.editRoleName.text.toString() != \"\"){\r\n                permissionCode += if(root.permAdmin.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permViewLogs.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permManageRoles.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permViewTasks.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permCreateTasks.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permCreateInvite.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permCreateGroupChats.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permKickUser.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permPostOnFeed.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permCreateGCInvite.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permAssignTasksToMembers.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permCreateMeetings.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permRequestMeetings.isChecked) \"1\" else \"0\"\r\n                permissionCode += if(root.permViewDeptLog.isChecked) \"1\" else \"0\"\r\n\r\n                role.role_name = editRoleName.text.toString()\r\n                role.permission_code = permissionCode\r\n                role.color_code = txtColorCode.text.toString()\r\n                role.id = UUID.randomUUID().toString()\r\n                writeNewRole(role)\r\n            }\r\n        }\r\n\r\n        return root\r\n    }\r\n\r\n    private fun writeNewRole(role : Role) {\r\n        val uid = app.auth.currentUser!!.uid\r\n\r\n\r\n        app.database.child(\"channels\").child(currentChannel!!.id)\r\n            .addValueEventListener(object : ValueEventListener {\r\n                override fun onCancelled(error: DatabaseError) {\r\n                }\r\n\r\n                override fun onDataChange(snapshot: DataSnapshot) {\r\n                    val childUpdates = HashMap<String, Any>()\r\n                    childUpdates[\"/channels/${currentChannel!!.id}/roles/${role.role_name}\"] = role\r\n                    app.database.updateChildren(childUpdates)\r\n\r\n                    app.database.child(\"channels\").child(currentChannel!!.id)\r\n                        .removeEventListener(this)\r\n                    //startActivity(intentFor<ChannelsListActivity>().putExtra(\"user_key\", user))\r\n                }\r\n            })\r\n    }\r\n\r\n    companion object {\r\n        @JvmStatic\r\n        fun newInstance(channel: Channel) =\r\n            RoleCreateFragment().apply {\r\n                arguments = Bundle().apply {\r\n                    putParcelable(\"channel_key\", channel)\r\n                }\r\n            }\r\n    }\r\n\r\n    private fun navigateTo(fragment: Fragment) {\r\n        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!\r\n        fragmentManager.beginTransaction()\r\n            .replace(R.id.homeFrame, fragment)\r\n            .addToBackStack(null)\r\n            .commit()\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/ie/wit/teamcom/fragments/RoleCreateFragment.kt	(revision 8a05278fe94551df20eda9fc6ce96f7e08e14b68)
++++ app/src/main/java/ie/wit/teamcom/fragments/RoleCreateFragment.kt	(date 1603039490917)
+@@ -6,6 +6,7 @@
+ import android.view.LayoutInflater
+ import android.view.View
+ import android.view.ViewGroup
++import androidx.core.view.isVisible
+ import androidx.fragment.app.FragmentManager
+ import com.google.firebase.database.DataSnapshot
+ import com.google.firebase.database.DatabaseError
+@@ -38,6 +39,8 @@
+         app = activity?.application as MainApp
+         arguments?.let {
+             currentChannel = it.getParcelable("channel_key")
++            currentChannel = it.getParcelable("channel_key_edit")
++            role = it.getParcelable("role_key_edit")!!
+         }
+     }
+ 
+@@ -48,6 +51,13 @@
+         root = inflater.inflate(R.layout.fragment_role_create, container, false)
+         activity?.title = getString(R.string.title_roles_settings)
+ 
++        root.editPressed.isVisible = false
++
++        if(role.id != ""){
++            root.editPressed.isVisible = true
++            root.btnCreateNewRole.isVisible = false
++        }
++
+         root.btnCreateNewRole.setOnClickListener {
+             if(root.editRoleName.text.toString() != ""){
+                 permissionCode += if(root.permAdmin.isChecked) "1" else "0"
+@@ -73,6 +83,8 @@
+             }
+         }
+ 
++
++
+         return root
+     }
+ 
+@@ -105,6 +117,13 @@
+                     putParcelable("channel_key", channel)
+                 }
+             }
++        fun editInstance(role: Role, channel: Channel) =
++            RoleListFragment().apply {
++                arguments = Bundle().apply {
++                    putParcelable("channel_key_edit", channel)
++                    putParcelable("role_key_edit", role)
++                }
++            }
+     }
+ 
+     private fun navigateTo(fragment: Fragment) {
+Index: app/src/main/java/ie/wit/teamcom/fragments/RoleListFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ie.wit.teamcom.fragments\r\n\r\nimport android.os.Bundle\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.FragmentManager\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport androidx.swiperefreshlayout.widget.SwipeRefreshLayout\r\nimport com.google.firebase.database.DataSnapshot\r\nimport com.google.firebase.database.DatabaseError\r\nimport com.google.firebase.database.ValueEventListener\r\nimport ie.wit.teamcom.R\r\nimport ie.wit.teamcom.adapters.ChannelsAdapter\r\nimport ie.wit.teamcom.adapters.RoleAdapter\r\nimport ie.wit.teamcom.adapters.RoleListener\r\nimport ie.wit.teamcom.main.MainApp\r\nimport ie.wit.teamcom.models.Channel\r\nimport ie.wit.teamcom.models.Role\r\nimport kotlinx.android.synthetic.main.activity_channels_list.*\r\nimport kotlinx.android.synthetic.main.activity_channels_list.view.*\r\nimport kotlinx.android.synthetic.main.fragment_role_list.*\r\nimport kotlinx.android.synthetic.main.fragment_role_list.view.*\r\nimport org.jetbrains.anko.AnkoLogger\r\nimport org.jetbrains.anko.info\r\nimport java.util.ArrayList\r\n\r\n\r\nclass RoleListFragment : Fragment(), AnkoLogger, RoleListener {\r\n    lateinit var app: MainApp\r\n    lateinit var root: View\r\n    var currentChannel = Channel()\r\n    var rolesList = ArrayList<Role>()\r\n\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        app = activity?.application as MainApp\r\n        arguments?.let {\r\n            currentChannel = it.getParcelable(\"channel_key\")!!\r\n        }\r\n\r\n    }\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        root = inflater.inflate(R.layout.fragment_role_list, container, false)\r\n        activity?.title = getString(R.string.title_roles_settings)\r\n\r\n        root.btnAddNewRole.setOnClickListener {\r\n            navigateTo(RoleCreateFragment.newInstance(currentChannel))\r\n        }\r\n\r\n        root.rolesRecyclerView.layoutManager = LinearLayoutManager(activity)\r\n\r\n        setSwipeRefresh()\r\n\r\n        return root\r\n    }\r\n\r\n    fun getAllChannelRoles(roleId: String?) {\r\n        rolesList = ArrayList<Role>()\r\n        app.database.child(\"channels\").child(currentChannel!!.id).child(\"roles\").orderByChild(\"permission_code\")\r\n            .addValueEventListener(object : ValueEventListener {\r\n                override fun onCancelled(error: DatabaseError) {\r\n                    info(\"Firebase roles error : ${error.message}\")\r\n                }\r\n\r\n                override fun onDataChange(snapshot: DataSnapshot) {\r\n                    //hideLoader(loader)\r\n                    val children = snapshot.children\r\n                    children.forEach {\r\n                        val role = it.\r\n                        getValue<Role>(Role::class.java)\r\n                        rolesList.add(role!!)\r\n                        root.rolesRecyclerView.adapter = RoleAdapter(rolesList, this@RoleListFragment)\r\n                        root.rolesRecyclerView.adapter?.notifyDataSetChanged()\r\n                        //checkSwipeRefresh()\r\n                        app.database.child(\"channels\").child(currentChannel!!.id).child(\"roles\").orderByChild(\"permission_code\")\r\n                            .removeEventListener(this)\r\n                    }\r\n                }\r\n            })\r\n    }\r\n\r\n    fun setSwipeRefresh() {\r\n        root.swiperefreshRoles.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {\r\n            override fun onRefresh() {\r\n                root.swiperefreshRoles.isRefreshing = true\r\n                getAllChannelRoles(currentChannel!!.id)\r\n            }\r\n        })\r\n    }\r\n\r\n    override fun onResume() {\r\n        super.onResume()\r\n        getAllChannelRoles(app.auth.currentUser!!.uid)\r\n    }\r\n\r\n    fun checkSwipeRefresh() {\r\n        if (root.swiperefreshRoles.isRefreshing) root.swiperefreshRoles.isRefreshing = false\r\n    }\r\n\r\n    companion object {\r\n        @JvmStatic\r\n        fun newInstance(channel: Channel) =\r\n            RoleListFragment().apply {\r\n                arguments = Bundle().apply {\r\n                    putParcelable(\"channel_key\", channel)\r\n                }\r\n            }\r\n    }\r\n\r\n    private fun navigateTo(fragment: Fragment) {\r\n        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!\r\n        fragmentManager.beginTransaction()\r\n            .replace(R.id.homeFrame, fragment)\r\n            .addToBackStack(null)\r\n            .commit()\r\n    }\r\n\r\n    override fun onRoleClick(role: Role) {\r\n        TODO(\"Not yet implemented\")\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/ie/wit/teamcom/fragments/RoleListFragment.kt	(revision 8a05278fe94551df20eda9fc6ce96f7e08e14b68)
++++ app/src/main/java/ie/wit/teamcom/fragments/RoleListFragment.kt	(date 1603039490922)
+@@ -123,6 +123,6 @@
+     }
+ 
+     override fun onRoleClick(role: Role) {
+-        TODO("Not yet implemented")
++        navigateTo(RoleCreateFragment.editInstance(role,currentChannel))
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\r\n    <string name=\"app_name\">TeamCom</string>\r\n\r\n    <!--activity_login_reg-->\r\n    <string name=\"btnLogin\">Login</string>\r\n    <string name=\"btnRegister\">Register</string>\r\n    <string name=\"btnShowReg\">Create An Account</string>\r\n    <string name=\"btnShowLogin\">Login To Your Account</string>\r\n    <string name=\"hintLgnEmail\">Email</string>\r\n    <string name=\"hintPassword\">Password</string>\r\n    <string name=\"hintFirstname\">First Name</string>\r\n    <string name=\"hintSurname\">Surname</string>\r\n\r\n    <!--fragment_channels_list-->\r\n    <string name=\"yourChannels\">Your Channels</string>\r\n    <string name=\"title_activity_channels_list\">ChannelsList</string>\r\n    <string name=\"btnAddNew\">Add New</string>\r\n\r\n    <!--create_channel-->\r\n    <string name=\"hintChannelName\">Channel Name</string>\r\n    <string name=\"hintChannelDesc\">Channel Description</string>\r\n    <string name=\"createChannel\">Create Channel</string>\r\n\r\n    <!--join_channel-->\r\n    <string name=\"hintChannelCode\">Channel Invite Code</string>\r\n    <string name=\"btnJoinChannel\">Join Channel</string>\r\n\r\n    <!--Home-->\r\n    <string name=\"nav_header_title\">TeamCom</string>\r\n\r\n    <string name=\"group_social\">Social</string>\r\n    <string name=\"menu_news_feed\">News Feed</string>\r\n    <string name=\"menu_conversations\">Conversations</string>\r\n    <string name=\"menu_meetings\">Meetings</string>\r\n\r\n    <string name=\"group_organizational\">Organizational</string>\r\n    <string name=\"menu_calendar\">Calendar</string>\r\n    <string name=\"menu_tasks\">Tasks</string>\r\n    <string name=\"menu_reminders\">Reminders</string>\r\n\r\n    <string name=\"group_channel\">Channel</string>\r\n    <string name=\"menu_channel_settings\">Channel Settings</string>\r\n    <string name=\"menu_log\">Log</string>\r\n    <string name=\"menu_members\">Members</string>\r\n    <string name=\"menu_support\">Support</string>\r\n\r\n    <string name=\"account\">Done for today?</string>\r\n    <string name=\"menu_logout\">Logout</string>\r\n\r\n\r\n    <string name=\"navigation_drawer_close\">Close navigation drawer</string>\r\n    <string name=\"navigation_drawer_open\">Open navigation drawer</string>\r\n    <!-- TODO: Remove or change this placeholder text -->\r\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\r\n\r\n    <!--fragment_settings-->\r\n    <string name=\"txtRoles\">Roles</string>\r\n    <string name=\"txtMembers\">Members</string>\r\n\r\n    <!--fragment roles-->\r\n    <string name=\"btnAddNewRole\">Add New</string>\r\n\r\n\r\n    <!--title Stuff-->\r\n    <string name=\"title_settings\">Channel Settings</string>\r\n    <string name=\"title_roles_settings\">Roles</string>\r\n    <string name=\"title_members_settings\">Members</string>\r\n\r\n    <!--fragment_roles-->\r\n    <string name=\"permissions\">Permissions</string>\r\n    <string name=\"editRoleName\">Role Name</string>\r\n    <string name=\"txtColorCode\">Color Code [eg. #643663]</string>\r\n    <string name=\"permAdmin\">Admin</string>\r\n    <string name=\"viewalllogs\">View All Logs</string>\r\n    <string name=\"manageRoles\">Manage Roles</string>\r\n    <string name=\"viewTasks\">View Tasks</string>\r\n    <string name=\"createTasks\">Create Tasks</string>\r\n    <string name=\"createInvite\">Create Channel Invites</string>\r\n    <string name=\"createGC\">Create Groupchats</string>\r\n    <string name=\"permKickUser\">Kick Users</string>\r\n    <string name=\"permPostOnFeed\">Post On News Feed</string>\r\n    <string name=\"permCreateGCInvite\">Create Groupchat Invite</string>\r\n    <string name=\"permAssignTasksToMembers\">Assign Tasks To Members</string>\r\n    <string name=\"permCreateMeetings\">Create Meetings</string>\r\n    <string name=\"permRequestMeetings\">Request Meetings</string>\r\n    <string name=\"permViewDeptLog\">View Dept. Logs</string>\r\n    <string name=\"addnewrole\">Add Role</string>\r\n\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/strings.xml	(revision 8a05278fe94551df20eda9fc6ce96f7e08e14b68)
++++ app/src/main/res/values/strings.xml	(date 1603039490910)
+@@ -85,5 +85,9 @@
+     <string name="permRequestMeetings">Request Meetings</string>
+     <string name="permViewDeptLog">View Dept. Logs</string>
+     <string name="addnewrole">Add Role</string>
++    <string name="editRole">Save Changes</string>
++    <string name="deleteRole">Delete Role</string>
++
++
+ 
+ </resources>
+\ No newline at end of file

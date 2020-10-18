@@ -11,7 +11,8 @@ data class Role (
     var id:String = "" /*UUID*/,
     var role_name:String = "",
     var permission_code: String = "",
-    var color_code: String ="#000000"
+    var color_code: String ="#000000",
+    var isDefault: Boolean = false
 ) : Parcelable
 
 {
@@ -21,7 +22,8 @@ data class Role (
             "id" to id,
             "role_name" to role_name,
             "permission_code" to permission_code,
-            "color_code" to color_code
+            "color_code" to color_code,
+            "isDefault" to isDefault
         )
     }
 }

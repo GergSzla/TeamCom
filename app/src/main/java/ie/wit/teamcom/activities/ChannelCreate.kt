@@ -12,6 +12,7 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Role
 import kotlinx.android.synthetic.main.activity_channel_create.*
 import org.jetbrains.anko.AnkoLogger
 import java.time.LocalDateTime
@@ -94,6 +95,8 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
     private fun createChannel(channel: Channel){
         val uid = app.auth.currentUser!!.uid
         val userValues = user
+        var role = Role(id = UUID.randomUUID().toString(), role_name = "Admin", permission_code = "10000000000000", color_code = "b20202", isDefault = true)
+        val roleValues = role
 
         generateDateID()
 
@@ -106,9 +109,11 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         userChildUpdates["/channels/${channel.id}/members/$uid"] = userValues
         userChildUpdates["/channels/${channel.id}/admin/$uid"] = userValues
         userChildUpdates["/users/$uid/channels/${channel.id}/orderDateId"] = orderDateId
-
-        //userChildUpdates["/users/$uid/channels/${channel.id}/members/$uid"] = userValues
         app.database.updateChildren(userChildUpdates)
+
+        val roleChildUpdates = HashMap<String, Any>()
+        roleChildUpdates["/channels/${channel.id}/roles/${role.id}"] = roleValues
+        app.database.updateChildren(roleChildUpdates)
 
         finish()
     }

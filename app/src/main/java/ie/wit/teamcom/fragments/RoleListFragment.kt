@@ -123,6 +123,6 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
     }
 
     override fun onRoleClick(role: Role) {
-        TODO("Not yet implemented")
+        navigateTo(RoleCreateFragment.editInstance(role,currentChannel))
     }
 }

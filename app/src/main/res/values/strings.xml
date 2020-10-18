@@ -95,6 +95,10 @@
     <string name="permRequestMeetings">Request Meetings</string>
     <string name="permViewDeptLog">View Dept. Logs</string>
     <string name="addnewrole">Add Role</string>
+    <string name="editRole">Save Changes</string>
+    <string name="deleteRole">Delete Role</string>
+
+
 
 
     <!--card invite-->

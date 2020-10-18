@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,16 +36,39 @@
                 android:padding="10dp"
                 android:hint="@string/editRoleName"
                 android:textSize="20dp" />
-            <EditText
-                android:id="@+id/txtColorCode"
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:padding="10dp"
-                android:hint="@string/txtColorCode"
-                android:textSize="20dp" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txtColorCode"
+                    android:layout_width="299dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_toStartOf="@+id/btnColorPicker"
+                    android:ems="10"
+                    android:hint="@string/txtColorCode"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:textSize="20dp" />
+
+                <ImageButton
+                    android:id="@+id/btnColorPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="23dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_palette_24" />
+            </RelativeLayout>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permAdmin"
@@ -171,6 +195,34 @@
                 android:padding="10dp"
                 android:text="@string/permViewDeptLog"
                 android:textSize="20dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editPressed"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnEditRole"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/editRole" />
+
+                <Button
+                    android:id="@+id/btnDeleteRole"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/deleteRole" />
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/btnCreateNewRole"

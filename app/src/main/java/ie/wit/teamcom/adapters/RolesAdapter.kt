@@ -43,7 +43,11 @@ class RoleAdapter constructor(var roles: ArrayList<Role>,
             itemView.tag = role
 
             itemView.txtRoleNameCard.text = role.role_name
-            itemView.txtRoleNameCard.setTextColor(Color.parseColor(role.color_code))
+            if(role.color_code.take(1) != "#"){
+                itemView.txtRoleNameCard.setTextColor(Color.parseColor("#"+role.color_code))
+            } else {
+                itemView.txtRoleNameCard.setTextColor(Color.parseColor(role.color_code))
+            }
 
             itemView.setOnClickListener {
                 listener.onRoleClick(role)
