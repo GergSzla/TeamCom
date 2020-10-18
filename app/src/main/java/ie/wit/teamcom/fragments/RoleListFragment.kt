@@ -78,7 +78,7 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
                         rolesList.add(role!!)
                         root.rolesRecyclerView.adapter = RoleAdapter(rolesList, this@RoleListFragment)
                         root.rolesRecyclerView.adapter?.notifyDataSetChanged()
-                        //checkSwipeRefresh()
+                        checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("roles").orderByChild("permission_code")
                             .removeEventListener(this)
                     }

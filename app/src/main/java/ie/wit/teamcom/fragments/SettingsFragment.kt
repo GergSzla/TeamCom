@@ -18,7 +18,7 @@ class SettingsFragment : Fragment(), AnkoLogger {
     lateinit var app: MainApp
     lateinit var eventListener : ValueEventListener
     lateinit var root: View
-    var currentChannel: Channel? = null
+    var currentChannel = Channel()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +26,7 @@ class SettingsFragment : Fragment(), AnkoLogger {
         app = activity?.application as MainApp
 
         arguments?.let {
-            currentChannel = it.getParcelable("channel_key")
+            currentChannel = it.getParcelable("channel_key")!!
         }
     }
 
@@ -37,8 +37,18 @@ class SettingsFragment : Fragment(), AnkoLogger {
         root = inflater.inflate(R.layout.fragment_settings, container, false)
         activity?.title = getString(R.string.title_settings)
 
+        root.txtChannelNameSettings.text = currentChannel.channelName
+
         root.txtSettingsRoles.setOnClickListener {
             navigateTo(RoleListFragment.newInstance(currentChannel!!))
+        }
+
+        root.txtSettingsMembers.setOnClickListener {
+
+        }
+
+        root.txtSettingsInvites.setOnClickListener {
+            navigateTo(InvitesListFragment.newInstance(currentChannel!!))
         }
 
         return root

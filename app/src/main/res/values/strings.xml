@@ -56,14 +56,23 @@
     <!--fragment_settings-->
     <string name="txtRoles">Roles</string>
     <string name="txtMembers">Members</string>
+    <string name="txtInvites">Invites</string>
+
 
     <!--fragment roles-->
     <string name="btnAddNewRole">Add New</string>
+
+    <!--fragment invites-->
+    <string name="btnAddNewInv">Create Invite</string>
+    <string name="hint_hoursActive">Expires In (Hrs)</string>
+    <string name="hint_uses">Uses</string>
+
 
 
     <!--title Stuff-->
     <string name="title_settings">Channel Settings</string>
     <string name="title_roles_settings">Roles</string>
+    <string name="title_invites_settings">Invites</string>
     <string name="title_members_settings">Members</string>
 
     <!--fragment_roles-->
@@ -76,6 +85,7 @@
     <string name="viewTasks">View Tasks</string>
     <string name="createTasks">Create Tasks</string>
     <string name="createInvite">Create Channel Invites</string>
+    <string name="createInvite1">Create New Invite</string>
     <string name="createGC">Create Groupchats</string>
     <string name="permKickUser">Kick Users</string>
     <string name="permPostOnFeed">Post On News Feed</string>
@@ -85,5 +95,12 @@
     <string name="permRequestMeetings">Request Meetings</string>
     <string name="permViewDeptLog">View Dept. Logs</string>
     <string name="addnewrole">Add Role</string>
+
+
+    <!--card invite-->
+    <string name="invite_code">Code: </string>
+    <string name="valid_from_as_string">Valid From: </string>
+    <string name="valid_to_as_string">Valid To: </string>
+    <string name="invite_uses">Uses: </string>
 
 </resources>
