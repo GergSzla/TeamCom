@@ -113,6 +113,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
         val roleChildUpdates = HashMap<String, Any>()
         roleChildUpdates["/channels/${channel.id}/roles/${role.id}"] = roleValues
+        roleChildUpdates["/channels/${channel.id}/members/$uid/role"] = roleValues
         app.database.updateChildren(roleChildUpdates)
 
         finish()

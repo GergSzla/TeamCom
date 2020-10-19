@@ -41,6 +41,7 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
+        getUser()
         btnJoinNew.setOnClickListener {
             checkInvite(txtChannelCode.text.toString())
         }
@@ -57,8 +58,7 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.hasChild(invite_code)){
                         generateDateID()
-                        if(snapshot.child(invite_code).child("valid_to").value.toString().toLong() > currentDateId){
-
+                        if(snapshot.child(invite_code).child("valid_to").value.toString().toLong() < currentDateId){
                             val childUpdates = HashMap<String, Any>()
                             app.database.child("invites").child(invite_code).child("belongs_to")
                                 .addValueEventListener(object : ValueEventListener {
@@ -75,6 +75,7 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
                                             channelList.add(channel!!)
                                             val channelUpd = HashMap<String, Any>()
                                             childUpdates["/users/$uid/channels/${channelList[0].id}"] = channelList[0]
+                                            childUpdates["/channels/${channelList[0].id}/members/$uid"] = user
                                             channelUpd["/users/$uid/channels/${channelList[0].id}/orderDateId"] = currentDateId
 
                                             app.database.updateChildren(childUpdates)
@@ -92,7 +93,7 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
                     } else {
                         Toast.makeText(this@ChannelJoin, "This Invite Does Not Exist", Toast.LENGTH_LONG).show()
                     }
-                    app.database.child("user-stats")
+                    app.database.child("invites").child(invite_code).child("belongs_to")
                         .removeEventListener(this)
                 }
             })
@@ -115,5 +116,29 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
 
         var dateId = year+month+day+hour+minutes+seconds
         currentDateId = 100000000000000 - dateId.toLong()
+    }
+
+    private fun getUser(){
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val rootRef = FirebaseDatabase.getInstance().reference
+        val uidRef = rootRef.child("users").child(uid)
+        eventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                user.email = dataSnapshot.child("email").value.toString()
+                user.firstName = dataSnapshot.child("firstName").value.toString()
+                user.surname = dataSnapshot.child("surname").value.toString()
+                user.id = dataSnapshot.child("id").value.toString()
+                user.image = dataSnapshot.child("image").value.toString().toInt()
+                user.loginUsed = dataSnapshot.child("loginUsed").value.toString()
+
+                uidRef.removeEventListener(this)
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
+        uidRef.addListenerForSingleValueEvent(eventListener)
+
     }
 }

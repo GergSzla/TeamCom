@@ -50,7 +50,6 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")!!
         }
-
     }
 
     override fun onCreateView(
@@ -61,8 +60,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         activity?.title = getString(R.string.title_invites_settings)
 
         root.btnAddNewInvite.setOnClickListener {
-            //navigateTo(InviteCreateFragment.newInstance(currentChannel))
-            showDialog("Fuck Sake")
+            showDialog("")
         }
 
         root.invitesRecyclerView.layoutManager = LinearLayoutManager(activity)

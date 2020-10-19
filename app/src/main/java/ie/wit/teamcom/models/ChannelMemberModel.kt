@@ -8,14 +8,16 @@ import kotlinx.android.parcel.Parcelize
 
 @IgnoreExtraProperties
 @Parcelize
-data class Account (
+data class Member (
     var id:String = "" /*UUID*/,
     var firstName:String = "",
     var surname:String = "",
     var email: String = "",
     var image: Int = 0,
-    var loginUsed: String ="",
-    var channels:  ArrayList<Channel> = ArrayList<Channel>()) : Parcelable
+    var login_used: String ="",
+    var department: String = "",
+    var role: Role = Role()) : Parcelable
+
 
 
 {
@@ -27,8 +29,9 @@ data class Account (
             "surname" to surname,
             "email" to email,
             "image" to image,
-            "loginUsed" to loginUsed,
-            "channels" to channels
+            "loginUsed" to login_used,
+            "department" to department,
+            "role" to role
         )
     }
 }

@@ -5,28 +5,42 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.MembersAdapter
+import ie.wit.teamcom.adapters.MembersListener
+import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.models.Account
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Member
+import kotlinx.android.synthetic.main.fragment_members.view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import java.util.ArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+lateinit var app: MainApp
+lateinit var eventListener : ValueEventListener
+lateinit var root: View
+var user = Member()
+var currentChannel = Channel()
+var memberList = ArrayList<Member>()
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MembersFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MembersFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+
+class MembersFragment : Fragment() , AnkoLogger, MembersListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
+
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            currentChannel = it.getParcelable("channel_key")!!
         }
     }
 
@@ -34,25 +48,66 @@ class MembersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_members, container, false)
+        root = inflater.inflate(R.layout.fragment_members, container, false)
+        activity?.title = getString(R.string.title_members_settings)
+        root.membersRecyclerView.layoutManager = LinearLayoutManager(activity)
+        getAllMembers()
+        //setSwipeRefresh()
+        return root
+    }
+
+    fun setSwipeRefresh() {
+        root.swiperefreshMembers.setOnRefreshListener(object :
+            SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                root.swiperefreshMembers.isRefreshing = true
+                getAllMembers()
+            }
+        })
+    }
+    fun checkSwipeRefresh() {
+        if (root.swiperefreshMembers.isRefreshing) root.swiperefreshMembers.isRefreshing = false
+    }
+
+
+    fun getAllMembers() {
+        memberList = ArrayList<Member>()
+        app.database.child("channels").child(currentChannel!!.id).child("members")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase roles error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //hideLoader(loader)
+                    val children = snapshot.children
+                    children.forEach {
+                        val member = it.getValue<Member>(Member::class.java)
+                        memberList.add(member!!)
+                        root.membersRecyclerView.adapter = MembersAdapter(
+                            memberList,
+                            this@MembersFragment
+                        )
+                        root.membersRecyclerView.adapter?.notifyDataSetChanged()
+                        checkSwipeRefresh()
+                        app.database.child("channels").child(currentChannel!!.id).child("members")
+                            .removeEventListener(this)
+                    }
+                }
+            })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MembersFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(channel: Channel) =
             MembersFragment().apply {
                 arguments = Bundle().apply {
+                    putParcelable("channel_key", channel)
                 }
             }
+    }
+
+    override fun onMemberClick(channel: Channel) {
+        TODO("Not yet implemented")
     }
 }

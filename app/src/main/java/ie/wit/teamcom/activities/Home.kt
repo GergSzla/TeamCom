@@ -184,7 +184,7 @@ class Home : AppCompatActivity(),
             }
 
             R.id.nav_members -> {
-                navigateTo(MembersFragment.newInstance())
+                navigateTo(MembersFragment.newInstance(channel))
             }
             R.id.nav_support -> {
                 navigateTo(SupportFragment.newInstance())

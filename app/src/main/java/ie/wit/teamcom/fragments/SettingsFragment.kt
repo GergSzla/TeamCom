@@ -16,7 +16,6 @@ import org.jetbrains.anko.AnkoLogger
 class SettingsFragment : Fragment(), AnkoLogger {
 
     lateinit var app: MainApp
-    lateinit var eventListener : ValueEventListener
     lateinit var root: View
     var currentChannel = Channel()
 
@@ -44,7 +43,7 @@ class SettingsFragment : Fragment(), AnkoLogger {
         }
 
         root.txtSettingsMembers.setOnClickListener {
-
+            navigateTo(MembersFragment.newInstance(currentChannel!!))
         }
 
         root.txtSettingsInvites.setOnClickListener {

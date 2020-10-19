@@ -196,8 +196,10 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     val user = app.auth.currentUser!!
                     val fname = user.displayName!!.substringBefore(" ")
                     val sname = user.displayName!!.substringAfter(" ")
-                    writeNewUserStats(Account(id = UUID.randomUUID().toString(), email = app.auth.currentUser!!.email.toString(), firstName = fname,
-                        surname = sname, image = 0, loginUsed = "google"))
+                    writeNewUserStats(
+                        Account(id = UUID.randomUUID().toString(), email = app.auth.currentUser!!.email.toString(), firstName = fname,
+                        surname = sname, image = 0, loginUsed = "google")
+                    )
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                 }

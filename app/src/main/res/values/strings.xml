@@ -57,7 +57,8 @@
     <string name="txtRoles">Roles</string>
     <string name="txtMembers">Members</string>
     <string name="txtInvites">Invites</string>
-
+    <string name="txtDepartments">Departments</string>
+    <string name="txtDetails">Channel Details</string>
 
     <!--fragment roles-->
     <string name="btnAddNewRole">Add New</string>
