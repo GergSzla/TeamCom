@@ -136,7 +136,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     // Sign in success, update UI with the signed-in user's information
                     val user = app.auth.currentUser
                     app.database = FirebaseDatabase.getInstance().reference
-                    writeNewUserStats(Account(id = UUID.randomUUID().toString(), email = app.auth.currentUser!!.email.toString(), firstName = txtFirstName.text.toString(),
+                    writeNewUserStats(Account(id = app.auth.currentUser!!.uid, email = app.auth.currentUser!!.email.toString(), firstName = txtFirstName.text.toString(),
                         surname = txtSurname.text.toString(), loginUsed = "firebaseAuth"))
 
                 } else {
@@ -161,7 +161,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                         childUpdates["/users/$uid"] = user
                         app.database.updateChildren(childUpdates)
                     }
-                    app.database.child("user-stats")
+                    app.database.child("users")
                         .removeEventListener(this)
                     startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
                 }
@@ -197,7 +197,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     val fname = user.displayName!!.substringBefore(" ")
                     val sname = user.displayName!!.substringAfter(" ")
                     writeNewUserStats(
-                        Account(id = UUID.randomUUID().toString(), email = app.auth.currentUser!!.email.toString(), firstName = fname,
+                        Account(id = app.auth.currentUser!!.uid, email = app.auth.currentUser!!.email.toString(), firstName = fname,
                         surname = sname, image = 0, loginUsed = "google")
                     )
                 } else {

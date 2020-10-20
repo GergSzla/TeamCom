@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -107,7 +108,15 @@ class MembersFragment : Fragment() , AnkoLogger, MembersListener {
             }
     }
 
-    override fun onMemberClick(channel: Channel) {
-        TODO("Not yet implemented")
+    private fun navigateTo(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
+        fragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun onMemberClick(member: Member) {
+        navigateTo(AssignRolesFragment.newInstance(member, currentChannel))
     }
 }

@@ -68,13 +68,17 @@
     <string name="hint_hoursActive">Expires In (Hrs)</string>
     <string name="hint_uses">Uses</string>
 
-
+    <!--fragment invites-->
+    <string name="hint_dept_name">Department Name</string>
 
     <!--title Stuff-->
     <string name="title_settings">Channel Settings</string>
     <string name="title_roles_settings">Roles</string>
     <string name="title_invites_settings">Invites</string>
+    <string name="title_department_settings">Departments</string>
     <string name="title_members_settings">Members</string>
+    <string name="title_members_assignments">Assign Role And Department</string>
+
 
     <!--fragment_roles-->
     <string name="permissions">Permissions</string>
@@ -86,6 +90,10 @@
     <string name="viewTasks">View Tasks</string>
     <string name="createTasks">Create Tasks</string>
     <string name="createInvite">Create Channel Invites</string>
+
+    <string name="createDepartment">Create Channel Department</string>
+    <string name="editDepartment">Edit Channel Department</string>
+
     <string name="createInvite1">Create New Invite</string>
     <string name="createGC">Create Groupchats</string>
     <string name="permKickUser">Kick Users</string>
@@ -100,12 +108,12 @@
     <string name="deleteRole">Delete Role</string>
 
 
-
-
     <!--card invite-->
     <string name="invite_code">Code: </string>
     <string name="valid_from_as_string">Valid From: </string>
     <string name="valid_to_as_string">Valid To: </string>
     <string name="invite_uses">Uses: </string>
 
+
+    <string name="btnReassign">Update Member</string>
 </resources>

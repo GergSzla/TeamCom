@@ -75,11 +75,10 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         app.database.child("channels").child(currentChannel!!.id).child("invites").orderByChild("valid_from")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
-                    info("Firebase roles error : ${error.message}")
+                    info("Firebase invites error : ${error.message}")
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
                         val invite = it.getValue<Invite>(Invite::class.java)

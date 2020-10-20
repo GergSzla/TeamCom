@@ -50,6 +50,10 @@ class SettingsFragment : Fragment(), AnkoLogger {
             navigateTo(InvitesListFragment.newInstance(currentChannel!!))
         }
 
+        root.txtSettingsDepts.setOnClickListener {
+            navigateTo(DepartmentList.newInstance(currentChannel))
+        }
+
         return root
     }
 

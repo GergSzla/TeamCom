@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.card_member.view.*
 
 
 interface MembersListener {
-    fun onMemberClick(channel: Channel)
+    fun onMemberClick(member: Member)
 }
 
 class MembersAdapter constructor(var members: ArrayList<Member>,
@@ -45,10 +45,10 @@ class MembersAdapter constructor(var members: ArrayList<Member>,
             //itemView.imageView3 TODO: ADD SHOW USER_IMAGE
             itemView.txtMemberName_card.text = member.firstName + " " + member.surname
 
-            if (member.department == ""){
+            if (member.department.dept_name == ""){
                 itemView.txtMemberDept_card.text = "[Department Not Assigned]"
             } else {
-                itemView.txtMemberDept_card.text = member.department
+                itemView.txtMemberDept_card.text = member.department.dept_name
             }
 
             if (member.role.role_name == ""){
@@ -61,7 +61,7 @@ class MembersAdapter constructor(var members: ArrayList<Member>,
             itemView.txtRoleNameCard.setTextColor(Color.parseColor(role.color_code))
             */
             itemView.setOnClickListener {
-                //listener.onMemberClick(channel)
+                listener.onMemberClick(member)
             }
         }
     }
