@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Role
 import kotlinx.android.synthetic.main.fragment_role_create.*
 import kotlinx.android.synthetic.main.fragment_role_create.view.*
@@ -41,6 +42,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                 role = it.getParcelable("role_key_edit")!!
             }
         }
+        app.getAllMembers(currentChannel!!.id)
     }
 
     override fun onCreateView(
@@ -183,6 +185,13 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                     val childUpdates = HashMap<String, Any>()
                     childUpdates["/channels/${currentChannel!!.id}/roles/${role.id}"] = role
                     app.database.updateChildren(childUpdates)
+
+
+                    app.generateDateID("1")
+                    val logUpdates = HashMap<String, Any>()
+                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "New Role [${role.role_name}] created.")
+                    logUpdates["/channels/${currentChannel!!.id}/logs/${new_log.log_id}"] = new_log
+                    app.database.updateChildren(logUpdates)
 
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)

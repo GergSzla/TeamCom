@@ -5,54 +5,113 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.LogAdapter
+import ie.wit.teamcom.adapters.LogListener
+import ie.wit.teamcom.adapters.RoleAdapter
+import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Log
+import ie.wit.teamcom.models.Role
+import kotlinx.android.synthetic.main.fragment_log.view.*
+import kotlinx.android.synthetic.main.fragment_role_list.view.*
+import kotlinx.android.synthetic.main.fragment_role_list.view.rolesRecyclerView
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import java.util.ArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LogFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class LogFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class LogFragment : Fragment(), AnkoLogger, LogListener {
+    lateinit var app: MainApp
+    lateinit var root: View
+    var currentChannel = Channel()
+    var logList = ArrayList<Log>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            currentChannel = it.getParcelable("channel_key")!!
         }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_log, container, false)
+        root = inflater.inflate(R.layout.fragment_log, container, false)
+        activity?.title = getString(R.string.title_logs)
+        root.logsRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        setSwipeRefresh()
+        return root
+    }
+
+    fun getAllChannelLogs() {
+        logList = ArrayList<Log>()
+        app.database.child("channels").child(currentChannel!!.id).child("logs").orderByChild("log_id")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase roles error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //hideLoader(loader)
+                    val children = snapshot.children
+                    children.forEach {
+                        val log = it.
+                        getValue<Log>(Log::class.java)
+                        logList.add(log!!)
+                        root.logsRecyclerView.adapter = LogAdapter(logList, this@LogFragment)
+                        root.logsRecyclerView.adapter?.notifyDataSetChanged()
+                        checkSwipeRefresh()
+                        app.database.child("channels").child(currentChannel!!.id).child("logs").orderByChild("log_id")
+                            .removeEventListener(this)
+                    }
+                }
+            })
+    }
+
+    fun setSwipeRefresh() {
+        root.logsrefreshLogs.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                root.logsrefreshLogs.isRefreshing = true
+                getAllChannelLogs()
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getAllChannelLogs()
+    }
+
+    fun checkSwipeRefresh() {
+        if (root.logsrefreshLogs.isRefreshing) root.logsrefreshLogs.isRefreshing = false
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LogFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(channel: Channel) =
             LogFragment().apply {
                 arguments = Bundle().apply {
+                    putParcelable("channel_key", channel)
                 }
             }
+    }
+
+    private fun navigateTo(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
+        fragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

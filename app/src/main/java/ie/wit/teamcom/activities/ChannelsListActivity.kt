@@ -32,8 +32,6 @@ import java.util.*
 
 class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
 
-    var user = Account()
-    lateinit var eventListener : ValueEventListener
     var ref = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().currentUser!!.uid)
     lateinit var app: MainApp
     var channelsList = ArrayList<Channel>()
@@ -49,7 +47,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         app.storage = FirebaseStorage.getInstance().reference
 
 
-        getUser()
+        app.getUser()
 
         //user = intent.getParcelableExtra("user_key")
         setSwipeRefresh()
@@ -94,7 +92,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
-                    user
+
                     children.forEach {
                         val channel = it.
                         getValue<Channel>(Channel::class.java)
@@ -123,29 +121,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         if (swiperefresh.isRefreshing) swiperefresh.isRefreshing = false
     }
 
-    private fun getUser(){
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val rootRef = FirebaseDatabase.getInstance().reference
-        val uidRef = rootRef.child("users").child(uid)
-        eventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                user.email = dataSnapshot.child("email").value.toString()
-                user.firstName = dataSnapshot.child("firstName").value.toString()
-                user.surname = dataSnapshot.child("surname").value.toString()
-                user.id = dataSnapshot.child("id").value.toString()
-                user.image = dataSnapshot.child("image").value.toString().toInt()
-                user.loginUsed = dataSnapshot.child("loginUsed").value.toString()
 
-                uidRef.removeEventListener(this)
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-            }
-        }
-        uidRef.addListenerForSingleValueEvent(eventListener)
-
-    }
 
     override fun onChannelClick(channel: Channel) {
         startActivity(intentFor<Home>().putExtra("channel_key",channel))

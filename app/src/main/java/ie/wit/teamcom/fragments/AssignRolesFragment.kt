@@ -13,10 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Department
-import ie.wit.teamcom.models.Member
-import ie.wit.teamcom.models.Role
+import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.fragment_assign_roles.*
 import kotlinx.android.synthetic.main.fragment_assign_roles.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -46,6 +43,7 @@ class AssignRolesFragment : Fragment(), AnkoLogger {
             selectedMember = it.getParcelable("member_key")!!
             currentChannel = it.getParcelable("channel_key")
         }
+        app.getAllMembers(currentChannel!!.id)
     }
 
     override fun onCreateView(
@@ -96,6 +94,11 @@ class AssignRolesFragment : Fragment(), AnkoLogger {
                         app.database.updateChildren(roleUpdates)
                         app.database.updateChildren(deptUpdates)
 
+                        app.generateDateID("1")
+                        val logUpdates = HashMap<String, Any>()
+                        var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "Role [${member_role.role_name}] and Department [${member_dept.dept_name}] has been assigned to ${selectedMember.firstName} ${selectedMember.surname}.")
+                        logUpdates["/channels/${currentChannel!!.id}/logs/${new_log.log_id}"] = new_log
+                        app.database.updateChildren(logUpdates)
 
                         app.database.child("channels").child(currentChannel!!.id).child("members").child(selectedMember.id)
                             .removeEventListener(this)

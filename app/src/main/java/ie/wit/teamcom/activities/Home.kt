@@ -19,11 +19,15 @@ import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Member
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
+import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
+import java.util.ArrayList
+
 
 class Home : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener {
@@ -59,7 +63,6 @@ class Home : AppCompatActivity(),
         ft = supportFragmentManager.beginTransaction()
         getUser()
         channel = intent.getParcelableExtra("channel_key")
-
     }
 
     //updates only image attribute of user
@@ -88,12 +91,11 @@ class Home : AppCompatActivity(),
                 user.surname = dataSnapshot.child("surname").value.toString()
                 user.id = dataSnapshot.child("id").value.toString()
                 user.image = dataSnapshot.child("image").value.toString().toInt()
-                user.loginUsed = dataSnapshot.child("loginUsed").value.toString()
+                user.login_used = dataSnapshot.child("login_used").value.toString()
 
                 var newsFeedFragment = NewsFeedFragment.newInstance(user)
                 navigateTo(NewsFeedFragment.newInstance(user))
                 navView.getHeaderView(0).nav_header_name.text = "${user.firstName} ${user.surname}"
-
                 uidRef.removeEventListener(this)
 
                 //image upload check
@@ -180,7 +182,7 @@ class Home : AppCompatActivity(),
             }
 
             R.id.nav_log -> {
-                navigateTo(LogFragment.newInstance())
+                navigateTo(LogFragment.newInstance(channel))
             }
 
             R.id.nav_members -> {

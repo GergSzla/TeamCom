@@ -20,6 +20,7 @@ import ie.wit.teamcom.adapters.DepartmentListener
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Department
+import ie.wit.teamcom.models.Log
 import kotlinx.android.synthetic.main.fragment_department_list.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -41,6 +42,8 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")!!
         }
+        app.getAllMembers(currentChannel.id)
+
     }
 
     override fun onCreateView(
@@ -148,8 +151,8 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
     private fun createDept(dept_name: String){
         dept.dept_name = dept_name
         dept.id = UUID.randomUUID().toString()
-        generateDateID()
-        dept.date_order_id = orderDateId
+        app.generateDateID("1")
+        dept.date_order_id = app.valid_from_cal
         writeNewDept()
     }
     private fun editDept(new_dept_name: String, dept2 : Department){
@@ -175,24 +178,6 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
             })
     }
 
-    fun generateDateID() {
-        var currentEndDateTime= LocalDateTime.now()
-        var year = Calendar.getInstance().get(Calendar.YEAR).toString()
-        var month = ""
-        if (Calendar.getInstance().get(Calendar.MONTH)+1 < 10){
-            month = "0"+(Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }else{
-            month = (Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
-        var hour = currentEndDateTime.format(DateTimeFormatter.ofPattern("HH")).toString()
-        var minutes = currentEndDateTime.format(DateTimeFormatter.ofPattern("mm")).toString()
-        var seconds = currentEndDateTime.format(DateTimeFormatter.ofPattern("ss")).toString()
-
-
-        var dateId = year+month+day+hour+minutes+seconds
-        orderDateId = 100000000000000 - dateId.toLong()
-    }
 
     fun writeNewDept(){
         app.database.child("channels").child(currentChannel!!.id)
@@ -207,7 +192,10 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
                     childUpdates["/channels/${currentChannel.id}/departments/${dept.id}"] = dept
                     app.database.updateChildren(childUpdates)
 
-
+                    val logUpdates = HashMap<String, Any>()
+                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "${app.currentActiveMember.firstName} ${app.currentActiveMember.surname} created a new Department [${dept.dept_name}].")
+                    logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
+                    app.database.updateChildren(logUpdates)
 
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)

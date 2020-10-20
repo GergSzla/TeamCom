@@ -137,7 +137,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     val user = app.auth.currentUser
                     app.database = FirebaseDatabase.getInstance().reference
                     writeNewUserStats(Account(id = app.auth.currentUser!!.uid, email = app.auth.currentUser!!.email.toString(), firstName = txtFirstName.text.toString(),
-                        surname = txtSurname.text.toString(), loginUsed = "firebaseAuth"))
+                        surname = txtSurname.text.toString(), login_used = "firebaseAuth"))
 
                 } else {
                     // If sign in fails, display a message to the user.
@@ -198,7 +198,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     val sname = user.displayName!!.substringAfter(" ")
                     writeNewUserStats(
                         Account(id = app.auth.currentUser!!.uid, email = app.auth.currentUser!!.email.toString(), firstName = fname,
-                        surname = sname, image = 0, loginUsed = "google")
+                        surname = sname, image = 0, login_used = "google")
                     )
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)

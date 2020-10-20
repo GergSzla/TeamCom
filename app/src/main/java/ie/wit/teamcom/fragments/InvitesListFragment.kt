@@ -19,10 +19,14 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.InviteAdapter
 import ie.wit.teamcom.adapters.InviteListener
+import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Invite
+import ie.wit.teamcom.models.Log
+import ie.wit.teamcom.models.Member
 import kotlinx.android.synthetic.main.fragment_invites_list.view.*
+import kotlinx.android.synthetic.main.fragment_members.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.time.LocalDateTime
@@ -33,14 +37,12 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
+
 class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
     lateinit var app: MainApp
     lateinit var root: View
     var currentChannel = Channel()
     var invitesList = ArrayList<Invite>()
-    var valid_from_cal: Long = 0
-    var valid_to_cal: Long = 0
-    var auto_delete_cal: Long = 0
     var invite = Invite()
     var key_set : String = ""
 
@@ -50,6 +52,8 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")!!
         }
+        app.getAllMembers(currentChannel.id)
+
     }
 
     override fun onCreateView(
@@ -149,10 +153,12 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
     }
 
     private fun createInvite(hrs_active: String, uses: String){
-        generateDateID(hrs_active)
-        invite.valid_from = valid_from_cal
-        invite.valid_to = valid_to_cal
-        invite.auto_deletion = auto_delete_cal
+        app.generateDateID(hrs_active)
+        invite.valid_to_as_string = app.valid_to_String
+        invite.valid_from_as_string = app.valid_from_String
+        invite.valid_from = app.valid_from_cal
+        invite.valid_to = app.valid_to_cal
+        invite.auto_deletion = app.auto_delete_cal
         invite.id = UUID.randomUUID().toString()
         invite.invite_uses = 0
         invite.invite_use_limit = uses.toInt()
@@ -162,126 +168,6 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
 
     }
 
-    fun generateDateID(hrs : String) {
-        /*
-        GETS VALID FROM
-         */
-        var currentEndDateTime= LocalDateTime.now()
-        var year = Calendar.getInstance().get(Calendar.YEAR).toString()
-        var month = ""
-        month = if (Calendar.getInstance().get(Calendar.MONTH)+1 < 10){
-            "0"+(Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }else{
-            (Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }
-
-        var day = ""
-        day = if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) < 10){
-            "0"+(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toString()
-        }else{
-            (Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toString()
-        }
-        var hour = currentEndDateTime.format(DateTimeFormatter.ofPattern("HH")).toString()
-        var minutes = currentEndDateTime.format(DateTimeFormatter.ofPattern("mm")).toString()
-        var seconds = currentEndDateTime.format(DateTimeFormatter.ofPattern("ss")).toString()
-
-        /*
-        NOW GET FOR VALID TO (+HRS VALID)
-         */
-        invite.valid_from_as_string = day+"/"+month+"/"+year+", "+hour+":"+minutes+":"+seconds
-
-        var dateId = year+month+day+hour+minutes+seconds
-
-        var cal = LocalDateTime.now().plusHours(hrs.toLong())
-
-        var year1 = cal.year.toString()
-        var month1  = ""
-        month1 = if (cal.monthValue < 10) {
-            "0" + (cal.monthValue).toString()
-        } else{
-            (cal.monthValue).toString()
-        }
-
-        var day1 =""
-        day1 = if (cal.dayOfMonth < 10) {
-            "0" + (cal.dayOfMonth).toString()
-        } else{
-            (cal.dayOfMonth).toString()
-        }
-
-        var hour1 = ""
-        hour1 = if (cal.hour < 10) {
-            "0" + (cal.hour).toString()
-        } else{
-            (cal.hour).toString()
-        }
-
-        var minutes1 = ""
-        minutes1 = if (cal.minute < 10) {
-            "0" + (cal.minute).toString()
-        } else{
-            (cal.minute).toString()
-        }
-
-        var seconds1= ""
-        seconds1 = if (cal.second < 10) {
-            "0" + (cal.second).toString()
-        } else{
-            (cal.second).toString()
-        }
-
-        invite.valid_to_as_string = day1+"/"+month1+"/"+year1+", "+hour1+":"+minutes1+":"+seconds1
-        var dateId_end = year1+month1+day1+hour1+minutes1+seconds1
-
-        /*
-        NOW GET AUTO DELETION
-         */
-
-        var cal1 = LocalDateTime.now().plusHours(hrs.toLong() + 36)
-
-        var year2 = cal1.year.toString()
-        var month2  = ""
-        month2 = if (cal1.monthValue+1 < 10) {
-            "0" + (cal1.monthValue + 1).toString()
-        } else{
-            (cal1.monthValue+1).toString()
-        }
-
-        var day2 =""
-        day2 = if (cal1.dayOfMonth < 10) {
-            "0" + (cal1.dayOfMonth).toString()
-        } else{
-            (cal1.dayOfMonth).toString()
-        }
-
-        var hour2 = ""
-        hour2 = if (cal1.hour < 10) {
-            "0" + (cal1.hour).toString()
-        } else{
-            (cal1.hour).toString()
-        }
-
-        var minutes2 = ""
-        minutes2 = if (cal1.minute < 10) {
-            "0" + (cal1.minute).toString()
-        } else{
-            (cal1.minute).toString()
-        }
-
-        var seconds2= ""
-        seconds2 = if (cal1.second < 10) {
-            "0" + (cal1.second).toString()
-        } else{
-            (cal1.second).toString()
-        }
-
-        var dateId_delete = year2+month2+day2+hour2+minutes2+seconds2
-
-
-        auto_delete_cal = 100000000000000 - dateId_delete.toLong()
-        valid_to_cal = 100000000000000 - dateId_end.toLong()
-        valid_from_cal = 100000000000000 - dateId.toLong()
-    }
 
     fun keyGen(){
         var res: Resources = resources
@@ -305,6 +191,8 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
                     val child1Updates = HashMap<String, Any>()
+                    val logUpdates = HashMap<String, Any>()
+
 
                     child1Updates["/invites/${invite.invite_code}/"] = invite
                     app.database.updateChildren(child1Updates)
@@ -312,6 +200,9 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
                     childUpdates["/invites/${invite.invite_code}/belongs_to/${currentChannel.id}"] = currentChannel
                     app.database.updateChildren(childUpdates)
 
+                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "Invite was created [${invite.invite_code}] with ${invite.invite_use_limit} uses and expires on ${invite.valid_to_as_string}.")
+                    logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
+                    app.database.updateChildren(logUpdates)
 
 
                     app.database.child("channels").child(currentChannel!!.id)
@@ -328,4 +219,8 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
             .addToBackStack(null)
             .commit()
     }
+
+    ///Log Nightmare Functions Below
+    //Get user as member (MUST HAVE ROLE!!!)
+
 }

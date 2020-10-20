@@ -14,7 +14,7 @@ data class Account (
     var surname:String = "",
     var email: String = "",
     var image: Int = 0,
-    var loginUsed: String ="",
+    var login_used: String ="",
     var channels:  ArrayList<Channel> = ArrayList<Channel>()) : Parcelable
 
 
@@ -27,7 +27,7 @@ data class Account (
             "surname" to surname,
             "email" to email,
             "image" to image,
-            "loginUsed" to loginUsed,
+            "login_used" to login_used,
             "channels" to channels
         )
     }

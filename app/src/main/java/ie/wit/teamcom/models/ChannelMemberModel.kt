@@ -29,7 +29,7 @@ data class Member (
             "surname" to surname,
             "email" to email,
             "image" to image,
-            "loginUsed" to login_used,
+            "login_used" to login_used,
             "department" to department,
             "role" to role
         )

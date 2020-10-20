@@ -10,9 +10,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.Account
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Role
+import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.activity_channel_create.*
 import org.jetbrains.anko.AnkoLogger
 import java.time.LocalDateTime
@@ -21,10 +19,8 @@ import java.util.*
 
 class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
-    var user = Account()
-    lateinit var eventListener : ValueEventListener
     lateinit var app: MainApp
-    var orderDateId :Long = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +31,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
-        getUser()
+        app.getUser()
         //user = intent.getParcelableExtra("user_key")
         btnCreateNew.setOnClickListener {
             createChannel(
@@ -49,56 +45,14 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    private fun getUser(){
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val rootRef = FirebaseDatabase.getInstance().reference
-        val uidRef = rootRef.child("users").child(uid)
-        eventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                user.email = dataSnapshot.child("email").value.toString()
-                user.firstName = dataSnapshot.child("firstName").value.toString()
-                user.surname = dataSnapshot.child("surname").value.toString()
-                user.id = dataSnapshot.child("id").value.toString()
-                user.image = dataSnapshot.child("image").value.toString().toInt()
-                user.loginUsed = dataSnapshot.child("loginUsed").value.toString()
-
-                uidRef.removeEventListener(this)
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-            }
-        }
-        uidRef.addListenerForSingleValueEvent(eventListener)
-
-    }
-
-    fun generateDateID() {
-        var currentEndDateTime= LocalDateTime.now()
-        var year = Calendar.getInstance().get(Calendar.YEAR).toString()
-        var month = ""
-        if (Calendar.getInstance().get(Calendar.MONTH)+1 < 10){
-            month = "0"+(Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }else{
-            month = (Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
-        var hour = currentEndDateTime.format(DateTimeFormatter.ofPattern("HH")).toString()
-        var minutes = currentEndDateTime.format(DateTimeFormatter.ofPattern("mm")).toString()
-        var seconds = currentEndDateTime.format(DateTimeFormatter.ofPattern("ss")).toString()
-
-
-        var dateId = year+month+day+hour+minutes+seconds
-        orderDateId = 100000000000000 - dateId.toLong()
-    }
 
     private fun createChannel(channel: Channel){
         val uid = app.auth.currentUser!!.uid
-        val userValues = user
+        val userValues = app.user
         var role = Role(id = UUID.randomUUID().toString(), role_name = "Admin", permission_code = "10000000000000", color_code = "b20202", isDefault = true)
         val roleValues = role
 
-        generateDateID()
+        app.generateDateID("1")
 
         val childUpdates = HashMap<String, Any>()
         childUpdates["/users/$uid/channels/${channel.id}"] = channel
@@ -108,13 +62,20 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         val userChildUpdates = HashMap<String, Any>()
         userChildUpdates["/channels/${channel.id}/members/$uid"] = userValues
         userChildUpdates["/channels/${channel.id}/admin/$uid"] = userValues
-        userChildUpdates["/users/$uid/channels/${channel.id}/orderDateId"] = orderDateId
+        userChildUpdates["/users/$uid/channels/${channel.id}/orderDateId"] = app.valid_from_cal
         app.database.updateChildren(userChildUpdates)
 
         val roleChildUpdates = HashMap<String, Any>()
         roleChildUpdates["/channels/${channel.id}/roles/${role.id}"] = roleValues
         roleChildUpdates["/channels/${channel.id}/members/$uid/role"] = roleValues
         app.database.updateChildren(roleChildUpdates)
+
+        var new_member = Member(id = uid, firstName = userValues.firstName, surname = userValues.surname, email = userValues.email, image = 0, login_used = userValues.login_used, role = roleValues)
+        var new_log = Log(log_id = app.valid_from_cal, log_triggerer = new_member, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "The channel, ${channel.channelName} has been successfully created.")
+        val logChildUpdate = HashMap<String, Any>()
+        logChildUpdate["/channels/${channel.id}/logs/${new_log.log_id}"] = new_log
+        app.database.updateChildren(logChildUpdate)
+
 
         finish()
     }

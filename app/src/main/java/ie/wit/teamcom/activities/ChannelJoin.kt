@@ -13,6 +13,7 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Log
 import kotlinx.android.synthetic.main.activity_channel_join.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -25,10 +26,8 @@ import kotlin.collections.ArrayList
 
 class ChannelJoin : AppCompatActivity() , AnkoLogger {
 
-    var user = Account()
-    lateinit var eventListener : ValueEventListener
+
     lateinit var app: MainApp
-    var currentDateId: Long = 0
     var channelList = ArrayList<Channel>()
 
 
@@ -41,8 +40,9 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
-        getUser()
+        app.getUser()
         btnJoinNew.setOnClickListener {
+            app.generateDateID("1")
             checkInvite(txtChannelCode.text.toString())
         }
     }
@@ -57,8 +57,8 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.hasChild(invite_code)){
-                        generateDateID()
-                        if(snapshot.child(invite_code).child("valid_to").value.toString().toLong() < currentDateId){
+                        app.generateDateID("1")
+                        if(snapshot.child(invite_code).child("valid_to").value.toString().toLong() < app.valid_from_cal){
                             val childUpdates = HashMap<String, Any>()
                             app.database.child("invites").child(invite_code).child("belongs_to")
                                 .addValueEventListener(object : ValueEventListener {
@@ -75,12 +75,17 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
                                             channelList.add(channel!!)
                                             val channelUpd = HashMap<String, Any>()
                                             childUpdates["/users/$uid/channels/${channelList[0].id}"] = channelList[0]
-                                            childUpdates["/channels/${channelList[0].id}/members/$uid"] = user
-                                            channelUpd["/users/$uid/channels/${channelList[0].id}/orderDateId"] = currentDateId
+                                            childUpdates["/channels/${channelList[0].id}/members/$uid"] = app.user
+                                            channelUpd["/users/$uid/channels/${channelList[0].id}/orderDateId"] = app.valid_from_cal
 
                                             app.database.updateChildren(childUpdates)
                                             app.database.updateChildren(channelUpd)
 
+                                            app.getAllMembers(channelList[0].id)
+                                            val logUpdates = HashMap<String, Any>()
+                                            var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "${app.user.firstName} ${app.user.surname} has joined the channel.")
+                                            logUpdates["/channels/${channelList[0].id}/logs/${new_log.log_id}"] = new_log
+                                            app.database.updateChildren(logUpdates)
 
                                             app.database.child("invites").child(invite_code).child("belongs_to")
                                                 .removeEventListener(this)
@@ -99,46 +104,7 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
             })
     }
 
-    fun generateDateID() {
-        var currentEndDateTime= LocalDateTime.now()
-        var year = Calendar.getInstance().get(Calendar.YEAR).toString()
-        var month = ""
-        if (Calendar.getInstance().get(Calendar.MONTH)+1 < 10){
-            month = "0"+(Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }else{
-            month = (Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
-        var hour = currentEndDateTime.format(DateTimeFormatter.ofPattern("HH")).toString()
-        var minutes = currentEndDateTime.format(DateTimeFormatter.ofPattern("mm")).toString()
-        var seconds = currentEndDateTime.format(DateTimeFormatter.ofPattern("ss")).toString()
 
 
-        var dateId = year+month+day+hour+minutes+seconds
-        currentDateId = 100000000000000 - dateId.toLong()
-    }
 
-    private fun getUser(){
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val rootRef = FirebaseDatabase.getInstance().reference
-        val uidRef = rootRef.child("users").child(uid)
-        eventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                user.email = dataSnapshot.child("email").value.toString()
-                user.firstName = dataSnapshot.child("firstName").value.toString()
-                user.surname = dataSnapshot.child("surname").value.toString()
-                user.id = dataSnapshot.child("id").value.toString()
-                user.image = dataSnapshot.child("image").value.toString().toInt()
-                user.loginUsed = dataSnapshot.child("loginUsed").value.toString()
-
-                uidRef.removeEventListener(this)
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-            }
-        }
-        uidRef.addListenerForSingleValueEvent(eventListener)
-
-    }
 }

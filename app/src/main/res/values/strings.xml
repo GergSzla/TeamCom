@@ -74,6 +74,8 @@
     <!--title Stuff-->
     <string name="title_settings">Channel Settings</string>
     <string name="title_roles_settings">Roles</string>
+    <string name="title_logs">Logs</string>
+
     <string name="title_invites_settings">Invites</string>
     <string name="title_department_settings">Departments</string>
     <string name="title_members_settings">Members</string>
