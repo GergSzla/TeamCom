@@ -93,8 +93,8 @@ class Home : AppCompatActivity(),
                 user.image = dataSnapshot.child("image").value.toString().toInt()
                 user.login_used = dataSnapshot.child("login_used").value.toString()
 
-                var newsFeedFragment = NewsFeedFragment.newInstance(user)
-                navigateTo(NewsFeedFragment.newInstance(user))
+                var newsFeedFragment = NewsFeedFragment.newInstance(channel)
+                navigateTo(NewsFeedFragment.newInstance(channel))
                 navView.getHeaderView(0).nav_header_name.text = "${user.firstName} ${user.surname}"
                 uidRef.removeEventListener(this)
 
@@ -152,7 +152,7 @@ class Home : AppCompatActivity(),
         when (item.itemId) {
             ///social
             R.id.nav_news_feed -> {
-                navigateTo(NewsFeedFragment.newInstance(user))
+                navigateTo(NewsFeedFragment.newInstance(channel))
             }
             R.id.nav_conversations -> {
                 navigateTo(ConversationFragment.newInstance())
@@ -209,7 +209,7 @@ class Home : AppCompatActivity(),
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START)
         else
-            navigateTo(NewsFeedFragment.newInstance(user))
+            navigateTo(NewsFeedFragment.newInstance(channel))
 
     }
 
