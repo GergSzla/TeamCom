@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.card_post.view.*
 
 interface PostListener {
     fun onLikeClicked(post: Post)
+    fun onCommentClicked(post: Post)
 }
 
 class PostAdapter constructor(
@@ -63,6 +64,14 @@ class PostAdapter constructor(
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         listener.onLikeClicked(post)
+                    }
+                }
+            })
+            itemView.btnComment.setOnClickListener(View.OnClickListener {
+                if (listener != null) {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onCommentClicked(post)
                     }
                 }
             })

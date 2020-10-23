@@ -49,12 +49,12 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         root = inflater.inflate(R.layout.fragment_news_feed, container, false)
         activity?.title = getString(R.string.title_news_feed)
         root.postsRecyclerView.layoutManager = LinearLayoutManager(activity)
-        getAllPosts()
+        //getAllPosts()
 
         root.imgBtnSend.setOnClickListener {
             sendPost()
         }
-        //setSwipeRefresh()
+        setSwipeRefresh()
         return root
     }
 
@@ -88,16 +88,15 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
-
+                    checkSwipeRefresh()
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
-                    //startActivity(intentFor<ChannelsListActivity>().putExtra("user_key", user))
                 }
             })
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshMembers.setOnRefreshListener(object :
+        root.swiperefreshPosts.setOnRefreshListener(object :
             SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 root.swiperefreshPosts.isRefreshing = true
@@ -114,7 +113,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         app.database.child("channels").child(currentChannel!!.id).child("posts").orderByChild("post_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
-                    info("Firebase roles error : ${error.message}")
+                    info("Firebase nf error : ${error.message}")
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -201,5 +200,9 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
 
     override fun onLikeClicked(post: Post) {
         getAllPostLikes(post)
+    }
+
+    override fun onCommentClicked(post: Post) {
+        navigateTo(PostCommentsFragment.newInstance(currentChannel, post))
     }
 }

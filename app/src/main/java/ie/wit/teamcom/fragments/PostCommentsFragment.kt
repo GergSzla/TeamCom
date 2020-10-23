@@ -5,56 +5,183 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.CommentListener
+import ie.wit.teamcom.adapters.CommentsAdapter
+import ie.wit.teamcom.adapters.PostAdapter
+import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Comment
+import ie.wit.teamcom.models.Log
+import ie.wit.teamcom.models.Post
+import kotlinx.android.synthetic.main.fragment_post_comments.view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [post_comments_fragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class PostCommentsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
+    lateinit var root: View
+    lateinit var app: MainApp
+    var commentsList = ArrayList<Comment>()
+    var likesList = ArrayList<String>()
+    var new_comment = Comment()
+    var currentPost = Post()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
+
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            currentChannel = it.getParcelable("channel_key")!!
+            currentPost = it.getParcelable("post_key")!!
         }
+        app.getAllMembers(currentChannel.id)
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_post_comments, container, false)
+        root = inflater.inflate(R.layout.fragment_post_comments, container, false)
+        activity?.title = getString(R.string.title_news_feed)
+        root.commentsRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        root.txtPostUserView.text = currentPost.post_author.firstName + " " + currentPost.post_author.surname
+        root.txtPostTimeAndDateView.text = currentPost.post_date +" @ "+ currentPost.post_time
+        root.txtPostContentView.text = currentPost.post_content
+
+
+        root.imgBtnPostComment.setOnClickListener {
+            sendComment()
+        }
+        setSwipeRefresh()
+        return root
+    }
+
+    fun setSwipeRefresh() {
+        root.swiperefreshComments.setOnRefreshListener(object :
+            SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                root.swiperefreshComments.isRefreshing = true
+                getAllComments()
+            }
+        })
+    }
+
+    fun checkSwipeRefresh() {
+        if (root.swiperefreshComments.isRefreshing) root.swiperefreshComments.isRefreshing = false
+    }
+
+    fun sendComment(){
+        app.generateDateID("1")
+        new_comment.comment_content = root.editComment.text.toString()
+        new_comment.id = UUID.randomUUID().toString()
+        new_comment.comment_date_id = app.valid_from_cal
+        new_comment.comment_author = app.currentActiveMember
+        new_comment.comment_date = app.dateAsString
+        new_comment.comment_time = app.timeAsString
+        createPost()
+        root.editComment.setText("")
+    }
+
+    fun createPost(){
+        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val childUpdates = HashMap<String, Any>()
+                    val logUpdates = HashMap<String, Any>()
+
+                    currentPost.post_comments.add(new_comment)
+                    childUpdates["/channels/${currentChannel.id}/posts/${currentPost.id}"] = currentPost
+                    app.database.updateChildren(childUpdates)
+
+                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "New Comment on " +
+                            "${currentPost.post_author.firstName} ${currentPost.post_author.surname}'s post")
+                    logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
+                    app.database.updateChildren(logUpdates)
+
+
+                    app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id)
+                        .removeEventListener(this)
+                    //startActivity(intentFor<ChannelsListActivity>().putExtra("user_key", user))
+                }
+            })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getAllComments()
+    }
+
+    fun getAllComments() {
+        commentsList = ArrayList<Comment>()
+        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id).child("post_comments")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase comments error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //hideLoader(loader)
+                    val children = snapshot.children
+                    children.forEach {
+                        val comment = it.getValue<Comment>(Comment::class.java)
+                        commentsList.add(comment!!)
+                        root.commentsRecyclerView.adapter = CommentsAdapter(commentsList,this@PostCommentsFragment)
+                        root.commentsRecyclerView.adapter?.notifyDataSetChanged()
+                        checkSwipeRefresh()
+                        app.database.child("channels").child(currentChannel!!.id).child("posts").child("post_comments")
+                            .removeEventListener(this)
+                    }
+                }
+            })
+    }
+
+    var alreadyLiked = false
+    fun getAllCommentLikes(comment: Comment){
+        likesList = ArrayList<String>()
+        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id).child("post_comments").child(comment.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase comments error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //hideLoader(loader)
+                    val children = snapshot.children
+                    children.forEach {
+                        val like = it.getValue<String>(String::class.java)
+                        likesList.add(like!!)
+
+                        checkSwipeRefresh()
+                        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id).child("post_comments").child(comment.id)
+                            .removeEventListener(this)
+                    }
+                }
+            })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment post_comments_fragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(channel: Channel, post: Post) =
             PostCommentsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putParcelable("channel_key", channel)
+                    putParcelable("post_key", post)
                 }
             }
+    }
+
+    override fun onLikeCommentClicked(comment: Comment) {
+        //getAllCommentLikes(comment)
     }
 }
