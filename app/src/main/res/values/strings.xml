@@ -62,6 +62,7 @@
 
     <!--fragment roles-->
     <string name="btnAddNewRole">Add New</string>
+    <string name="btnAddNewConvo">Start New Chat</string>
 
     <!--fragment invites-->
     <string name="btnAddNewInv">Create Invite</string>
@@ -79,9 +80,10 @@
     <string name="title_invites_settings">Invites</string>
     <string name="title_department_settings">Departments</string>
     <string name="title_members_settings">Members</string>
+    <string name="title_conversations">Conversations</string>
+    <string name="title_create_conversations">Start a Conversation</string>
     <string name="title_members_assignments">Assign Role And Department</string>
     <string name="title_news_feed">News Feed</string>
-
 
 
     <!--fragment_roles-->
@@ -120,4 +122,6 @@
 
 
     <string name="btnReassign">Update Member</string>
+    <string name="btnCreateConvo">Start Conversation</string>
+
 </resources>

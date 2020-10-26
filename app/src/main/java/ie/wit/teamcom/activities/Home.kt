@@ -155,7 +155,7 @@ class Home : AppCompatActivity(),
                 navigateTo(NewsFeedFragment.newInstance(channel))
             }
             R.id.nav_conversations -> {
-                navigateTo(ConversationFragment.newInstance())
+                navigateTo(ConversationFragment.newInstance(channel))
             }
             R.id.nav_meetings -> {
                 navigateTo(MeetingsFragment.newInstance())

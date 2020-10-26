@@ -25,9 +25,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.ArrayList
 
-lateinit var app: MainApp
-lateinit var eventListener : ValueEventListener
-lateinit var root: View
+
 var user = Member()
 var currentChannel = Channel()
 var memberList = ArrayList<Member>()
@@ -35,6 +33,10 @@ var memberList = ArrayList<Member>()
 
 
 class MembersFragment : Fragment() , AnkoLogger, MembersListener {
+
+    lateinit var app: MainApp
+    lateinit var eventListener : ValueEventListener
+    lateinit var root: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
