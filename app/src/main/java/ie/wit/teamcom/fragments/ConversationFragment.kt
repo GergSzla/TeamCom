@@ -131,6 +131,6 @@ class ConversationFragment : Fragment(), AnkoLogger, ConversationListener {
     }
 
     override fun onConversationClick(convo: Conversation) {
-        TODO("Not yet implemented")
+        navigateTo(MessagingFragment.newInstance(convo))
     }
 }

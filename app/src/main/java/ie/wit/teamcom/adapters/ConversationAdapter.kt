@@ -52,7 +52,8 @@ class ConversationAdapter constructor(var conversations: ArrayList<Conversation>
             if (conversation.messages.isEmpty()){
                 itemView.txtLastMessage.text = "Start Chatting!"
             }else{
-                itemView.txtLastMessage.text = conversation.messages[0].content
+                var size = conversation.messages.size
+                itemView.txtLastMessage.text = conversation.messages[size-1].content
             }
 
             itemView.setOnClickListener {
