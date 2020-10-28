@@ -172,7 +172,7 @@ class Home : AppCompatActivity(),
             }
 
             R.id.nav_reminders -> {
-                navigateTo(RemindersFragment.newInstance())
+                navigateTo(RemindersFragment.newInstance(channel))
             }
 
 

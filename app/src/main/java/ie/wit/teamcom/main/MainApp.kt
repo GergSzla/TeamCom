@@ -30,7 +30,10 @@ class MainApp : Application() {
     var valid_to_cal: Long = 0
     var auto_delete_cal: Long = 0
     var dateAsString = ""
+    var rem_dateAsString = ""
+    var rem_timeAsString = ""
     var timeAsString = ""
+    var reminder_date_id : Long = 0
     var valid_to_String = ""
     var valid_from_String = ""
     var user = Account()
@@ -193,6 +196,49 @@ class MainApp : Application() {
         valid_from_cal = 100000000000000 - dateId.toLong()
         dateAsString = "$day/$month/$year"
         timeAsString = "$hour:$minutes"
+    }
+
+    fun generate_date_reminder_id(dd: String , m: String, yy: String, hh: String, mm: String, ss: String){
+        var year = yy
+        var month  = ""
+        month = if (m.toInt() < 10) {
+            "0" + (m.toInt()).toString()
+        } else{
+            (m.toInt()).toString()
+        }
+
+        var day =""
+        day = if (dd.toInt() < 10) {
+            "0" + (dd.toInt()).toString()
+        } else{
+            (dd.toInt()).toString()
+        }
+
+        var hour = ""
+        hour = if (hh.toInt() < 10) {
+            "0" + (hh.toInt()).toString()
+        } else{
+            (hh.toInt()).toString()
+        }
+
+        var minutes = ""
+        minutes = if (mm.toInt() < 10) {
+            "0" + (mm.toInt()).toString()
+        } else{
+            (mm.toInt()).toString()
+        }
+
+        var seconds = ""
+        seconds = if (ss.toInt() < 10) {
+            "0" + (ss.toInt()).toString()
+        } else{
+            (ss.toInt()).toString()
+        }
+
+        var date = year+month+day+hour+minutes+seconds
+        rem_dateAsString = "${day}/${month}/${year}"
+        rem_timeAsString = "${hour}:${minutes}"
+        reminder_date_id = 100000000000000 - date.toLong()
     }
 
     fun getUser(){
