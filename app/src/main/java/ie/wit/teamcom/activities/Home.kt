@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.startActivity
 import java.util.ArrayList
+import java.util.HashMap
 
 
 class Home : AppCompatActivity(),
@@ -105,6 +106,11 @@ class Home : AppCompatActivity(),
             if (it.rem_reminder_date_it >= app.valid_from_cal && it.rem_date_id <= app.valid_from_cal){
                 due_soon ++
                 rems +="\""+it.rem_msg+ "\""+", "
+            } else if (it.rem_date_id > app.valid_from_cal){
+                it.rem_status = "Overdue"
+                val childUpdates = HashMap<String, Any>()
+                childUpdates["/channels/${currentChannel!!.id}/reminders/${app.currentActiveMember.id}/${it.id}/"] = it
+                app.database.updateChildren(childUpdates)
             }
         }
         if (due_soon != 0){
@@ -229,48 +235,63 @@ class Home : AppCompatActivity(),
         notificationManager?.notify(notificationID, notification)
     }
 
+    fun recurring_methods(){
+        getActiveReminders(channel.id)
+
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
             ///social
             R.id.nav_news_feed -> {
+                recurring_methods()
                 navigateTo(NewsFeedFragment.newInstance(channel))
             }
             R.id.nav_conversations -> {
+                recurring_methods()
                 navigateTo(ConversationFragment.newInstance(channel))
             }
             R.id.nav_meetings -> {
+                recurring_methods()
                 navigateTo(MeetingsFragment.newInstance())
             }
 
 
             ///Organizational
             R.id.nav_calendar -> {
+                recurring_methods()
                 navigateTo(CalendarFragment.newInstance())
             }
 
             R.id.nav_tasks -> {
+                recurring_methods()
                 navigateTo(TasksFragment.newInstance())
             }
 
             R.id.nav_reminders -> {
+                recurring_methods()
                 navigateTo(RemindersFragment.newInstance(channel))
             }
 
 
             ///Channel
             R.id.nav_channel_settings -> {
+                recurring_methods()
                 navigateTo(SettingsFragment.newInstance(channel))
             }
 
             R.id.nav_log -> {
+                recurring_methods()
                 navigateTo(LogFragment.newInstance(channel))
             }
 
             R.id.nav_members -> {
+                recurring_methods()
                 navigateTo(MembersFragment.newInstance(channel))
             }
             R.id.nav_support -> {
+                recurring_methods()
                 navigateTo(SupportFragment.newInstance())
             }
             /////////////////////////

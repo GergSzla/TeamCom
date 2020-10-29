@@ -10,6 +10,7 @@ import ie.wit.teamcom.models.Post
 import ie.wit.teamcom.models.Reminder
 import kotlinx.android.synthetic.main.card_post.view.*
 import kotlinx.android.synthetic.main.card_reminder.view.*
+import kotlinx.android.synthetic.main.card_role.view.*
 
 
 interface ReminderListener {
@@ -47,6 +48,11 @@ class RemindersAdapter constructor(
 
             itemView.txtRemMsg.text = reminder.rem_msg
             itemView.txtRemDandT.text = reminder.rem_date_as_string +" - "+ reminder.rem_time_as_string
+            itemView.txtRemStatus.text = reminder.rem_status
+
+            if (reminder.rem_status == "Overdue"){
+                itemView.txtRemStatus.setTextColor(Color.parseColor("#d00000"))
+            }
         }
     }
 }
