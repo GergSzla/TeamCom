@@ -1,5 +1,10 @@
 package ie.wit.teamcom.activities
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,18 +18,15 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.R
 import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Member
+import ie.wit.teamcom.models.Reminder
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
-import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
 import java.util.ArrayList
 
@@ -38,6 +40,10 @@ class Home : AppCompatActivity(),
     var user = Account()
     lateinit var eventListener : ValueEventListener
     var channel = Channel()
+    var reminderList = ArrayList<Reminder>()
+    var num_reminders = 0
+    lateinit var notificationManager : NotificationManager
+    var reminders_list = ArrayList<Reminder>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,10 +67,54 @@ class Home : AppCompatActivity(),
         //navView.getHeaderView(0).nav_header_email.text = app.auth.currentUser?.email
 
         ft = supportFragmentManager.beginTransaction()
-        getUser()
+
         channel = intent.getParcelableExtra("channel_key")
+        app.getAllMembers(channel.id)
+        getUser()
+        notificationManager =
+            getSystemService(
+                Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    }
+    fun getActiveReminders(channel_id: String){
+        app.database.child("channels").child(channel_id).child("reminders").child(app.currentActiveMember.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val children = dataSnapshot.children
+                    children.forEach {
+                        val reminder = it.getValue<Reminder>(Reminder::class.java)
+                        reminders_list.add(reminder!!)
+                        app.database.child("channels").child(currentChannel!!.id).child("reminders")
+                            .child(app.currentActiveMember.id).removeEventListener(this)
+                    }
+                    checkActiveReminders()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+            })
     }
 
+    fun checkActiveReminders(){
+        app.generateDateID("1")
+        var due_soon = 0
+        //var reminders_desc = ArrayList<String>()
+        var rems = ""
+
+        reminders_list.forEach {
+            if (it.rem_reminder_date_it >= app.valid_from_cal && it.rem_date_id <= app.valid_from_cal){
+                due_soon ++
+                rems +="\""+it.rem_msg+ "\""+", "
+            }
+        }
+        if (due_soon != 0){
+            rems = rems.substring(0, rems.length - 2)
+            createNotificationChannel("ie.wit.teamcom",
+                "${due_soon} Upcoming reminder(s)!",
+                "${rems} are due within 24 hours!")
+        }
+
+    }
     //updates only image attribute of user
     fun updateUserProfile(uid: String?, image: Int) {
         app.database.child("user-stats").child(uid!!).child("image")
@@ -92,6 +142,7 @@ class Home : AppCompatActivity(),
                 user.id = dataSnapshot.child("id").value.toString()
                 user.image = dataSnapshot.child("image").value.toString().toInt()
                 user.login_used = dataSnapshot.child("login_used").value.toString()
+                getActiveReminders(channel.id)
 
                 var newsFeedFragment = NewsFeedFragment.newInstance(channel)
                 navigateTo(NewsFeedFragment.newInstance(channel))
@@ -145,6 +196,37 @@ class Home : AppCompatActivity(),
         }
         uidRef.addListenerForSingleValueEvent(eventListener)
 
+    }
+
+    fun createNotificationChannel(id: String, name: String,
+                                  description: String) {
+
+        val importance = NotificationManager.IMPORTANCE_LOW
+        val notific_channel = NotificationChannel(id, name, importance)
+
+        notific_channel.description = description
+        notific_channel.enableLights(true)
+        notific_channel.lightColor = Color.RED
+        notific_channel.enableVibration(true)
+        notific_channel.vibrationPattern =
+            longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+        notificationManager?.createNotificationChannel(notific_channel)
+
+        val notificationID = 101
+
+        val channelID = id
+
+
+        val notification = Notification.Builder(this@Home,
+            channelID)
+            .setContentTitle(name)
+            .setContentText(description)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setChannelId(channelID)
+            .build()
+
+
+        notificationManager?.notify(notificationID, notification)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

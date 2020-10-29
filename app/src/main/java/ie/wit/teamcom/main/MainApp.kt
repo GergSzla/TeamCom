@@ -1,17 +1,30 @@
 package ie.wit.teamcom.main
 
 import android.app.Application
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.graphics.Color
 import android.net.Uri
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.ReminderListener
+import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.fragments.currentChannel
 import ie.wit.teamcom.fragments.memberList
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Member
+import ie.wit.teamcom.models.Reminder
+import kotlinx.android.synthetic.main.fragment_reminders.view.*
+import org.jetbrains.anko.info
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -25,6 +38,7 @@ class MainApp : Application() {
     lateinit var userImage: Uri
     var currentActiveMember: Member = Member()
     var membersList = ArrayList<Member>()
+    var reminders_list = ArrayList<Reminder>()
 
     var valid_from_cal: Long = 0
     var valid_to_cal: Long = 0
@@ -33,19 +47,56 @@ class MainApp : Application() {
     var rem_dateAsString = ""
     var rem_timeAsString = ""
     var timeAsString = ""
-    var reminder_date_id : Long = 0
+    var reminder_due_date_id : Long = 0
     var valid_to_String = ""
     var valid_from_String = ""
     var user = Account()
     lateinit var eventListener : ValueEventListener
-
+    lateinit var notificationManager : NotificationManager
 
     override fun onCreate() {
         super.onCreate()
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
         storage = FirebaseStorage.getInstance().reference
+
+        notificationManager =
+            getSystemService(
+                Context.NOTIFICATION_SERVICE) as NotificationManager
+
     }
+
+    fun createNotificationChannel(id: String, name: String,
+                                          description: String) {
+
+        val importance = NotificationManager.IMPORTANCE_LOW
+        val channel = NotificationChannel(id, name, importance)
+
+        channel.description = description
+        channel.enableLights(true)
+        channel.lightColor = Color.RED
+        channel.enableVibration(true)
+        channel.vibrationPattern =
+            longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+        notificationManager?.createNotificationChannel(channel)
+
+        val notificationID = 101
+
+        val channelID = id
+
+        val notification = Notification.Builder(this@MainApp,
+            channelID)
+            .setContentTitle(name)
+            .setContentText(description)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setChannelId(channelID)
+            .setActions()
+            .build()
+
+        notificationManager?.notify(notificationID, notification)
+    }
+
+
     fun getAllMembers(channel_id:String) {
         membersList = ArrayList<Member>()
         database.child("channels").child(channel_id).child("members")
@@ -63,11 +114,52 @@ class MainApp : Application() {
                         database.child("channels").child(channel_id).child("members")
                             .removeEventListener(this)
                     }
-                    getCurrentActiveMember()
+                    getCurrentActiveMember(channel_id)
                 }
             })
     }
-    fun getCurrentActiveMember(){
+
+    fun getActiveReminders(channel_id: String){
+        database.child("channels").child(channel_id).child("reminders").child(currentActiveMember.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val children = dataSnapshot.children
+                    children.forEach {
+                        val reminder = it.getValue<Reminder>(Reminder::class.java)
+                        reminders_list.add(reminder!!)
+                        database.child("channels").child(currentChannel!!.id).child("reminders")
+                            .child(currentActiveMember.id).removeEventListener(this)
+                    }
+                    checkActiveReminders()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+            })
+    }
+
+    fun checkActiveReminders(){
+        generateDateID("1")
+        var due_soon = 0
+        //var reminders_desc = ArrayList<String>()
+        var rems = ""
+
+        reminders_list.forEach {
+            if (it.rem_reminder_date_it >= valid_from_cal && it.rem_date_id <= valid_from_cal){
+                due_soon ++
+                rems +="\""+it.rem_msg+ "\""+", "
+            }
+        }
+        if (due_soon != 0){
+            rems = rems.substring(0, rems.length - 2)
+            createNotificationChannel("ie.wit.teamcom",
+                "${due_soon} Upcoming reminder(s)!",
+                "${rems} are due within 24 hours!")
+        }
+
+    }
+
+    fun getCurrentActiveMember(channel_id: String){
         membersList.forEach {
             if(it.id == auth.currentUser!!.uid){
                 currentActiveMember = it
@@ -198,6 +290,8 @@ class MainApp : Application() {
         timeAsString = "$hour:$minutes"
     }
 
+
+
     fun generate_date_reminder_id(dd: String , m: String, yy: String, hh: String, mm: String, ss: String){
         var year = yy
         var month  = ""
@@ -238,7 +332,7 @@ class MainApp : Application() {
         var date = year+month+day+hour+minutes+seconds
         rem_dateAsString = "${day}/${month}/${year}"
         rem_timeAsString = "${hour}:${minutes}"
-        reminder_date_id = 100000000000000 - date.toLong()
+        reminder_due_date_id = 100000000000000 - date.toLong()
     }
 
     fun getUser(){

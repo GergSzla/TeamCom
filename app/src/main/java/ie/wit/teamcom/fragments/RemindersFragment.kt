@@ -129,11 +129,24 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
             var date_seconds = remind_date.get(Calendar.SECOND).toString()
 
             app.generate_date_reminder_id(date_day,date_month,date_year,date_hour,date_minute,date_seconds)
-
-            new_reminder.rem_date_id = app.reminder_date_id
+            new_reminder.rem_date_id = app.reminder_due_date_id
             new_reminder.rem_date_as_string = app.rem_dateAsString
             new_reminder.rem_time_as_string = app.rem_timeAsString
+
+            val ddate = Calendar.getInstance()
+            ddate.set(date_year.toInt(),date_month.toInt(),date_day.toInt()-1,date_hour.toInt(),date_minute.toInt())
+            var d = ddate.get(Calendar.DATE).toString()
+            var m = ddate.get(Calendar.MONTH).toString()
+            var y = ddate.get(Calendar.YEAR).toString()
+            var h = ddate.get(Calendar.HOUR_OF_DAY).toString()
+            var mm = ddate.get(Calendar.MINUTE).toString()
+            var s = ddate.get(Calendar.SECOND).toString()
+
+            app.generate_date_reminder_id(d,m,y,h,mm,s)
+
+            new_reminder.rem_reminder_date_it = app.reminder_due_date_id
             new_reminder.rem_msg = message.text.toString()
+            new_reminder.rem_status = ""
 
             createReminder()
         }
@@ -152,9 +165,6 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                     val childUpdates = HashMap<String, Any>()
                     childUpdates["/channels/${currentChannel!!.id}/reminders/${app.currentActiveMember.id}/${new_reminder.id}/"] = new_reminder
                     app.database.updateChildren(childUpdates)
-
-
-
 
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)

@@ -57,7 +57,7 @@ class PostAdapter constructor(
             itemView.txtPostContent.text = "${post.post_content}"
 
             itemView.btnLike.text = "Like (${post.post_likes})"
-            itemView.btnComment.text = "Comments (${post.post_comments_total})"
+            itemView.btnComment.text = "Comments (${post.post_comments.size})"
 
             itemView.btnLike.setOnClickListener(View.OnClickListener {
                 if (listener != null) {
