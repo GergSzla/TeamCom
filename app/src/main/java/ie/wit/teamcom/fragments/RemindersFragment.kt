@@ -90,6 +90,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                 requireContext(),
                 { view, year, month, dayOfMonth ->
                     val time = TimePickerDialog(
+
                         requireContext(),
                         { view, hourOfDay, minute ->
                             newDate[year, month, dayOfMonth, hourOfDay, minute] = 0

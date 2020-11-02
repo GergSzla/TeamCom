@@ -81,6 +81,7 @@
     <string name="title_department_settings">Departments</string>
     <string name="title_members_settings">Members</string>
     <string name="title_conversations">Conversations</string>
+    <string name="title_calendar">Team Calendar</string>
     <string name="title_create_conversations">Start a Conversation</string>
     <string name="title_members_assignments">Assign Role And Department</string>
     <string name="title_news_feed">News Feed</string>

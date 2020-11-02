@@ -261,7 +261,7 @@ class Home : AppCompatActivity(),
             ///Organizational
             R.id.nav_calendar -> {
                 recurring_methods()
-                navigateTo(CalendarFragment.newInstance())
+                navigateTo(CalendarFragment.newInstance(channel))
             }
 
             R.id.nav_tasks -> {

@@ -5,53 +5,81 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import androidx.recyclerview.widget.LinearLayoutManager
 import ie.wit.teamcom.R
+import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.models.Channel
+import kotlinx.android.synthetic.main.fragment_calendar.view.*
+import org.jetbrains.anko.AnkoLogger
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class CalendarFragment : Fragment(), AnkoLogger {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CalendarFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class CalendarFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var app: MainApp
+    lateinit var root: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
+
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            currentChannel = it.getParcelable("channel_key")!!
         }
+
+        app.getAllMembers(currentChannel.id)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar, container, false)
+        root = inflater.inflate(R.layout.fragment_calendar, container, false)
+        activity?.title = getString(R.string.title_calendar)
+        root.calendarRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        var day = ""
+        var month = ""
+        var cal = Calendar.getInstance()
+        val dateDialog = root.calPickDate
+
+        dateDialog.minDate = Calendar.getInstance().timeInMillis
+
+        var today = "" //TODO: GET DATE ID RANGE? / SAVE DATE AS DD-MM-YYYY (STRING) TO DB
+
+        //TODO: CONVERT TODAY'S DATE TO DD-MM-YYYY FORMAT
+        getEventsForDate(today)
+
+        dateDialog.setOnDateChangedListener { datePicker, yyyy, mm, dd ->
+
+            day = if(dd < 10){
+                "0$dd"
+            } else {
+                "$dd"
+            }
+
+            month = if(mm < 10){
+                "0${mm + 1}"
+            } else {
+                "${mm + 1}"
+            }
+
+            var selected_date = "$day-$month-$yyyy"
+            getEventsForDate(selected_date)
+            //TODO: CONVERT DATEPICKER VALUE TO DD-MM-YYYY
+        }
+        return root
+    }
+
+    fun getEventsForDate(date : String){
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CalendarFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(channel: Channel) =
             CalendarFragment().apply {
                 arguments = Bundle().apply {
+                    putParcelable("channel_key", channel)
                 }
             }
     }

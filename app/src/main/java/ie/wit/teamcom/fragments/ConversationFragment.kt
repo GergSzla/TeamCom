@@ -30,7 +30,6 @@ import java.util.ArrayList
 class ConversationFragment : Fragment(), AnkoLogger, ConversationListener {
 
     lateinit var app: MainApp
-    lateinit var eventListener : ValueEventListener
     lateinit var root: View
     var conversationList = ArrayList<Conversation>()
 
