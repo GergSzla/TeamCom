@@ -5,54 +5,81 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.MeetingListener
+import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Meeting
+import kotlinx.android.synthetic.main.fragment_meetings.view.*
+import org.jetbrains.anko.AnkoLogger
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MeetingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MeetingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var app: MainApp
+    lateinit var root: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
+
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            currentChannel = it.getParcelable("channel_key")!!
         }
+        app.getAllMembers(currentChannel.id)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meetings, container, false)
+        root = inflater.inflate(R.layout.fragment_meetings, container, false)
+        activity?.title = getString(R.string.title_conversations)
+        root.meetingsRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        root.btnAddNewMeeting.setOnClickListener {
+
+        }
+
+        return root
+    }
+
+    fun getAllMeetings(){
+
+    }
+
+    fun setSwipeRefresh() {
+        root.swiperefreshMeetings.setOnRefreshListener(object :
+            SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                root.swiperefreshMeetings.isRefreshing = true
+                getAllMeetings()
+            }
+        })
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        getAllMeetings()
+    }
+
+    fun checkSwipeRefresh() {
+        if (root.swiperefreshMeetings.isRefreshing) root.swiperefreshMeetings.isRefreshing = false
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MeetingsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(channel: Channel) =
             MeetingsFragment().apply {
                 arguments = Bundle().apply {
+                    putParcelable("channel_key", channel)
                 }
             }
+    }
+
+    override fun onMeetingClicked(meeting: Meeting) {
+        TODO("Not yet implemented")
     }
 }
