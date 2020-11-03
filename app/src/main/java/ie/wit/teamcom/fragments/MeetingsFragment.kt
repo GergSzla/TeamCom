@@ -121,6 +121,6 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
     }
 
     override fun onMeetingClicked(meeting: Meeting) {
-        TODO("Not yet implemented")
+        navigateTo(ViewMeetingFragment.newInstance(meeting, currentChannel))
     }
 }

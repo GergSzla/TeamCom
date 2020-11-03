@@ -47,10 +47,14 @@ class MeetingsAdapter constructor(
             itemView.txtMDesc.text = meeting.meeting_desc
             itemView.txtMDateAndTime.text = "${meeting.meeting_date_as_string} @ ${meeting.meeting_time_as_string}"
 
-            if(meeting.online == true){
+            if(meeting.online){
                 itemView.txtMLocationElsePlatform.text = "Online via: ${meeting.meeting_platform}"
             } else {
                 itemView.txtMLocationElsePlatform.text = "Location: ${meeting.meeting_location}"
+            }
+
+            itemView.setOnClickListener {
+                listener.onMeetingClicked(meeting)
             }
         }
     }

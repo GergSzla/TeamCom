@@ -5,37 +5,131 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.MembersAdapter
+import ie.wit.teamcom.adapters.MembersListener
+import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Meeting
+import ie.wit.teamcom.models.Member
+import kotlinx.android.synthetic.main.fragment_view_meeting.view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import java.util.ArrayList
 
-class ViewMeetingFragment : Fragment() {
+class ViewMeetingFragment : Fragment(),AnkoLogger, MembersListener{
+
+    lateinit var app: MainApp
+    lateinit var root: View
+    var selected_meeting = Meeting()
+    var memberList = ArrayList<Member>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
+
+        arguments?.let {
+            selected_meeting = it.getParcelable("meeting_key")!!
+            currentChannel = it.getParcelable("channel_key")!!
+
+        }
+        app.getAllMembers(currentChannel.id)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_meeting, container, false)
+        root = inflater.inflate(R.layout.fragment_view_meeting, container, false)
+        activity?.title = selected_meeting.meeting_title
+        root.meetingMembersRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+
+        root.linearNotOnline.isVisible = false
+        root.linearOnline.isVisible = false
+
+        if (selected_meeting.meeting_creator.id == app.currentActiveMember.id){
+            root.btnCancelMeeting.isVisible = true
+            root.btnUpdateMeeting.isVisible = true
+        } else {
+            root.btnCancelMeeting.isVisible = false
+            root.btnUpdateMeeting.isVisible = false
+        }
+
+        root.textViewTitle.text = selected_meeting.meeting_title
+        root.textViewDesc.text = selected_meeting.meeting_desc
+        root.textViewDateAndTime.text = "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}"
+
+        if(selected_meeting.online){
+            root.linearOnline.isVisible = true
+            root.linearNotOnline.isVisible = false
+
+            root.textViewPlatform.text = selected_meeting.meeting_platform
+            root.textViewID.text = selected_meeting.meeting_id
+            root.textViewPasscode.text = selected_meeting.meeting_passcode
+        } else {
+            root.linearOnline.isVisible = false
+            root.linearNotOnline.isVisible = true
+
+            root.textViewLoc.text = selected_meeting.meeting_location
+        }
+
+        root.btnUpdateMeeting.setOnClickListener {
+            //TODO: EDIT/UPDATE Fragment
+        }
+
+        root.btnCancelMeeting.setOnClickListener {
+            //TODO: WARNING POPUP
+            //TODO: DELETE MEETING
+        }
+        getAllMeetingMembers()
+
+        return root
+    }
+
+    fun getAllMeetingMembers() {
+        memberList = ArrayList<Member>()
+        app.database.child("channels").child(currentChannel!!.id).child("meetings").child(selected_meeting.meeting_uuid).child("participants")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase roles error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //hideLoader(loader)
+                    val children = snapshot.children
+                    children.forEach {
+                        val member = it.getValue<Member>(Member::class.java)
+                        memberList.add(member!!)
+                        root.meetingMembersRecyclerView.adapter = MembersAdapter(
+                            memberList,
+                            this@ViewMeetingFragment
+                        )
+                        root.meetingMembersRecyclerView.adapter?.notifyDataSetChanged()
+                        app.database.child("channels").child(currentChannel!!.id).child("meetings").child(selected_meeting.meeting_uuid).child("participants")
+                            .removeEventListener(this)
+                    }
+                }
+            })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ViewMeetingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(meeting: Meeting, channel: Channel) =
             ViewMeetingFragment().apply {
                 arguments = Bundle().apply {
+                    putParcelable("meeting_key", meeting)
+                    putParcelable("channel_key", channel)
                 }
             }
+    }
+
+    override fun onMemberClick(member: Member) {
+        //TODO: GO TO MEMBER PROFILE
     }
 }
