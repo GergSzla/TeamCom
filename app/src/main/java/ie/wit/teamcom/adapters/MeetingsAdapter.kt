@@ -50,7 +50,7 @@ class MeetingsAdapter constructor(
             if(meeting.online == true){
                 itemView.txtMLocationElsePlatform.text = "Online via: ${meeting.meeting_platform}"
             } else {
-                itemView.txtMLocationElsePlatform.text = "Location: ${meeting.meeting_platform}"
+                itemView.txtMLocationElsePlatform.text = "Location: ${meeting.meeting_location}"
             }
         }
     }

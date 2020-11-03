@@ -254,7 +254,7 @@ class Home : AppCompatActivity(),
             }
             R.id.nav_meetings -> {
                 recurring_methods()
-                navigateTo(MeetingsFragment.newInstance())
+                navigateTo(MeetingsFragment.newInstance(channel))
             }
 
 

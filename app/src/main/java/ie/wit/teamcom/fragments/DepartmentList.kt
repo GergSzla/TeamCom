@@ -169,7 +169,17 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
                     childUpdates["/channels/${currentChannel.id}/departments/${dept2.id}/"] = dept2
                     app.database.updateChildren(childUpdates)
 
-
+                    app.generateDateID("1")
+                    val logUpdates = HashMap<String, Any>()
+                    var new_log = Log(
+                        log_id = app.valid_from_cal,
+                        log_triggerer = app.currentActiveMember,
+                        log_date = app.dateAsString,
+                        log_time = app.timeAsString,
+                        log_content = "${app.currentActiveMember.firstName} ${app.currentActiveMember.surname} made changes to Department : ${dept.dept_name}."
+                    )
+                    logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
+                    app.database.updateChildren(logUpdates)
 
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)

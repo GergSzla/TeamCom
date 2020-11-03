@@ -79,20 +79,27 @@ class AssignRolesFragment : Fragment(), AnkoLogger {
                 }
             }
 
+            member_dept.dept_members.add(selectedMember)
+
             app.database.child("channels").child(currentChannel!!.id).child("members").child(selectedMember.id)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
                     }
 
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val roleUpdates = HashMap<String, Any>()
+                        val userRoleUpdates = HashMap<String, Any>()
+                        val userDeptUpdates = HashMap<String, Any>()
                         val deptUpdates = HashMap<String, Any>()
 
-                        roleUpdates["/channels/${currentChannel!!.id}/members/${selectedMember.id}/role/"] = member_role
-                        deptUpdates["/channels/${currentChannel!!.id}/members/${selectedMember.id}/department/"] = member_dept
+                        userRoleUpdates["/channels/${currentChannel!!.id}/members/${selectedMember.id}/role/"] = member_role
+                        userDeptUpdates["/channels/${currentChannel!!.id}/members/${selectedMember.id}/department/"] = member_dept
+                        deptUpdates["/channels/${currentChannel!!.id}/departments/${member_dept.id}/"] = member_dept
 
-                        app.database.updateChildren(roleUpdates)
+
+                        app.database.updateChildren(userRoleUpdates)
+                        app.database.updateChildren(userDeptUpdates)
                         app.database.updateChildren(deptUpdates)
+
 
                         app.generateDateID("1")
                         val logUpdates = HashMap<String, Any>()

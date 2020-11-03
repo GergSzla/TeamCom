@@ -101,4 +101,34 @@
         <item>9</item>
         <item>0</item>
     </string-array>
+
+    <string-array name="platforms">
+        <item>
+            GoToMeeting
+        </item>
+
+        <item>
+            Google Hangouts
+        </item>
+
+        <item>
+            Zoom
+        </item>
+
+        <item>
+            Skype
+        </item>
+
+        <item>
+            Microsoft Teams
+        </item>
+
+        <item>
+            Join.me
+        </item>
+
+        <item>
+            Other
+        </item>
+    </string-array>
 </resources>

@@ -10,6 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class Department (
     var id:String = "" /*UUID*/,
     var dept_name:String ="",
+    var dept_members: ArrayList<Member> = ArrayList<Member>(),
     var date_order_id:Long = 0
 ) : Parcelable
 
@@ -19,6 +20,7 @@ data class Department (
         return mapOf(
             "id" to id,
             "dept_name" to dept_name,
+            "dept_members" to dept_members,
             "date_order_id" to date_order_id
         )
     }

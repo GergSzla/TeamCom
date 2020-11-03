@@ -82,11 +82,23 @@
     <string name="title_members_settings">Members</string>
     <string name="title_conversations">Conversations</string>
     <string name="title_meetings">Meetings</string>
+    <string name="title_create_meetings">Create Meeting</string>
     <string name="title_calendar">Team Calendar</string>
     <string name="title_create_conversations">Start a Conversation</string>
     <string name="title_members_assignments">Assign Role And Department</string>
     <string name="title_news_feed">News Feed</string>
     <string name="title_reminders">Reminders</string>
+
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="select_date">Date</string>
+    <string name="btnDateSelect">Select Date</string>
+    <string name="deptSelect">Select Department</string>
+    <string name="location">Meeting Location</string>
+    <string name="platform">Select Platform</string>
+    <string name="specify">Please Specify</string>
+    <string name="meeting">Meeting ID</string>
+    <string name="passcode">Meeting Passcode</string>
 
 
     <!--fragment_roles-->

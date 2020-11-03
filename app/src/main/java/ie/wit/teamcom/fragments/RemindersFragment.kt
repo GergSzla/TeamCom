@@ -40,9 +40,6 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     var reminderList = ArrayList<Reminder>()
     var new_reminder = Reminder()
     private var dialog: Dialog? = null
-    private val adapter: RemindersAdapter? = null
-    private val temp: List<Reminder>? = null
-    private val empty: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
