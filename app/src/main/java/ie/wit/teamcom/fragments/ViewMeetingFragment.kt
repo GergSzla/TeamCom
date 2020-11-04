@@ -85,7 +85,7 @@ class ViewMeetingFragment : Fragment(),AnkoLogger, MembersListener{
         }
 
         root.btnUpdateMeeting.setOnClickListener {
-            //TODO: EDIT/UPDATE Fragment
+            navigateTo(EditMeetingFragment.newInstance(selected_meeting, currentChannel))
         }
 
         root.btnCancelMeeting.setOnClickListener {

@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
 import org.jetbrains.anko.AnkoLogger
 import java.util.*
 
-class CreateMeetingFragment : Fragment(), AnkoLogger {
+class EditMeetingFragment : Fragment(), AnkoLogger {
 
     lateinit var app: MainApp
     lateinit var root: View
@@ -40,6 +40,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
     var depts = ArrayList<String>()
     var deptsList = ArrayList<Department>()
     var member_dept = Department()
+    var selected_meeting = Meeting()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +48,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         app = activity?.application as MainApp
 
         arguments?.let {
+            selected_meeting = it.getParcelable("meeting_key")!!
             currentChannel = it.getParcelable("channel_key")!!
         }
         app.getAllMembers(currentChannel.id)
@@ -57,7 +59,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_create_meeting, container, false)
-        activity?.title = getString(R.string.title_create_meetings)
+        activity?.title = "Edit ${selected_meeting.meeting_title}"
 
         getAllDepartments()
 
@@ -147,6 +149,8 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         }
         val newCalender = Calendar.getInstance()
 
+        insert_details()
+
         root.btnSelectDate.setOnClickListener {
             val dialog = DatePickerDialog(
                 requireContext(),
@@ -228,15 +232,32 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
 
         }
-
+        root.btnCreateNewMeeting.text = "Update Meeting"
+        root.btnSelectDate.text = "Reschedule"
         root.btnCreateNewMeeting.setOnClickListener {
-            createMeeting()
+            editMeeting()
         }
 
         return root
     }
 
-    fun createMeeting(){
+    fun insert_details(){
+        root.editTxtTitle.setText(selected_meeting.meeting_title)
+        root.editTxtDesc.setText(selected_meeting.meeting_desc)
+        root.txtDandT.text = "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}"
+        root.checkBoxCheckOnline.isChecked = selected_meeting.online
+
+        if(!root.checkBoxCheckOnline.isChecked){
+            root.editTxtLoc.setText(new_meeting.meeting_location)
+        } else if (root.checkBoxCheckOnline.isChecked && root.spinnerPlatform.selectedItem.toString() !== "Other"){
+            root.editTxtPasscode.setText(new_meeting.meeting_passcode)
+            root.editTxtID.setText(new_meeting.meeting_id)
+        } else if (root.checkBoxCheckOnline.isChecked && root.spinnerPlatform.selectedItem.toString() == "Other"){
+            root.editTxtOtherPlatform.setText(new_meeting.meeting_platform)
+        }
+    }
+
+    fun editMeeting(){
         new_meeting.meeting_date_as_string = "$dd/$mm/$yyyy"
         new_meeting.meeting_time_as_string = "$h:$m"
 
@@ -246,7 +267,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
         new_meeting.meeting_title = root.editTxtTitle.text.toString()
         new_meeting.meeting_desc = root.editTxtDesc.text.toString()
-        new_meeting.meeting_uuid = UUID.randomUUID().toString()
+        new_meeting.meeting_uuid = selected_meeting.meeting_uuid
 
         if(!root.checkBoxCheckOnline.isChecked){
             new_meeting.meeting_location = root.editTxtLoc.text.toString()
@@ -279,10 +300,10 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         }
 
 
-        writeNewMeeting(new_meeting)
+        editMeeting(new_meeting)
     }
 
-    fun writeNewMeeting(meeting: Meeting) {
+    fun editMeeting(meeting: Meeting) {
         app.database.child("channels").child(currentChannel!!.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -301,7 +322,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
                         log_triggerer = app.currentActiveMember,
                         log_date = app.dateAsString,
                         log_time = app.timeAsString,
-                        log_content = "${app.currentActiveMember.firstName} ${app.currentActiveMember.surname} created a new Meeting [${meeting.meeting_title} on ${meeting.meeting_date_as_string} @ ${meeting.meeting_time_as_string}]."
+                        log_content = "${app.currentActiveMember.firstName} ${app.currentActiveMember.surname} edited Meeting : ${meeting.meeting_title} on ${meeting.meeting_date_as_string} @ ${meeting.meeting_time_as_string}]."
                     )
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
@@ -353,9 +374,10 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
     companion object {
         @JvmStatic
-        fun newInstance(channel: Channel) =
-            CreateMeetingFragment().apply {
+        fun newInstance(meeting: Meeting, channel: Channel) =
+            EditMeetingFragment().apply {
                 arguments = Bundle().apply {
+                    putParcelable("meeting_key", meeting)
                     putParcelable("channel_key", channel)
                 }
             }
