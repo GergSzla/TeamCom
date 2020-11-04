@@ -1,11 +1,16 @@
 package ie.wit.teamcom.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
+import android.widget.EditText
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -84,12 +89,43 @@ class ViewMeetingFragment : Fragment(),AnkoLogger, MembersListener{
         }
 
         root.btnCancelMeeting.setOnClickListener {
-            //TODO: WARNING POPUP
-            //TODO: DELETE MEETING
+            val dialog = Dialog(requireActivity())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.popup_warning)
+            val proceed = dialog.findViewById(R.id.btnProceed) as Button
+            val cancel = dialog.findViewById(R.id.btnCancel) as Button
+            proceed.setOnClickListener {
+                app.database.child("channels").child(currentChannel!!.id).child("meetings").child(selected_meeting.meeting_uuid)
+                    .addListenerForSingleValueEvent(
+                        object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                snapshot.ref.removeValue()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
+                dialog.dismiss()
+                navigateTo(MeetingsFragment.newInstance(currentChannel))
+            }
+            cancel.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
         }
+
         getAllMeetingMembers()
 
         return root
+    }
+
+    private fun navigateTo(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
+        fragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     fun getAllMeetingMembers() {
