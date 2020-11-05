@@ -266,7 +266,7 @@ class Home : AppCompatActivity(),
 
             R.id.nav_tasks -> {
                 recurring_methods()
-                navigateTo(TasksFragment.newInstance())
+                navigateTo(TasksFragment.newInstance(channel))
             }
 
             R.id.nav_reminders -> {

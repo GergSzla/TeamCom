@@ -84,6 +84,8 @@
     <string name="title_conversations">Conversations</string>
     <string name="title_meetings">Meetings</string>
     <string name="title_create_meetings">Create Meeting</string>
+    <string name="title_create_tasks">Create Task</string>
+
     <string name="title_calendar">Team Calendar</string>
     <string name="title_create_conversations">Start a Conversation</string>
     <string name="title_members_assignments">Assign Role And Department</string>
@@ -106,6 +108,7 @@
     <!--fragment_roles-->
     <string name="permissions">Permissions</string>
     <string name="taskStages">Task Stages</string>
+    <string name="newTask">New Task</string>
 
     <string name="editRoleName">Role Name</string>
     <string name="stage1">Stage One Name</string>

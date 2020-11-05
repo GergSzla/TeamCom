@@ -31,7 +31,6 @@ data class Reminder (
             "rem_status" to rem_status,
             "rem_date_as_string" to rem_date_as_string,
             "rem_time_as_string" to rem_time_as_string
-
         )
     }
 }
