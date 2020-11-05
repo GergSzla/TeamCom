@@ -114,7 +114,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                 .with(context)
                 .setTitle("Choose color")
                 .initialColor(Color.parseColor("#a20606"))
-                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
                 .setOnColorSelectedListener { selectedColor ->
                     root.txtColorCode.setText(Integer.toHexString(selectedColor).replaceRange(0,2, ""))

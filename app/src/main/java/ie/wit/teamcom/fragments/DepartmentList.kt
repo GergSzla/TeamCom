@@ -43,7 +43,6 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
             currentChannel = it.getParcelable("channel_key")!!
         }
         app.getAllMembers(currentChannel.id)
-
     }
 
     override fun onCreateView(

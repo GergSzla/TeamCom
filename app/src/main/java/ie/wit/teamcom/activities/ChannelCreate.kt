@@ -50,6 +50,16 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         val uid = app.auth.currentUser!!.uid
         val userValues = app.user
         var role = Role(id = UUID.randomUUID().toString(), role_name = "Admin", permission_code = "10000000000000", color_code = "b20202", isDefault = true)
+        var task_stage_1 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "To Do",stage_color_code =  "d00000", stage_no = 1, stage_active = true)
+        var task_stage_2 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "In Progress",stage_color_code =  "d08800", stage_no = 2, stage_active = true)
+        var task_stage_3 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "Completed",stage_color_code =  "00a500", stage_no = 3, stage_active = true)
+        var task_stage_4 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "",stage_color_code =  "6e087a", stage_no = 4, stage_active = false)
+        var task_stage_5 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "",stage_color_code =  "1c087a", stage_no = 5, stage_active = false)
+        var task_stage_6 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "",stage_color_code =  "7a0832", stage_no = 6, stage_active = false)
+
+        val task_stage_arr = arrayListOf<TaskStage>(task_stage_1,task_stage_2,task_stage_3,task_stage_4,task_stage_5,task_stage_6)
+
+
         val roleValues = role
 
         app.generateDateID("1")
@@ -69,6 +79,10 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         roleChildUpdates["/channels/${channel.id}/roles/${role.id}"] = roleValues
         roleChildUpdates["/channels/${channel.id}/members/$uid/role"] = roleValues
         app.database.updateChildren(roleChildUpdates)
+
+        val taskStageChildUpdate = HashMap<String, Any>()
+        taskStageChildUpdate["/channels/${channel.id}/task_stages/"] = task_stage_arr
+        app.database.updateChildren(taskStageChildUpdate)
 
         var new_member = Member(id = uid, firstName = userValues.firstName, surname = userValues.surname, email = userValues.email, image = 0, login_used = userValues.login_used, role = roleValues)
         var new_log = Log(log_id = app.valid_from_cal, log_triggerer = new_member, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "The channel, ${channel.channelName} has been successfully created.")

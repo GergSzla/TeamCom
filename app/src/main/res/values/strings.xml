@@ -59,6 +59,7 @@
     <string name="txtInvites">Invites</string>
     <string name="txtDepartments">Departments</string>
     <string name="txtDetails">Channel Details</string>
+    <string name="txtTaskStages">Task Stages</string>
 
     <!--fragment roles-->
     <string name="btnAddNewRole">Add New</string>
@@ -104,7 +105,16 @@
 
     <!--fragment_roles-->
     <string name="permissions">Permissions</string>
+    <string name="taskStages">Task Stages</string>
+
     <string name="editRoleName">Role Name</string>
+    <string name="stage1">Stage One Name</string>
+    <string name="stage2">Stage Two Name</string>
+    <string name="stage3">Stage Three Name</string>
+    <string name="stage4">Stage Four Name</string>
+    <string name="stage5">Stage Five Name</string>
+    <string name="stage6">Stage Six Name</string>
+
     <string name="txtColorCode">Color Code [eg. #643663]</string>
     <string name="permAdmin">Admin</string>
     <string name="viewalllogs">View All Logs</string>
