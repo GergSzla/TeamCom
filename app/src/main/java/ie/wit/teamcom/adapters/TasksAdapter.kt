@@ -18,17 +18,17 @@ interface TaskListener {
 }
 
 class TasksAdapter constructor(var tasks: ArrayList<Task>,
-                                  private val listener: TaskListener): RecyclerView.Adapter<TasksAdapter.RowViewHolder>(){
+                                  private val listener: TaskListener): RecyclerView.Adapter<TasksAdapter.MainHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowViewHolder {
-        return RowViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
+        return MainHolder(
             LayoutInflater.from(
                 parent.context
             ).inflate(R.layout.item_task, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: RowViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val task = tasks[holder.adapterPosition]
         holder.bind(task, listener)
     }
@@ -41,7 +41,7 @@ class TasksAdapter constructor(var tasks: ArrayList<Task>,
     }
 
 
-    class RowViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(task: Task/*, task_stage: TaskStage*/, listener: TaskListener) {
             itemView.tag = task
