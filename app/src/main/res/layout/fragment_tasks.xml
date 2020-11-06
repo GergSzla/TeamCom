@@ -1,12 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.TasksFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+
+    <!--STAGE 1-->
+
+    <TextView
+        android:id="@+id/txtStage1Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="[STAGE 1 TITLE]"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Table View-->
+    <HorizontalScrollView
+        android:id="@+id/horizontal1ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStage1Title">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks1RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_task" />
+
+    </HorizontalScrollView>
+
+
+    <!--STAGE 2-->
+    <TextView
+        android:id="@+id/txtStage2Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[STAGE 2 TITLE]"
+        android:layout_marginTop="48dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontal1ScrollView" />
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/horizontal2ScrollView"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStage2Title">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks2RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_task" />
+    </HorizontalScrollView>
+
+    <!--STAGE 3-->
+    <TextView
+        android:id="@+id/txtStage3Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[STAGE 3 TITLE]"
+        android:layout_marginTop="48dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontal2ScrollView" />
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/horizontal3ScrollView"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStage3Title">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks3RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_task" />
+    </HorizontalScrollView>
+
+    <!--STAGE 4-->
+
+        <TextView
+            android:id="@+id/txtStage4Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="[STAGE 4 TITLE]"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal3ScrollView" />
+
+        <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/horizontal4ScrollView"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStage4Title">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks4RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_task" />
+    </HorizontalScrollView>
+
+
+    <!--STAGE 5-->
+    <TextView
+        android:id="@+id/txtStage5Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[STAGE 5 TITLE]"
+        android:layout_marginTop="48dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontal4ScrollView" />
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/horizontal5ScrollView"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStage5Title">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks5RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_task" />
+    </HorizontalScrollView>
+
+    <!--STAGE 6-->
+        <TextView
+            android:id="@+id/txtStage6Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="[STAGE 6 TITLE]"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal5ScrollView" />
+
+        <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/horizontal6ScrollView"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStage6Title">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks6RecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_task" />
+    </HorizontalScrollView>
+<!--TODO: Change to floating button-->
+    <Button
+        android:id="@+id/btnCreateTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Task"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="24dp"
@@ -18,6 +199,4 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create Task" />
-    </LinearLayout>
-
-</FrameLayout>
+    </LinearLayout>-->
