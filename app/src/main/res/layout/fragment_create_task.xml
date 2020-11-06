@@ -96,7 +96,25 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/spinner_des" />
 
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_marginTop="24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Importance" />
 
+                <SeekBar
+                    android:id="@+id/seekBarImportance"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:min="1"
+                    android:max="5" />
+                <TextView
+                    android:id="@+id/txtImportanceStatus"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/textViewDateAndTime"

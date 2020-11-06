@@ -1,6 +1,7 @@
 package ie.wit.teamcom.adapters
 
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,11 +46,22 @@ class TasksAdapter constructor(var tasks: ArrayList<Task>,
         fun bind(task: Task/*, task_stage: TaskStage*/, listener: TaskListener) {
             itemView.tag = task
 
-            //if(task.)
+            if(task.task_current_stage_color.take(1) != "#"){
+                itemView.sqrStage.setTextColor(Color.parseColor("#"+task.task_current_stage_color))
+            } else {
+                itemView.sqrStage.setTextColor(Color.parseColor(task.task_current_stage_color))
+            }
             itemView.txtTaskName.text = task.task_msg
             itemView.txtTaskAssignee.text ="${task.task_assignee.firstName}  ${task.task_assignee.surname}"
-            itemView.txtTaskImportance.text = "0/5"
-            itemView.txtTaskStage.text = " "
+            itemView.txtTaskImportance.text = task.task_importance.toString() +"/5"
+            itemView.txtTaskStage.text = task.task_current_stage
+
+            if(task.task_current_stage_color.take(1) != "#"){
+                itemView.txtTaskStage.setBackgroundColor(Color.parseColor("#"+task.task_current_stage_color))
+            } else {
+                itemView.txtTaskStage.setBackgroundColor(Color.parseColor(task.task_current_stage_color))
+            }
+
             itemView.txtTaskCreator.text = task.task_creator.firstName + " " + task.task_creator.surname
             itemView.txtTaskDueDate.text = task.task_due_date_as_string+", " + task.task_due_time_as_string
 

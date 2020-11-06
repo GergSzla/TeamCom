@@ -17,6 +17,9 @@ data class Task (
     var task_creator: Member = Member(),
     var task_due_date_as_string:String = "",
     var task_due_time_as_string:String = "",
+    var task_current_stage:String ="",
+    var task_current_stage_color:String ="",
+    var task_importance:Int = 1,
     var task_due_date_id:Long = 0
 ) : Parcelable
 
@@ -31,6 +34,9 @@ data class Task (
             "task_creator" to task_creator,
             "task_due_date_as_string" to task_due_date_as_string,
             "task_due_time_as_string" to task_due_time_as_string,
+            "task_current_stage" to task_current_stage,
+            "task_current_stage_color" to task_current_stage_color,
+            "task_importance" to task_importance,
             "task_due_date_id" to task_due_date_id
         )
     }

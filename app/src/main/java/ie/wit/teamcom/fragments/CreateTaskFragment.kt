@@ -2,27 +2,31 @@ package ie.wit.teamcom.fragments
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.*
-import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Member
+import ie.wit.teamcom.models.Task
+import ie.wit.teamcom.models.TaskStage
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
-import kotlinx.android.synthetic.main.fragment_create_task.view.btnSelectDate
-import kotlinx.android.synthetic.main.fragment_create_task.view.txtDandT
 import org.jetbrains.anko.AnkoLogger
 import java.util.*
+
 
 class CreateTaskFragment : Fragment(), AnkoLogger {
 
@@ -58,6 +62,8 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         activity?.title = getString(R.string.title_create_tasks)
 
         getStages()
+        root.txtImportanceStatus.text = "(1) Very Low"
+        new_task.task_importance = 1
 
         val date = Calendar.getInstance()
         val newCalender = Calendar.getInstance()
@@ -90,6 +96,29 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
         root.txtDandT.text = " $dd/$mm/$yyyy @ $h:$m"
 
+        root.seekBarImportance.setOnSeekBarChangeListener(
+            object : OnSeekBarChangeListener {
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    // TODO Auto-generated method stub
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar) {
+                    // TODO Auto-generated method stub
+                }
+
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    when (progress) {
+                        1 -> root.txtImportanceStatus.text = "(${progress}) Very Low"
+                        2 -> root.txtImportanceStatus.text = "(${progress}) Low"
+                        3 -> root.txtImportanceStatus.text = "(${progress}) Normal"
+                        4 -> root.txtImportanceStatus.text = "(${progress}) High"
+                        5 -> root.txtImportanceStatus.text = "(${progress}) Urgent"
+                    }
+                    new_task.task_importance = progress
+                }
+            })
+
+
 
         root.btnSelectDate.setOnClickListener {
             val dialog = DatePickerDialog(
@@ -105,30 +134,31 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
                             dd = if (dayOfMonth < 10) {
                                 "0$dayOfMonth"
-                            } else{
+                            } else {
                                 "$dayOfMonth"
                             }
 
-                            mm = if ((month +1) < 10) {
-                                "0" + "${((month )+1)}"
-                            } else{
-                                "${((month )+1)}"
+                            mm = if ((month + 1) < 10) {
+                                "0" + "${((month) + 1)}"
+                            } else {
+                                "${((month) + 1)}"
                             }
 
                             yyyy = "$year"
                             h = if (hourOfDay < 10) {
                                 "0$hourOfDay"
-                            } else{
+                            } else {
                                 "$hourOfDay"
                             }
 
                             m = if (minute < 10) {
                                 "0$minute"
-                            } else{
+                            } else {
                                 "$minute"
                             }
 
-                            if (date.timeInMillis - tem.timeInMillis > 0) root.txtDandT.text = "$dd/$mm/$yyyy @ $h:$m" else Toast.makeText(
+                            if (date.timeInMillis - tem.timeInMillis > 0) root.txtDandT.text =
+                                "$dd/$mm/$yyyy @ $h:$m" else Toast.makeText(
                                 requireContext(),
                                 "Invalid time",
                                 Toast.LENGTH_SHORT
@@ -202,11 +232,14 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         new_task.task_creator = app.currentActiveMember
         new_task.task_desc = root.txtTaskDesc.text.toString()
         new_task.task_msg = root.txtTaskName.text.toString()
-        app.generate_date_reminder_id(dd,mm,yyyy,h,m,"00")
+        app.generate_date_reminder_id(dd, mm, yyyy, h, m, "00")
 
         new_task.task_due_date_id = app.reminder_due_date_id
         new_task.task_due_date_as_string = app.rem_dateAsString
         new_task.task_due_time_as_string = app.rem_timeAsString
+        new_task.task_current_stage = selected_stage.stage_name
+        new_task.task_current_stage_color = selected_stage.stage_color_code
+
         selected_stage.stage_tasks.add(new_task)
         writeNewTask()
     }
@@ -221,7 +254,8 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel.id}/task_stages/${selected_stage.stage_no-1}/"] = selected_stage
+                    childUpdates["/channels/${currentChannel.id}/task_stages/${selected_stage.stage_no - 1}/"] =
+                        selected_stage
                     app.database.updateChildren(childUpdates)
 
 
@@ -252,15 +286,15 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val children = snapshot.children
                     children.forEach {
-                        val task = it.
-                        getValue<TaskStage>(TaskStage::class.java)
+                        val task = it.getValue<TaskStage>(TaskStage::class.java)
 
-                        if(task!!.stage_name != ""){
+                        if (task!!.stage_name != "") {
                             tasks_stages.add(task!!.stage_name)
                             tasks_stages_list.add(task)
                         }
 
-                        app.database.child("channel").child(currentChannel!!.id).child("task_stages")
+                        app.database.child("channel").child(currentChannel!!.id)
+                            .child("task_stages")
                             .removeEventListener(this)
                     }
                     val adapter = ArrayAdapter(
@@ -288,7 +322,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                         val member = it.getValue<Member>(Member::class.java)
 
                         if (member!!.id == app.currentActiveMember.id) {
-                            members.add(member!!.firstName + " " + member!!.surname +" (Me)")
+                            members.add(member!!.firstName + " " + member!!.surname + " (Me)")
                             members_list.add(member)
                         }
 

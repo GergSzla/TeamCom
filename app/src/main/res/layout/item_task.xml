@@ -16,54 +16,61 @@
 
     <TextView
         android:id="@+id/txtTaskName"
-        android:layout_width="260dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:background="@drawable/table_content_cell_bg"
+        android:gravity="center"
         android:text="[TASK NAME]"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtTaskAssignee"
-        android:layout_width="124dp"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="top"
+        android:gravity="center"
         android:background="@drawable/table_content_cell_bg"
         android:text="[ASSIGNEE]"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtTaskImportance"
-        android:layout_width="124dp"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:background="@drawable/table_content_cell_bg"
+        android:gravity="center"
         android:text="[IMPORTANCE]"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtTaskStage"
-        android:layout_width="124dp"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:layout_gravity="top"
+        android:textColor="#FFFFFF"
         android:background="@drawable/table_content_cell_bg"
         android:text="[STAGE]"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtTaskCreator"
-        android:layout_width="156dp"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="top"
+        android:gravity="center"
         android:background="@drawable/table_content_cell_bg"
         android:text="[CREATOR]"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtTaskDueDate"
-        android:layout_width="156dp"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="top"
+        android:gravity="center"
         android:background="@drawable/table_content_cell_bg"
         android:text="[DUE DATE]"
         android:textSize="18sp" />
