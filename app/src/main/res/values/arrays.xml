@@ -131,4 +131,48 @@
             Other
         </item>
     </string-array>
+
+    <string-array name="pages">
+        <item>News Feed</item>
+        <item>News Feed/Posts</item>
+        <item>News Feed/Creating-Editing-Deleting Posts</item>
+        <item>News Feed/Liking Posts</item>
+        <item>News Feed/Commenting On Posts</item>
+        <item>News Feed/Post Settings</item>
+
+        <item>Conversations</item>
+        <item>Conversations/Creating Conversation</item>
+        <item>Conversations/Sending Messages</item>
+
+        <item>Meetings</item>
+        <item>Meetings/Creating-Editing-Deleting Meetings</item>
+        <item>Meetings/Cancelling Meetings</item>
+
+        <item>Calendar</item>
+
+        <item>Tasks</item>
+        <item>Tasks/Creating-Editing-Deleting Tasks</item>
+        <item>Tasks/Viewing Task</item>
+        <item>Tasks/Moving Task</item>
+
+        <item>Reminders</item>
+        <item>Reminders/Creating-Editing-Deleting Reminders</item>
+
+        <item>Channel Settings</item>
+        <item>Channel Settings/Roles</item>
+        <item>Channel Settings/Members</item>
+        <item>Channel Settings/Invites</item>
+        <item>Channel Settings/Departments</item>
+        <item>Channel Settings/Channel Details</item>
+        <item>Channel Settings/Task Stages</item>
+
+        <item>Log</item>
+
+        <item>Members</item>
+
+        <item>Support</item>
+
+        <item>Logout</item>
+
+    </string-array>
 </resources>

@@ -1,57 +1,126 @@
 package ie.wit.teamcom.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.StageAdapter
+import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.models.Bug
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.TaskStage
+import kotlinx.android.synthetic.main.fragment_assign_roles.view.*
+import kotlinx.android.synthetic.main.fragment_support.view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import java.util.ArrayList
+import java.util.HashMap
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SupportFragment : Fragment(), AnkoLogger {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SupportFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SupportFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var app: MainApp
+    lateinit var root: View
+    var new_bug = Bug()
+    var bugs_list = ArrayList<Bug>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
+
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            currentChannel = it.getParcelable("channel_key")!!
         }
+        app.getAllMembers(currentChannel.id)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_support, container, false)
+        root = inflater.inflate(R.layout.fragment_support, container, false)
+        activity?.title = getString(R.string.menu_support)
+
+
+        var res: Resources = resources
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item, // Layout
+            res.getStringArray(R.array.pages)
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+        root.spinnerPages.adapter = adapter
+
+        getAllBugs()
+
+        root.btnSubmitBug.setOnClickListener {
+            new_bug.bug_no = bugs_list.size + 1
+            new_bug.channel = currentChannel.channelName
+            app.generateDateID("1")
+            new_bug.date_reported = app.dateAsString
+            new_bug.date_resolved = "-"
+            new_bug.fixed = false
+            new_bug.issue = root.editTxtIssue.text.toString()
+            new_bug.issue_desc = root.editTxtIssueDesc.text.toString()
+            new_bug.reported_by = app.currentActiveMember
+            new_bug.id = "Bug_${bugs_list.size + 1}"
+            new_bug.page = root.spinnerPages.selectedItem.toString()
+            addBugReport()
+        }
+
+        return root
+    }
+
+    fun getAllBugs(){
+        app.database.child("bugs")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase bugs error : ${error.message}")
+                }
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val children = snapshot.children
+                    children.forEach {
+                        val bug = it.
+                        getValue<Bug>(Bug::class.java)
+                        bugs_list.add(bug!!)
+
+                        app.database.child("bugs")
+                            .removeEventListener(this)
+                    }
+                }
+            })
+    }
+
+    fun addBugReport(){
+        app.database.child("bugs")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val childUpdates = HashMap<String, Any>()
+                    childUpdates["/bugs/${new_bug.id}/"] = new_bug
+                    app.database.updateChildren(childUpdates)
+
+                    app.database.child("channels").child(currentChannel.id)
+                        .removeEventListener(this)
+                }
+            })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SupportFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(channel: Channel) =
             SupportFragment().apply {
                 arguments = Bundle().apply {
+                    putParcelable("channel_key", channel)
                 }
             }
     }

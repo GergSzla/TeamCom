@@ -292,7 +292,7 @@ class Home : AppCompatActivity(),
             }
             R.id.nav_support -> {
                 recurring_methods()
-                navigateTo(SupportFragment.newInstance())
+                navigateTo(SupportFragment.newInstance(channel))
             }
             /////////////////////////
             R.id.nav_logout -> {

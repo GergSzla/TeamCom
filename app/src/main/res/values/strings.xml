@@ -107,6 +107,7 @@
 
     <!--fragment_roles-->
     <string name="permissions">Permissions</string>
+    <string name="bugs">Report Bugs</string>
     <string name="taskStages">Task Stages</string>
     <string name="newTask">New Task</string>
 
@@ -151,6 +152,7 @@
 
 
     <string name="btnReassign">Update Member</string>
+    <string name="btnSubmitBug">Send Bug Report</string>
     <string name="btnCreateConvo">Start Conversation</string>
 
 </resources>
