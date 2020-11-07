@@ -91,6 +91,7 @@
             android:layout_weight="1"
             android:background="@drawable/table_content_cell_bg"
             android:gravity="center"
+            android:clickable="true"
             android:text="[STAGE]"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
