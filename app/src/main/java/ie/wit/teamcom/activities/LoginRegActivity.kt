@@ -20,6 +20,7 @@ import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
+import ie.wit.teamcom.models.Channel
 import kotlinx.android.synthetic.main.activity_login_reg.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.intentFor
@@ -27,10 +28,12 @@ import org.jetbrains.anko.toast
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
 
 class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
     lateinit var app: MainApp
+    lateinit var eventListener : ValueEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +110,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                         if (task.isSuccessful) {
                             val user = app.auth.currentUser
                             app.database = FirebaseDatabase.getInstance().reference
-                            startActivity(intentFor<ChannelsListActivity>())
+                            startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
                         } else {
                             Toast.makeText(baseContext, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
@@ -160,12 +163,48 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                         val childUpdates = HashMap<String, Any>()
                         childUpdates["/users/$uid"] = user
                         app.database.updateChildren(childUpdates)
+                        startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
                     }
+                    getUser()
                     app.database.child("users")
                         .removeEventListener(this)
-                    startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
                 }
             })
+    }
+
+    var user = Account()
+    fun getUser(){
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val rootRef = FirebaseDatabase.getInstance().reference
+        val uidRef = rootRef.child("users").child(uid)
+        eventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                user.email = dataSnapshot.child("email").value.toString()
+                user.firstName = dataSnapshot.child("firstName").value.toString()
+                user.surname = dataSnapshot.child("surname").value.toString()
+                user.id = dataSnapshot.child("id").value.toString()
+                user.image = dataSnapshot.child("image").value.toString().toInt()
+                user.login_used = dataSnapshot.child("login_used").value.toString()
+                /*var array_of_ids = ArrayList<String>()
+                dataSnapshot.child("channels").children.forEach {
+                    array_of_ids.add(it.toString())
+                    //dataSnapshot.child("channels").child("${it.}").children.forEach {
+
+
+                    val channel = it.
+                    getValue<Channel>(Channel::class.java)
+                    user.channels.add(channel!!)
+                }*/
+
+                uidRef.removeEventListener(this)
+                startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        }
+        uidRef.addListenerForSingleValueEvent(eventListener)
+
     }
 
     private fun googleSignIn() {

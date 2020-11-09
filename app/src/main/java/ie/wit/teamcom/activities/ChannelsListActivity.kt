@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.ChannelListener
 import ie.wit.teamcom.adapters.ChannelsAdapter
+import ie.wit.teamcom.fragments.currentChannel
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
@@ -32,11 +34,10 @@ import java.util.*
 
 class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
 
-    var ref = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().currentUser!!.uid)
     lateinit var app: MainApp
     var channelsList = ArrayList<Channel>()
     val layoutManager = LinearLayoutManager(this)
-
+    var user = Account()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,18 +46,87 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         app.auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
+        //app.getAllMembers(currentChannel.id)
+        user = intent.extras!!.getParcelable<Account>("user_key")!!
 
 
         app.getUser()
+
+        txtClickChangeImg.isVisible = false
+        editTxtDisplayFullName.isVisible = false
+        editTxtDisplayEmail.isEnabled = false //TODO: ALLOW USER TO SWITCH FROM GOOGLE ACC TO NORMAL
+        editTxtDisplayEmail.isVisible = false
+        txtSaveProfile.isVisible = false
+        editTxtDisplayWhatIDo.isVisible = false
 
         //user = intent.getParcelableExtra("user_key")
         setSwipeRefresh()
         getAllUserChannels(app.auth.currentUser!!.uid)
 
+        txtDisplayFullName.text = user.firstName + " " + user.surname
+        txtDisplayEmail.text = user.email
+        //TODO: txtDisplayWhatIDo.text = user.what_i_do
+
+        txtEditProfile.setOnClickListener {
+            editTxtDisplayFullName.isVisible = true
+            editTxtDisplayEmail.isVisible = true
+            txtSaveProfile.isVisible = true
+            txtClickChangeImg.isVisible = true
+            editTxtDisplayFullName.setText(user.firstName+" "+user.surname)
+            editTxtDisplayEmail.setText(user.email)
+
+
+
+            txtDisplayFullName.isVisible = false
+            txtDisplayEmail.isVisible = false
+            txtEditProfile.isVisible = false
+            txtDisplayWhatIDo.isVisible = false
+        }
+
+        txtClickChangeImg.setOnClickListener {
+            //TODO: CHANGE PICTURE
+        }
+
+        txtSaveProfile.setOnClickListener {
+            user.firstName = editTxtDisplayFullName.text.toString().substringBefore(" ")
+            user.surname = editTxtDisplayFullName.text.toString().substringAfter(" ")
+            user.email = editTxtDisplayEmail.text.toString()
+            //TODO: user.what_i_do = editTxtDisplayWhatIDo.text.toString()
+
+
+            editTxtDisplayFullName.isVisible = false
+            editTxtDisplayEmail.isVisible = false
+            txtSaveProfile.isVisible = false
+            txtClickChangeImg.isVisible = false
+
+
+            txtDisplayFullName.isVisible = true
+            txtDisplayEmail.isVisible = true
+            txtEditProfile.isVisible = true
+
+            app.database.child("users").child(user.id)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val childUpdates = HashMap<String, Any>()
+                        childUpdates["/users/${user.id}/firstName"] = user.firstName
+                        childUpdates["/users/${user.id}/surname"] = user.surname
+
+                        app.database.updateChildren(childUpdates)
+
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .removeEventListener(this)
+                    }
+                })
+        }
 
         val builder: AlertDialog.Builder? = this.let {
             AlertDialog.Builder(it)
         }
+
+        //TODO: txtDisplayWhatIDo.text = app.currentActiveMember.what_i_do
 
         builder?.setTitle("Add New Channel")?.setItems(
             arrayOf("Create", "Join")
@@ -107,6 +177,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                 }
             })
     }
+
 
     fun setSwipeRefresh() {
         swiperefresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
