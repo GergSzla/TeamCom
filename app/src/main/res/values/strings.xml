@@ -44,6 +44,9 @@
     <string name="menu_members">Members</string>
     <string name="menu_support">Support</string>
 
+    <string name="imgPick">Select Image</string>
+
+
     <string name="account">Done for today?</string>
     <string name="menu_logout">Logout</string>
 
