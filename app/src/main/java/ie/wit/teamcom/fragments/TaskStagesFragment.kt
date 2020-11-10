@@ -232,6 +232,17 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(ie.wit.teamcom.fragments.currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(ie.wit.teamcom.fragments.currentChannel,app.currentActiveMember)
+    }
+
+
     fun save_stages_changes(){
 
         //stage 1

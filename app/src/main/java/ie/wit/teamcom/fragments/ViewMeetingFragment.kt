@@ -120,6 +120,16 @@ class ViewMeetingFragment : Fragment(),AnkoLogger, MembersListener{
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     private fun navigateTo(fragment: Fragment) {
         val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
         fragmentManager.beginTransaction()

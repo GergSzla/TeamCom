@@ -70,11 +70,17 @@ class ConversationFragment : Fragment(), AnkoLogger, ConversationListener {
         })
     }
 
-
     override fun onResume() {
         super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
         getAllConversations()
     }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
 
     fun checkSwipeRefresh() {
         if (root.swiperefreshConversations.isRefreshing) root.swiperefreshConversations.isRefreshing = false

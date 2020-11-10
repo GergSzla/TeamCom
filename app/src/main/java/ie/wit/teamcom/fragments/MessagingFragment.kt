@@ -74,6 +74,16 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun sendMsg(){
         app.database.child("channels").child(currentChannel!!.id)
             .addValueEventListener(object : ValueEventListener {

@@ -7,24 +7,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.ReminderListener
-import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.fragments.currentChannel
-import ie.wit.teamcom.fragments.memberList
 import ie.wit.teamcom.models.Account
-import ie.wit.teamcom.models.Log
+import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Member
 import ie.wit.teamcom.models.Reminder
-import kotlinx.android.synthetic.main.fragment_reminders.view.*
-import org.jetbrains.anko.info
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -53,6 +45,7 @@ class MainApp : Application() {
     var user = Account()
     lateinit var eventListener : ValueEventListener
     lateinit var notificationManager : NotificationManager
+    var user_is_online: Boolean = false
 
     override fun onCreate() {
         super.onCreate()
@@ -62,12 +55,55 @@ class MainApp : Application() {
 
         notificationManager =
             getSystemService(
-                Context.NOTIFICATION_SERVICE) as NotificationManager
+                Context.NOTIFICATION_SERVICE
+            ) as NotificationManager
 
     }
 
-    fun createNotificationChannel(id: String, name: String,
-                                          description: String) {
+    fun isActivityVisible(): Boolean {
+        return user_is_online
+    }
+
+    fun activityResumed(channel: Channel, current_user: Member) {
+        user_is_online = true
+        database.child("channels").child(channel.id).child(current_user.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val childUpdates = HashMap<String, Any>()
+                    childUpdates["/channels/${channel.id}/members/${current_user.id}/online"] = user_is_online
+
+                    database.updateChildren(childUpdates)
+                    database.child("channels").child(channel.id).child(current_user.id)
+                        .removeEventListener(this)
+                }
+            })
+    }
+
+    fun activityPaused(channel: Channel, current_user: Member) {
+        user_is_online = false
+        database.child("channels").child(channel.id).child(current_user.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val childUpdates = HashMap<String, Any>()
+                    childUpdates["/channels/${channel.id}/members/${current_user.id}/online"] = user_is_online
+
+                    database.updateChildren(childUpdates)
+                    database.child("channels").child(channel.id).child(current_user.id)
+                        .removeEventListener(this)
+                }
+            })
+    }
+
+    fun createNotificationChannel(
+        id: String, name: String,
+        description: String
+    ) {
 
         val importance = NotificationManager.IMPORTANCE_LOW
         val channel = NotificationChannel(id, name, importance)
@@ -84,8 +120,10 @@ class MainApp : Application() {
 
         val channelID = id
 
-        val notification = Notification.Builder(this@MainApp,
-            channelID)
+        val notification = Notification.Builder(
+            this@MainApp,
+            channelID
+        )
             .setContentTitle(name)
             .setContentText(description)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -97,7 +135,7 @@ class MainApp : Application() {
     }
 
 
-    fun getAllMembers(channel_id:String) {
+    fun getAllMembers(channel_id: String) {
         membersList = ArrayList<Member>()
         database.child("channels").child(channel_id).child("members")
             .addValueEventListener(object : ValueEventListener {
@@ -152,9 +190,11 @@ class MainApp : Application() {
         }
         if (due_soon != 0){
             rems = rems.substring(0, rems.length - 2)
-            createNotificationChannel("ie.wit.teamcom",
+            createNotificationChannel(
+                "ie.wit.teamcom",
                 "${due_soon} Upcoming reminder(s)!",
-                "${rems} are due within 24 hours!")
+                "${rems} are due within 24 hours!"
+            )
         }
 
     }
@@ -167,7 +207,7 @@ class MainApp : Application() {
         }
     }
 
-    fun generateDateID(hrs : String) {
+    fun generateDateID(hrs: String) {
         /*
         GETS VALID FROM
          */
@@ -292,7 +332,14 @@ class MainApp : Application() {
 
 
 
-    fun generate_date_reminder_id(dd: String , m: String, yy: String, hh: String, mm: String, ss: String){
+    fun generate_date_reminder_id(
+        dd: String,
+        m: String,
+        yy: String,
+        hh: String,
+        mm: String,
+        ss: String
+    ){
         var year = yy
         var month  = ""
         month = if (m.toInt() < 10) {

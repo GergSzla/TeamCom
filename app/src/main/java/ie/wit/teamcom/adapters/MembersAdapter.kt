@@ -1,5 +1,6 @@
 package ie.wit.teamcom.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +58,12 @@ class MembersAdapter constructor(var members: ArrayList<Member>,
                 itemView.txtMemberRole_card.text = member.role.role_name
             }
 
+
+            if(member.online){
+                itemView.txtOnlineStatus.setTextColor(Color.parseColor("#008000"))
+            } else {
+                itemView.txtOnlineStatus.setTextColor(Color.parseColor("#A9A9A9"))
+            }
             /*itemView.txtRoleNameCard.text = role.role_name
             itemView.txtRoleNameCard.setTextColor(Color.parseColor(role.color_code))
             */

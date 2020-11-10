@@ -161,6 +161,16 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel!!,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel!!,app.currentActiveMember)
+    }
+
     fun deleteRole(roleId: String?) {
         val uid = app.auth.currentUser!!.uid
         app.database.child("channels").child(currentChannel!!.id).child("roles").child(roleId!!)

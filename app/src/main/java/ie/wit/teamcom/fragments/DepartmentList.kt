@@ -111,10 +111,15 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
         })
     }
 
-
     override fun onResume() {
         super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
         getAllChannelDepartments()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(ie.wit.teamcom.fragments.currentChannel,app.currentActiveMember)
     }
 
     fun checkSwipeRefresh() {

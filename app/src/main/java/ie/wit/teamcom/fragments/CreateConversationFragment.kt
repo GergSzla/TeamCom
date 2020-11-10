@@ -70,6 +70,16 @@ class CreateConversationFragment : Fragment(),AnkoLogger {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     private fun createNewConvo(conversation: Conversation) {
         app.database.child("channels").child(currentChannel!!.id)
             .addValueEventListener(object : ValueEventListener {

@@ -1,10 +1,10 @@
 package ie.wit.teamcom.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -12,13 +12,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.adapters.PostAdapter
 import ie.wit.teamcom.adapters.PostListener
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.*
-import kotlinx.android.synthetic.main.card_post.view.*
-import kotlinx.android.synthetic.main.fragment_members.view.*
+import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Log
+import ie.wit.teamcom.models.Post
 import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -58,6 +57,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         return root
     }
 
+
     fun sendPost(){
         app.generateDateID("1")
         new_post.post_content = root.editTextPost.text.toString()
@@ -84,7 +84,13 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     childUpdates["/channels/${currentChannel.id}/posts/${new_post.id}"] = new_post
                     app.database.updateChildren(childUpdates)
 
-                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "Created a new post on the News Feed!.")
+                    var new_log = Log(
+                        log_id = app.valid_from_cal,
+                        log_triggerer = app.currentActiveMember,
+                        log_date = app.dateAsString,
+                        log_time = app.timeAsString,
+                        log_content = "Created a new post on the News Feed!."
+                    )
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
@@ -128,7 +134,10 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                         )
                         root.postsRecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("posts").orderByChild("post_date_id")
+                        app.database.child("channels").child(currentChannel!!.id).child("posts")
+                            .orderByChild(
+                                "post_date_id"
+                            )
                             .removeEventListener(this)
                     }
                 }
@@ -152,15 +161,25 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
             .addToBackStack(null)
             .commit()
     }
+
     override fun onResume() {
         super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
         getAllPosts()
     }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
 
     var alreadyLiked: Boolean = false
     fun getAllPostLikes(post: Post){
         likesList = ArrayList<String>()
-        app.database.child("channels").child(currentChannel!!.id).child("posts").child(post.id).child("liked_by")
+        app.database.child("channels").child(currentChannel!!.id).child("posts").child(post.id).child(
+            "liked_by"
+        )
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase roles error : ${error.message}")
@@ -172,16 +191,19 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     children.forEach {
                         val like = it.getValue<String>(String::class.java)
                         likesList.add(like!!)
-                        app.database.child("channels").child(currentChannel!!.id).child("posts").child(post.id).child("liked_by")
+                        app.database.child("channels").child(currentChannel!!.id).child("posts")
+                            .child(
+                                post.id
+                            ).child("liked_by")
                             .removeEventListener(this)
                     }
                     likesList.forEach {
-                        if (it == app.currentActiveMember.id){
+                        if (it == app.currentActiveMember.id) {
                             alreadyLiked = true
                             return
                         }
                     }
-                    if(!alreadyLiked){
+                    if (!alreadyLiked) {
                         post.post_likes += 1
                         post.liked_by.add(app.currentActiveMember.id)
                     } else {

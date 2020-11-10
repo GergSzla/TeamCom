@@ -64,6 +64,17 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+        getAllComments()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun setSwipeRefresh() {
         root.swiperefreshComments.setOnRefreshListener(object :
             SwipeRefreshLayout.OnRefreshListener {
@@ -117,10 +128,6 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
             })
     }
 
-    override fun onResume() {
-        super.onResume()
-        getAllComments()
-    }
 
     fun getAllComments() {
         commentsList = ArrayList<Comment>()

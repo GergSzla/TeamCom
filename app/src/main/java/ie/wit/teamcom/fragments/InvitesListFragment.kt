@@ -74,6 +74,17 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+        getAllChannelInvites()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun getAllChannelInvites() {
         invitesList = ArrayList<Invite>()
         app.database.child("channels").child(currentChannel!!.id).child("invites").orderByChild("valid_from")
@@ -113,10 +124,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        getAllChannelInvites()
-    }
+
 
     fun checkSwipeRefresh() {
         if (root.swiperefreshInvites.isRefreshing) root.swiperefreshInvites.isRefreshing = false

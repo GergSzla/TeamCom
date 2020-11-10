@@ -67,6 +67,17 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+        getAllReminders()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     val newDate = Calendar.getInstance()
     val newTime = Calendar.getInstance()
 
@@ -214,10 +225,6 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         if (root.swiperefreshReminders.isRefreshing) root.swiperefreshReminders.isRefreshing = false
     }
 
-    override fun onResume() {
-        super.onResume()
-        getAllReminders()
-    }
 
     private fun navigateTo(fragment: Fragment) {
         val fragmentManager: FragmentManager = activity?.supportFragmentManager!!

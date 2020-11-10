@@ -241,6 +241,16 @@ class EditMeetingFragment : Fragment(), AnkoLogger {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun insert_details(){
         root.editTxtTitle.setText(selected_meeting.meeting_title)
         root.editTxtDesc.setText(selected_meeting.meeting_desc)

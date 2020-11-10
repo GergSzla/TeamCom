@@ -78,6 +78,16 @@ class SupportFragment : Fragment(), AnkoLogger {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun getAllBugs(){
         app.database.child("bugs")
             .addValueEventListener(object : ValueEventListener {

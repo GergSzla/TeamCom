@@ -236,6 +236,16 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun createMeeting(){
         new_meeting.meeting_date_as_string = "$dd/$mm/$yyyy"
         new_meeting.meeting_time_as_string = "$h:$m"

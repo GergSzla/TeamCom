@@ -95,10 +95,15 @@ class LogFragment : Fragment(), AnkoLogger, LogListener {
             }
         })
     }
-
     override fun onResume() {
         super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
         getAllChannelLogs()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
     }
 
     fun checkSwipeRefresh() {

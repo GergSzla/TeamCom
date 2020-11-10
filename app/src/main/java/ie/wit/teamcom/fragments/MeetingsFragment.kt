@@ -92,11 +92,17 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
         })
     }
 
-
     override fun onResume() {
         super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
         getAllMeetings()
     }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
 
     fun checkSwipeRefresh() {
         if (root.swiperefreshMeetings.isRefreshing) root.swiperefreshMeetings.isRefreshing = false

@@ -61,6 +61,17 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+        getAllChannelRoles(app.auth.currentUser!!.uid)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun getAllChannelRoles(roleId: String?) {
         rolesList = ArrayList<Role>()
         app.database.child("channels").child(currentChannel!!.id).child("roles").orderByChild("permission_code")
@@ -95,10 +106,6 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        getAllChannelRoles(app.auth.currentUser!!.uid)
-    }
 
     fun checkSwipeRefresh() {
         if (root.swiperefreshRoles.isRefreshing) root.swiperefreshRoles.isRefreshing = false

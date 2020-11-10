@@ -79,6 +79,17 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel,app.currentActiveMember)
+        getAllTasks()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(currentChannel,app.currentActiveMember)
+    }
+
     fun getAllTasks(){
         task_list_1 = ArrayList<Task>()
         root.tasks1RecyclerView.adapter = TasksAdapter(task_list_1, this@TasksFragment)
@@ -357,10 +368,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         dialog.show()
     }
 
-    override fun onResume() {
-        super.onResume()
-        getAllTasks()
-    }
 
     override fun onStageClick(stage: TaskStage) {
         selected_task.task_current_stage = stage.stage_name

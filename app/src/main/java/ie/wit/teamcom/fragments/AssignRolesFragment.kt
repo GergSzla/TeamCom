@@ -116,6 +116,16 @@ class AssignRolesFragment : Fragment(), AnkoLogger {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(ie.wit.teamcom.fragments.currentChannel,app.currentActiveMember)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        app.activityPaused(ie.wit.teamcom.fragments.currentChannel,app.currentActiveMember)
+    }
+
     fun getRoleNames(){
         app.database.child("channels").child(currentChannel!!.id).child("roles")
             .addValueEventListener(object : ValueEventListener {
