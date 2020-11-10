@@ -5,9 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Member
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.card_member.view.*
 
 
@@ -58,6 +63,15 @@ class MembersAdapter constructor(var members: ArrayList<Member>,
                 itemView.txtMemberRole_card.text = member.role.role_name
             }
 
+            var ref = FirebaseStorage.getInstance().getReference("photos/${member.id}.jpg")
+            ref.downloadUrl.addOnSuccessListener {
+                Picasso.get().load(it)
+                    .resize(260, 260)
+                    .transform(CropCircleTransformation())
+                    .into(itemView.imageView3)
+            }
+            itemView.txtMemberRole_card.text = member.role.role_name
+
 
             if(member.online){
                 itemView.txtOnlineStatus.setTextColor(Color.parseColor("#008000"))
@@ -67,6 +81,11 @@ class MembersAdapter constructor(var members: ArrayList<Member>,
             /*itemView.txtRoleNameCard.text = role.role_name
             itemView.txtRoleNameCard.setTextColor(Color.parseColor(role.color_code))
             */
+            if(member.role.color_code.take(1) != "#"){
+                itemView.txtMemberRole_card.setTextColor(Color.parseColor("#"+member.role.color_code))
+            } else {
+                itemView.txtMemberRole_card.setTextColor(Color.parseColor(member.role.color_code))
+            }
             itemView.setOnClickListener {
                 listener.onMemberClick(member)
             }

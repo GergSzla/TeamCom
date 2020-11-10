@@ -1,8 +1,12 @@
 package ie.wit.teamcom.activities
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +21,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import ie.wit.adventurio.helpers.showImagePicker
+import ie.wit.adventurio.helpers.uploadProfileImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.ChannelListener
 import ie.wit.teamcom.adapters.ChannelsAdapter
@@ -24,11 +32,16 @@ import ie.wit.teamcom.fragments.currentChannel
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.activity_channels_list.*
+import kotlinx.android.synthetic.main.home.*
+import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
+import java.io.IOException
 import java.util.*
 
 
@@ -38,6 +51,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
     var channelsList = ArrayList<Channel>()
     val layoutManager = LinearLayoutManager(this)
     var user = Account()
+    val IMAGE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +62,48 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         app.storage = FirebaseStorage.getInstance().reference
         //app.getAllMembers(currentChannel.id)
         user = intent.extras!!.getParcelable<Account>("user_key")!!
+
+        if(user.image == 0) {
+            if (app.auth.currentUser?.photoUrl != null) {
+                Picasso.get().load(app.auth.currentUser?.photoUrl)
+                    .resize(260, 260)
+                    .transform(CropCircleTransformation())
+                    .into(profImage, object : Callback {
+                    override fun onSuccess() {
+                        // Drawable is ready
+                        uploadProfileImageView(app, profImage)
+                        user.image = 1
+                        updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                    }
+
+                    override fun onError(e: Exception) {
+                    }
+
+                })
+            } else {
+                Picasso.get().load(R.mipmap.ic_avatar)
+                    .resize(260, 260)
+                    .transform(CropCircleTransformation())
+                    .into(profImage, object : Callback {
+                        override fun onSuccess() {
+                            // Drawable is ready
+                            uploadProfileImageView(app, profImage)
+                            user.image = 1
+                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                        }
+
+                        override fun onError(e: Exception) {}
+                    })
+            }
+        } else if (user.image == 1){
+            var ref = FirebaseStorage.getInstance().getReference("photos/${app.auth.currentUser!!.uid}.jpg")
+            ref.downloadUrl.addOnSuccessListener {
+                Picasso.get().load(it)
+                    .resize(260, 260)
+                    .transform(CropCircleTransformation())
+                    .into(profImage)
+            }
+        }
 
 
         app.getUser()
@@ -84,7 +140,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         }
 
         txtClickChangeImg.setOnClickListener {
-            //TODO: CHANGE PICTURE
+            showImagePicker(this, IMAGE_REQUEST)
         }
 
         txtSaveProfile.setOnClickListener {
@@ -103,6 +159,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
             txtDisplayFullName.isVisible = true
             txtDisplayEmail.isVisible = true
             txtEditProfile.isVisible = true
+            uploadProfileImageView(app,profImage)
 
             app.database.child("users").child(user.id)
                 .addValueEventListener(object : ValueEventListener {
@@ -148,6 +205,37 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         btnAddNew.setOnClickListener {
             dialog?.show()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (!(requestCode !== IMAGE_REQUEST || resultCode !== Activity.RESULT_OK || data == null || data.data == null)) {
+            val uri: Uri = data.data!!
+            try {
+                val bitmap =
+                    MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+                Picasso.get().load(uri)
+                    .resize(260, 260)
+                    .transform(CropCircleTransformation())
+                    .into(profImage)
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun updateUserProfile(uid: String?, image: Int) {
+        app.database.child("users").child(uid!!).child("image")
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.ref.setValue(image)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
     }
 
     fun getAllUserChannels(userId: String?) {
