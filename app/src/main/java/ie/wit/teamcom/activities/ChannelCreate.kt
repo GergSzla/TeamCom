@@ -1,18 +1,30 @@
 package ie.wit.teamcom.activities
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import ie.wit.adventurio.helpers.showImagePicker
+import ie.wit.adventurio.helpers.uploadChannelImageView
+import ie.wit.adventurio.helpers.uploadProfileImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_channel_create.*
+import kotlinx.android.synthetic.main.activity_channels_list.*
 import org.jetbrains.anko.AnkoLogger
+import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -20,6 +32,7 @@ import java.util.*
 class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
     lateinit var app: MainApp
+    val IMAGE_REQUEST = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +45,20 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         app.storage = FirebaseStorage.getInstance().reference
 
         app.getUser()
+
+        Picasso.get().load(R.mipmap.socialnetwork)
+            .resize(300, 300)
+            .transform(CropCircleTransformation())
+            .into(imageView2)
+        //Icons made by <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+
+
         //user = intent.getParcelableExtra("user_key")
+
+        btnChannelImage.setOnClickListener {
+            showImagePicker(this, IMAGE_REQUEST)
+        }
+
         btnCreateNew.setOnClickListener {
             createChannel(
                 Channel(
@@ -45,6 +71,23 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (!(requestCode !== IMAGE_REQUEST || resultCode !== Activity.RESULT_OK || data == null || data.data == null)) {
+            val uri: Uri = data.data!!
+            try {
+                val bitmap =
+                    MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+                Picasso.get().load(uri)
+                    .resize(300, 300)
+                    .transform(CropCircleTransformation())
+                    .into(imageView2)
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     private fun createChannel(channel: Channel){
         val uid = app.auth.currentUser!!.uid
@@ -61,6 +104,9 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
 
         val roleValues = role
+
+        uploadChannelImageView(app, imageView2, channel.id)
+
 
         app.generateDateID("1")
 

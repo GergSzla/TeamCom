@@ -81,7 +81,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
 
                 })
             } else {
-                Picasso.get().load(R.mipmap.ic_avatar)
+                Picasso.get().load(R.mipmap.user)
                     .resize(260, 260)
                     .transform(CropCircleTransformation())
                     .into(profImage, object : Callback {
