@@ -3,4 +3,15 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <!--Event Button Colors-->
+    <color name="color_1">#6200EE</color>
+    <color name="color_2">#0057EE</color>
+    <color name="color_3">#06CD8F</color>
+    <color name="color_4">#00B103</color>
+    <color name="color_5">#BCB200</color>
+    <color name="color_6">#EE6700</color>
+    <color name="color_7">#A30000</color>
+    <color name="color_8">#CA00EE</color>
+
 </resources>

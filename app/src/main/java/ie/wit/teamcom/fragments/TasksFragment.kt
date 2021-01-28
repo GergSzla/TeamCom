@@ -81,34 +81,38 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllTasks()
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
-    fun getAllTasks(){
+    fun getAllTasks() {
         task_list_1 = ArrayList<Task>()
         root.tasks1RecyclerView.adapter = TasksAdapter(task_list_1, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("0").child("stage_tasks").orderByChild("task_due_date_id")
+        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("0")
+            .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val task = it.
-                        getValue<Task>(Task::class.java)
+                        val task = it.getValue<Task>(Task::class.java)
                         task_list_1.add(task!!)
-                        root.tasks1RecyclerView.adapter = TasksAdapter(task_list_1, this@TasksFragment)
+                        root.tasks1RecyclerView.adapter =
+                            TasksAdapter(task_list_1, this@TasksFragment)
                         root.tasks1RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("0").child("stage_tasks").orderByChild("task_due_date_id")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages").child("0").child("stage_tasks")
+                            .orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -117,22 +121,26 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         task_list_2 = ArrayList<Task>()
         root.tasks2RecyclerView.adapter = TasksAdapter(task_list_2, this@TasksFragment)
 
-        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("1").child("stage_tasks").orderByChild("task_due_date_id")
+        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("1")
+            .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val task = it.
-                        getValue<Task>(Task::class.java)
+                        val task = it.getValue<Task>(Task::class.java)
                         task_list_2.add(task!!)
-                        root.tasks2RecyclerView.adapter = TasksAdapter(task_list_2, this@TasksFragment)
+                        root.tasks2RecyclerView.adapter =
+                            TasksAdapter(task_list_2, this@TasksFragment)
                         root.tasks2RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("1").child("stage_tasks").orderByChild("task_due_date_id")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages").child("1").child("stage_tasks")
+                            .orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -140,22 +148,26 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_3 = ArrayList<Task>()
         root.tasks3RecyclerView.adapter = TasksAdapter(task_list_3, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("2").child("stage_tasks").orderByChild("task_due_date_id")
+        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("2")
+            .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val task = it.
-                        getValue<Task>(Task::class.java)
+                        val task = it.getValue<Task>(Task::class.java)
                         task_list_3.add(task!!)
-                        root.tasks3RecyclerView.adapter = TasksAdapter(task_list_3, this@TasksFragment)
+                        root.tasks3RecyclerView.adapter =
+                            TasksAdapter(task_list_3, this@TasksFragment)
                         root.tasks3RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("2").child("stage_tasks").orderByChild("task_due_date_id")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages").child("2").child("stage_tasks")
+                            .orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -163,22 +175,26 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_4 = ArrayList<Task>()
         root.tasks4RecyclerView.adapter = TasksAdapter(task_list_4, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("3").child("stage_tasks").orderByChild("task_due_date_id")
+        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("3")
+            .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val task = it.
-                        getValue<Task>(Task::class.java)
+                        val task = it.getValue<Task>(Task::class.java)
                         task_list_4.add(task!!)
-                        root.tasks4RecyclerView.adapter = TasksAdapter(task_list_4, this@TasksFragment)
+                        root.tasks4RecyclerView.adapter =
+                            TasksAdapter(task_list_4, this@TasksFragment)
                         root.tasks4RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("3").child("stage_tasks").orderByChild("task_due_date_id")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages").child("3").child("stage_tasks")
+                            .orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -186,22 +202,26 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_5 = ArrayList<Task>()
         root.tasks5RecyclerView.adapter = TasksAdapter(task_list_5, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("4").child("stage_tasks").orderByChild("task_due_date_id")
+        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("4")
+            .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val task = it.
-                        getValue<Task>(Task::class.java)
+                        val task = it.getValue<Task>(Task::class.java)
                         task_list_5.add(task!!)
-                        root.tasks5RecyclerView.adapter = TasksAdapter(task_list_5, this@TasksFragment)
+                        root.tasks5RecyclerView.adapter =
+                            TasksAdapter(task_list_5, this@TasksFragment)
                         root.tasks5RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("4").child("stage_tasks").orderByChild("task_due_date_id")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages").child("4").child("stage_tasks")
+                            .orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -209,22 +229,26 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_6 = ArrayList<Task>()
         root.tasks6RecyclerView.adapter = TasksAdapter(task_list_6, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("5").child("stage_tasks").orderByChild("task_due_date_id")
+        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("5")
+            .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val task = it.
-                        getValue<Task>(Task::class.java)
+                        val task = it.getValue<Task>(Task::class.java)
                         task_list_6.add(task!!)
-                        root.tasks6RecyclerView.adapter = TasksAdapter(task_list_6, this@TasksFragment)
+                        root.tasks6RecyclerView.adapter =
+                            TasksAdapter(task_list_6, this@TasksFragment)
                         root.tasks6RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("5").child("stage_tasks").orderByChild("task_due_date_id")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages").child("5").child("stage_tasks")
+                            .orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -249,7 +273,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
     }
 
-    fun change_state_dialog(stage : TaskStage, task : Task){
+    fun change_state_dialog(stage: TaskStage, task: Task) {
         task_stage_list = ArrayList<TaskStage>()
         val dialog = Dialog(requireActivity())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -266,18 +290,19 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val children = snapshot.children
                     children.forEach {
-                        val stage = it.
-                        getValue<TaskStage>(TaskStage::class.java)
-                        if(stage!!.stage_active){
+                        val stage = it.getValue<TaskStage>(TaskStage::class.java)
+                        if (stage!!.stage_active) {
                             task_stage_list.add(stage)
 
                         }
                         stageRecycler.adapter = StageAdapter(task_stage_list, this@TasksFragment)
                         stageRecycler.adapter?.notifyDataSetChanged()
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -289,22 +314,23 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     }
 
 
-    fun getCurrentTaskStage(task : Task){
+    fun getCurrentTaskStage(task: Task) {
         app.database.child("channels").child(currentChannel!!.id).child("task_stages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val children = snapshot.children
                     children.forEach {
-                        val stage = it.
-                        getValue<TaskStage>(TaskStage::class.java)
-                        if(stage!!.stage_name == task.task_current_stage){
+                        val stage = it.getValue<TaskStage>(TaskStage::class.java)
+                        if (stage!!.stage_name == task.task_current_stage) {
                             selected_stage = stage
                         }
 
-                        app.database.child("channels").child(currentChannel!!.id).child("task_stages")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -331,12 +357,12 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         taskName.text = task.task_msg
         taskDesc.text = task.task_desc
-        taskCreator.text = task.task_creator.firstName+ " " + task.task_creator.surname
-        taskAssignee.text = task.task_assignee.firstName+ " " + task.task_assignee.surname
-        taskDueDate.text = task.task_due_date_as_string+", "+task.task_due_time_as_string
+        taskCreator.text = task.task_creator.firstName + " " + task.task_creator.surname
+        taskAssignee.text = task.task_assignee.firstName + " " + task.task_assignee.surname
+        taskDueDate.text = task.task_due_date_as_string + ", " + task.task_due_time_as_string
 
-        if(task.task_current_stage_color.take(1) != "#"){
-            taskStage.setBackgroundColor(Color.parseColor("#"+task.task_current_stage_color))
+        if (task.task_current_stage_color.take(1) != "#") {
+            taskStage.setBackgroundColor(Color.parseColor("#" + task.task_current_stage_color))
         } else {
             taskStage.setBackgroundColor(Color.parseColor(task.task_current_stage_color))
         }
@@ -346,7 +372,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
 
         progressBar.progress = task.task_importance
-        taskProgress.text = task.task_importance.toString()+"/5"
+        taskProgress.text = task.task_importance.toString() + "/5"
         taskStage.text = task.task_current_stage
         /*proceed.setOnClickListener {
             app.database.child("channels").child(currentChannel!!.id).child("meetings").child(selected_meeting.meeting_uuid)
@@ -380,7 +406,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel.id}/task_stages/${stage.stage_no-1}/"] = stage
+                    childUpdates["/channels/${currentChannel.id}/task_stages/${stage.stage_no - 1}/"] =
+                        stage
                     app.database.updateChildren(childUpdates)
 
                     app.database.child("channels").child(currentChannel.id)
@@ -390,8 +417,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         var deleted = false
         var i = 0
-        while (!deleted){
-            app.database.child("channels").child(currentChannel!!.id).child("task_stages").child("${selected_stage.stage_no-1}").child("stage_tasks").child("$i")
+        while (!deleted) {
+            app.database.child("channels").child(currentChannel!!.id).child("task_stages")
+                .child("${selected_stage.stage_no - 1}").child("stage_tasks").child("$i")
                 .addListenerForSingleValueEvent(
                     object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -402,9 +430,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
-            if(i <= 5 && !deleted){
+            if (i <= 5 && !deleted) {
                 i++
-            } else if (i > 5 && !deleted){
+            } else if (i > 5 && !deleted) {
                 //Toast.makeText(requireContext(), "Error: Task Not Found In Any Stages!", Toast.LENGTH_SHORT).show()
                 return
             }

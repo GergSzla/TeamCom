@@ -158,4 +158,12 @@
     <string name="btnSubmitBug">Send Bug Report</string>
     <string name="btnCreateConvo">Start Conversation</string>
 
+
+    <!--Events-->
+    <string name="event_name">Event Name </string>
+    <string name="event_desc">Description </string>
+    <string name="event_date">Current Selected Date </string>
+    <string name="event_color">Color: </string>
+
+
 </resources>

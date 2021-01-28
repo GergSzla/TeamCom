@@ -175,4 +175,12 @@
         <item>Logout</item>
 
     </string-array>
+
+
+    <string-array name="event_types">
+        <item>
+
+        </item>
+
+    </string-array>
 </resources>
