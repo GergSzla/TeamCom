@@ -35,7 +35,7 @@
 
     <string name="group_organizational">Organizational</string>
     <string name="menu_calendar">Calendar</string>
-    <string name="menu_tasks">Tasks</string>
+    <string name="menu_tasks">Projects</string>
     <string name="menu_reminders">Reminders</string>
 
     <string name="group_channel">Channel</string>
@@ -79,6 +79,7 @@
     <!--title Stuff-->
     <string name="title_settings">Channel Settings</string>
     <string name="title_roles_settings">Roles</string>
+    <string name="title_project_settings">Projects</string>
     <string name="title_logs">Logs</string>
 
     <string name="title_invites_settings">Invites</string>
@@ -111,7 +112,8 @@
     <!--fragment_roles-->
     <string name="permissions">Permissions</string>
     <string name="bugs">Report Bugs</string>
-    <string name="taskStages">Task Stages</string>
+    <string name="taskStages">Project Setup</string>
+    <string name="projectDeets">Project Details</string>
     <string name="newTask">New Task</string>
 
     <string name="editRoleName">Role Name</string>
@@ -165,5 +167,12 @@
     <string name="event_date">Current Selected Date </string>
     <string name="event_color">Color: </string>
 
+    <!--strings-->
+    <string name="str_status_def">Completed </string>
+    <string name="str_status_def_2">In Progress </string>
+    <string name="str_status_def_3">To Do </string>
+    <string name="str_color_def">00a500</string>
+    <string name="str_color_def_2">d08800 </string>
+    <string name="str_color_def_3">d00000 </string>
 
 </resources>

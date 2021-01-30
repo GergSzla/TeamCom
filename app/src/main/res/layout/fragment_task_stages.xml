@@ -17,9 +17,78 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/txtChannelNameSettings"
+                android:id="@+id/txtTitleProj"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/projectDeets"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Project Name" />
+
+            <EditText
+                android:id="@+id/txt_project_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:hint="Project Name"
+                android:textSize="20dp" />
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Project Description" />
+
+            <EditText
+                android:id="@+id/txt_project_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:padding="10dp"
+                android:hint="Description"
+                android:textSize="20dp"
+                android:inputType="textMultiLine" />
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtProjDateAndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="200"
+                    android:textSize="20dp"
+                    android:layout_gravity="center"
+                    android:text="No Due Date Selected" />
+
+                <ImageButton
+                    android:id="@+id/btnProjectDateSelect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_baseline_calendar_today_24"
+                    android:text="@string/btnDateSelect" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtTitleStage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/taskStages"
@@ -439,7 +508,7 @@
                     android:id="@+id/btnSaveStages"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Save" />
+                    android:text="Done" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

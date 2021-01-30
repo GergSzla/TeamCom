@@ -17,6 +17,10 @@
                 android:id="@+id/nav_meetings"
                 android:icon="@drawable/ic_meeting_svgrepo_com"
                 android:title="@string/menu_meetings" />
+            <item
+                android:id="@+id/nav_tasks"
+                android:icon="@drawable/ic_baseline_playlist_add_check_24"
+                android:title="@string/menu_tasks" />
         </menu>
     </item>
 
@@ -26,10 +30,6 @@
                 android:id="@+id/nav_calendar"
                 android:icon="@drawable/ic_baseline_calendar_today_24"
                 android:title="@string/menu_calendar" />
-            <item
-                android:id="@+id/nav_tasks"
-                android:icon="@drawable/ic_baseline_playlist_add_check_24"
-                android:title="@string/menu_tasks" />
             <item
                 android:id="@+id/nav_reminders"
                 android:icon="@drawable/ic_baseline_alarm_24"

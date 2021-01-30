@@ -19,10 +19,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Member
-import ie.wit.teamcom.models.Task
-import ie.wit.teamcom.models.TaskStage
+import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
 import org.jetbrains.anko.AnkoLogger
 import java.util.*
@@ -43,6 +40,8 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
     var h = ""
     var m = ""
     var selected_stage = TaskStage()
+    var project = Project()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +49,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")!!
+            project = it.getParcelable("proj_key")!!
         }
         app.getAllMembers(currentChannel.id)
     }
@@ -264,7 +264,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel.id}/task_stages/${selected_stage.stage_no - 1}/"] =
+                    childUpdates["/channels/${currentChannel.id}/projects/${project.proj_id}/proj_task_stages/${selected_stage.stage_no - 1}/"] =
                         selected_stage
                     app.database.updateChildren(childUpdates)
 
@@ -288,7 +288,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
     }
 
     fun getStages(){
-        app.database.child("channels").child(currentChannel!!.id).child("task_stages")
+        app.database.child("channels").child(currentChannel!!.id).child("projects").child(project.proj_id).child("proj_task_stages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -304,7 +304,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                         }
 
                         app.database.child("channel").child(currentChannel!!.id)
-                            .child("task_stages")
+                            .child("projects").child(project.proj_id).child("proj_task_stages")
                             .removeEventListener(this)
                     }
                     val adapter = ArrayAdapter(
@@ -360,10 +360,11 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
     companion object {
         @JvmStatic
-        fun newInstance(channel: Channel) =
+        fun newInstance(channel: Channel,project: Project) =
             CreateTaskFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("channel_key", channel)
+                    putParcelable("proj_key", project)
                 }
             }
     }
