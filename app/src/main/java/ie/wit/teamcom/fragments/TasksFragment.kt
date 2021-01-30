@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -22,6 +23,7 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
+import kotlinx.android.synthetic.main.fragment_role_list.view.*
 import kotlinx.android.synthetic.main.fragment_tasks.view.*
 import kotlinx.android.synthetic.main.fragment_tasks.view.tasks6RecyclerView
 import kotlinx.android.synthetic.main.popup_change_stage.view.*
@@ -44,7 +46,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     var selected_stage = TaskStage()
     var selected_task = Task()
     var selected_project = Project()
-
+    var completed_tasks = ArrayList<Task>()
+    var active_tasks = ArrayList<Task>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,16 +75,117 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
 
         root.btnCreateTask.setOnClickListener {
-            navigateTo(CreateTaskFragment.newInstance(currentChannel,selected_project))
+            navigateTo(CreateTaskFragment.newInstance(currentChannel, selected_project))
         }
+        setSwipeRefresh()
 
         return root
+    }
+
+    fun setSwipeRefresh() {
+        root.swiperefreshTasks.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                root.swiperefreshTasks.isRefreshing = true
+                getAllTasks()
+            }
+        })
+    }
+
+
+    fun checkSwipeRefresh() {
+        if (root.swiperefreshTasks.isRefreshing) root.swiperefreshTasks.isRefreshing = false
+    }
+
+    fun update_project_stats() {
+        //count active tasks (excl. complete)
+        active_tasks = ArrayList<Task>()
+        for (i in 1..5) {
+            app.database.child("channels").child(currentChannel!!.id).child("projects")
+                .child(selected_project.proj_id).child("proj_task_stages").child("$i")
+                .child("stage_tasks")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        info("Firebase tasks/stages error : ${error.message}")
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val children = snapshot.children
+                        children.forEach {
+                            val task = it.getValue<Task>(Task::class.java)
+                            active_tasks.add(task!!)
+                            app.database.child("channels").child(currentChannel!!.id)
+                                .child("projects").child(selected_project.proj_id)
+                                .child("proj_task_stages")
+                                .removeEventListener(this)
+                        }
+                        var active = active_tasks.size
+                        app.database.child("channels").child(currentChannel.id)
+                            .addValueEventListener(object : ValueEventListener {
+                                override fun onCancelled(error: DatabaseError) {
+                                }
+
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    val childUpdates_ = HashMap<String, Any>()
+                                    childUpdates_["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_active_tasks/"] =
+                                        active
+                                    app.database.updateChildren(childUpdates_)
+
+                                    app.database.child("channels").child(currentChannel.id)
+                                        .removeEventListener(this)
+                                }
+                            })
+                    }
+                })
+        }
+
+        //count complete tasks
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages").child("0")
+            .child("stage_tasks")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase tasks/stages error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val children = snapshot.children
+                    children.forEach {
+                        val task = it.getValue<Task>(Task::class.java)
+                        completed_tasks.add(task!!)
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages").child("stage_tasks")
+                            .removeEventListener(this)
+                    }
+                    var completed = completed_tasks.size
+                    app.database.child("channels").child(currentChannel.id)
+                        .addValueEventListener(object : ValueEventListener {
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val childUpdates = HashMap<String, Any>()
+                                childUpdates["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_completed_tasks/"] =
+                                    completed
+                                app.database.updateChildren(childUpdates)
+
+                                app.database.child("channels").child(currentChannel.id)
+                                    .removeEventListener(this)
+                            }
+                        })
+                }
+            })
+
+        //save new number to db
+
     }
 
     override fun onResume() {
         super.onResume()
         app.activityResumed(currentChannel, app.currentActiveMember)
         getAllTasks()
+        update_project_stats()
+
     }
 
     override fun onPause() {
@@ -92,7 +196,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     fun getAllTasks() {
         task_list_1 = ArrayList<Task>()
         root.tasks1RecyclerView.adapter = TasksAdapter(task_list_1, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages").child("0")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages").child("0")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -108,9 +213,10 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks1RecyclerView.adapter =
                             TasksAdapter(task_list_1, this@TasksFragment)
                         root.tasks1RecyclerView.adapter?.notifyDataSetChanged()
-                        //checkSwipeRefresh()
+                        checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -119,7 +225,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         task_list_2 = ArrayList<Task>()
         root.tasks2RecyclerView.adapter = TasksAdapter(task_list_2, this@TasksFragment)
 
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages").child("1")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages").child("1")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -137,7 +244,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks2RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -145,7 +253,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_3 = ArrayList<Task>()
         root.tasks3RecyclerView.adapter = TasksAdapter(task_list_3, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages").child("2")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages").child("2")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -163,7 +272,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks3RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -171,7 +281,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_4 = ArrayList<Task>()
         root.tasks4RecyclerView.adapter = TasksAdapter(task_list_4, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages").child("3")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages").child("3")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -189,7 +300,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks4RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -197,7 +309,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_5 = ArrayList<Task>()
         root.tasks5RecyclerView.adapter = TasksAdapter(task_list_5, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages").child("4")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages").child("4")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -215,7 +328,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks5RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -223,7 +337,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_6 = ArrayList<Task>()
         root.tasks6RecyclerView.adapter = TasksAdapter(task_list_6, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages").child("5")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages").child("5")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -241,7 +356,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks6RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -279,7 +395,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         val stageRecycler = dialog.findViewById(R.id.stage_rec) as RecyclerView
         stageRecycler.layoutManager = LinearLayoutManager(activity)
 
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
@@ -296,7 +413,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         stageRecycler.adapter = StageAdapter(task_stage_list, this@TasksFragment)
                         stageRecycler.adapter?.notifyDataSetChanged()
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -309,7 +427,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
 
     fun getCurrentTaskStage(task: Task) {
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(selected_project.proj_id).child("proj_task_stages")
+        app.database.child("channels").child(currentChannel!!.id).child("projects")
+            .child(selected_project.proj_id).child("proj_task_stages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase tasks/stages error : ${error.message}")
@@ -324,7 +443,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         }
 
                         app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id).child("proj_task_stages")
+                            .child("projects").child(selected_project.proj_id)
+                            .child("proj_task_stages")
                             .removeEventListener(this)
                     }
                 }
@@ -362,6 +482,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
 
         taskStage.setOnClickListener {
+            dialog.dismiss()
             change_state_dialog(selected_stage, task)
         }
 
@@ -390,9 +511,16 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
 
     override fun onStageClick(stage: TaskStage) {
+        var index_of_task = selected_stage.stage_tasks.indexOf(selected_task)
+        index_of_task
+        selected_stage.stage_tasks.removeAt(index_of_task)
         selected_task.task_current_stage = stage.stage_name
         selected_task.task_current_stage_color = stage.stage_color_code
         stage.stage_tasks.add(selected_task)
+//        for (i in selected_stage.stage_tasks){
+//            if (selected_stage.stage_tasks[i].id ==  )
+//        }
+
         app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -404,33 +532,52 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         stage
                     app.database.updateChildren(childUpdates)
 
+                    val childUpdates_ = HashMap<String, Any>()
+                    childUpdates_["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/${selected_stage.stage_no - 1}/"] =
+                        selected_stage
+                    app.database.updateChildren(childUpdates_)
+
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
+                    getAllTasks()
                 }
             })
 
-        var deleted = false
-        var i = 0
-        while (!deleted) {
-            app.database.child("channels").child("projects").child(selected_project.proj_id).child("proj_task_stages")
-                .child("${selected_stage.stage_no - 1}").child("stage_tasks").child("$i")
-                .addListenerForSingleValueEvent(
-                    object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.ref.removeValue()
-                            deleted = true
-                        }
+//        app.database.child("channels").child(currentChannel!!.id).child("projects")
+//            .child(selected_project.proj_id).child("proj_task_stages").child("${stage.stage_no - 1}").child("stage_tasks")
+//            .addListenerForSingleValueEvent(
+//                object : ValueEventListener {
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        snapshot.ref.removeValue()
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//                    }
+//                })
 
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-                    })
-            if (i <= 5 && !deleted) {
-                i++
-            } else if (i > 5 && !deleted) {
-                //Toast.makeText(requireContext(), "Error: Task Not Found In Any Stages!", Toast.LENGTH_SHORT).show()
-                return
-            }
-        }
+//        var deleted = false
+//        var i = 0
+//        while (!deleted) {
+//            app.database.child("channels").child("projects").child(selected_project.proj_id).child("proj_task_stages")
+//                .child("${selected_stage.stage_no - 1}").child("stage_tasks").child("$i")
+//                .addListenerForSingleValueEvent(
+//                    object : ValueEventListener {
+//                        override fun onDataChange(snapshot: DataSnapshot) {
+//                            snapshot.ref.removeValue()
+//                            deleted = true
+//                            return
+//                        }
+//
+//                        override fun onCancelled(error: DatabaseError) {
+//                        }
+//                    })
+//            if (i <= 5 && !deleted) {
+//                i++
+//            } else if (i > 5 && !deleted) {
+//                //Toast.makeText(requireContext(), "Error: Task Not Found In Any Stages!", Toast.LENGTH_SHORT).show()
+//                return
+//            }
+//        }
     }
 
 
