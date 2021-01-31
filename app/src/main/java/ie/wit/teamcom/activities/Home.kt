@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -18,14 +19,22 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import ie.wit.adventurio.helpers.uploadProfileImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Reminder
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.app_bar_home.*
+import kotlinx.android.synthetic.main.card_channel.view.*
 import kotlinx.android.synthetic.main.home.*
+import kotlinx.android.synthetic.main.nav_header_home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.startActivity
 import java.util.ArrayList
@@ -39,11 +48,11 @@ class Home : AppCompatActivity(),
 
     lateinit var ft: FragmentTransaction
     var user = Account()
-    lateinit var eventListener : ValueEventListener
+    lateinit var eventListener: ValueEventListener
     var channel = Channel()
     var reminderList = ArrayList<Reminder>()
     var num_reminders = 0
-    lateinit var notificationManager : NotificationManager
+    lateinit var notificationManager: NotificationManager
     var reminders_list = ArrayList<Reminder>()
 
 
@@ -58,7 +67,8 @@ class Home : AppCompatActivity(),
         navView.setNavigationItemSelectedListener(this)
 
 
-        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout, toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
@@ -72,13 +82,20 @@ class Home : AppCompatActivity(),
         channel = intent.getParcelableExtra("channel_key")
         app.getAllMembers(channel.id)
         getUser()
-        notificationManager =
-            getSystemService(
-                Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = getSystemService(
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager
+
+        navView.getHeaderView(0).btn_change_channel.setOnClickListener {
+            finish()
+        }
+
 
     }
-    fun getActiveReminders(channel_id: String){
-        app.database.child("channels").child(channel_id).child("reminders").child(app.currentActiveMember.id)
+
+    fun getActiveReminders(channel_id: String) {
+        app.database.child("channels").child(channel_id).child("reminders")
+            .child(app.currentActiveMember.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val children = dataSnapshot.children
@@ -96,31 +113,35 @@ class Home : AppCompatActivity(),
             })
     }
 
-    fun checkActiveReminders(){
+    fun checkActiveReminders() {
         app.generateDateID("1")
         var due_soon = 0
         //var reminders_desc = ArrayList<String>()
         var rems = ""
 
         reminders_list.forEach {
-            if (it.rem_reminder_date_it >= app.valid_from_cal && it.rem_date_id <= app.valid_from_cal){
-                due_soon ++
-                rems +="\""+it.rem_msg+ "\""+", "
-            } else if (it.rem_date_id > app.valid_from_cal){
+            if (it.rem_reminder_date_it >= app.valid_from_cal && it.rem_date_id <= app.valid_from_cal) {
+                due_soon++
+                rems += "\"" + it.rem_msg + "\"" + ", "
+            } else if (it.rem_date_id > app.valid_from_cal) {
                 it.rem_status = "Overdue"
                 val childUpdates = HashMap<String, Any>()
-                childUpdates["/channels/${currentChannel!!.id}/reminders/${app.currentActiveMember.id}/${it.id}/"] = it
+                childUpdates["/channels/${currentChannel!!.id}/reminders/${app.currentActiveMember.id}/${it.id}/"] =
+                    it
                 app.database.updateChildren(childUpdates)
             }
         }
-        if (due_soon != 0){
+        if (due_soon != 0) {
             rems = rems.substring(0, rems.length - 2)
-            createNotificationChannel("ie.wit.teamcom",
+            createNotificationChannel(
+                "ie.wit.teamcom",
                 "${due_soon} Upcoming reminder(s)!",
-                "${rems} are due within 24 hours!")
+                "${rems} are due within 24 hours!"
+            )
         }
 
     }
+
     //updates only image attribute of user
     fun updateUserProfile(uid: String?, image: Int) {
         app.database.child("user-stats").child(uid!!).child("image")
@@ -136,7 +157,7 @@ class Home : AppCompatActivity(),
     }
 
     //get logged in user
-    private fun getUser(){
+    private fun getUser() {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val rootRef = FirebaseDatabase.getInstance().reference
         val uidRef = rootRef.child("users").child(uid)
@@ -153,6 +174,17 @@ class Home : AppCompatActivity(),
                 var newsFeedFragment = NewsFeedFragment.newInstance(channel)
                 navigateTo(NewsFeedFragment.newInstance(channel))
                 navView.getHeaderView(0).nav_header_name.text = "${user.firstName} ${user.surname}"
+                navView.getHeaderView(0).nav_channel_name.text = channel.channelName
+
+                var ref = FirebaseStorage.getInstance()
+                    .getReference("channel_photos/profile/${channel.id}.jpg")
+                ref.downloadUrl.addOnSuccessListener {
+                    Picasso.get().load(it)
+                        .resize(150, 150)
+                        .transform(CropCircleTransformation())
+                        .into(navView.getHeaderView(0).img_channel_image)
+                }
+
                 uidRef.removeEventListener(this)
 
                 //image upload check
@@ -204,8 +236,10 @@ class Home : AppCompatActivity(),
 
     }
 
-    fun createNotificationChannel(id: String, name: String,
-                                  description: String) {
+    fun createNotificationChannel(
+        id: String, name: String,
+        description: String
+    ) {
 
         val importance = NotificationManager.IMPORTANCE_LOW
         val notific_channel = NotificationChannel(id, name, importance)
@@ -223,8 +257,10 @@ class Home : AppCompatActivity(),
         val channelID = id
 
 
-        val notification = Notification.Builder(this@Home,
-            channelID)
+        val notification = Notification.Builder(
+            this@Home,
+            channelID
+        )
             .setContentTitle(name)
             .setContentText(description)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -235,13 +271,12 @@ class Home : AppCompatActivity(),
         notificationManager?.notify(notificationID, notification)
     }
 
-    fun recurring_methods(){
+    fun recurring_methods() {
         getActiveReminders(channel.id)
 
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
             ///social
             R.id.nav_news_feed -> {
@@ -305,9 +340,6 @@ class Home : AppCompatActivity(),
     }
 
 
-
-
-
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -317,10 +349,7 @@ class Home : AppCompatActivity(),
     }
 
 
-
-
-
-    private fun signOut(){
+    private fun signOut() {
         app.auth.signOut()
         app.googleSignInClient.signOut()
         finish()
