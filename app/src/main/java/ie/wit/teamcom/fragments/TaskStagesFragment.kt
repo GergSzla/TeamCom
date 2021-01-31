@@ -479,7 +479,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
 
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
-                    navigateTo(NewsFeedFragment.newInstance(currentChannel))
+                    navigateTo(ProjectListFragment.newInstance(currentChannel))
                 }
             })
     }

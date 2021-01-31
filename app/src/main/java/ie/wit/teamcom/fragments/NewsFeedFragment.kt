@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.PostAdapter
 import ie.wit.teamcom.adapters.PostListener
+import ie.wit.teamcom.interfaces.IOnBackPressed
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
@@ -71,7 +73,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
     }
 
     fun createPost(){
-        app.database.child("channels").child(currentChannel!!.id)
+        app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -95,7 +97,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     app.database.updateChildren(logUpdates)
 
                     checkSwipeRefresh()
-                    app.database.child("channels").child(currentChannel!!.id)
+                    app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
                 }
             })
@@ -116,7 +118,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
 
     fun getAllPosts() {
         postList = ArrayList<Post>()
-        app.database.child("channels").child(currentChannel!!.id).child("posts").orderByChild("post_date_id")
+        app.database.child("channels").child(currentChannel.id).child("posts").orderByChild("post_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase nf error : ${error.message}")
@@ -134,7 +136,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                         )
                         root.postsRecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("posts")
+                        app.database.child("channels").child(currentChannel.id).child("posts")
                             .orderByChild(
                                 "post_date_id"
                             )
@@ -164,20 +166,20 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllPosts()
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
 
     var alreadyLiked: Boolean = false
     fun getAllPostLikes(post: Post){
         likesList = ArrayList<String>()
-        app.database.child("channels").child(currentChannel!!.id).child("posts").child(post.id).child(
+        app.database.child("channels").child(currentChannel.id).child("posts").child(post.id).child(
             "liked_by"
         )
             .addValueEventListener(object : ValueEventListener {
@@ -191,7 +193,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     children.forEach {
                         val like = it.getValue<String>(String::class.java)
                         likesList.add(like!!)
-                        app.database.child("channels").child(currentChannel!!.id).child("posts")
+                        app.database.child("channels").child(currentChannel.id).child("posts")
                             .child(
                                 post.id
                             ).child("liked_by")
@@ -212,7 +214,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     }
 
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel!!.id}/posts/${post.id}/"] = post
+                    childUpdates["/channels/${currentChannel.id}/posts/${post.id}/"] = post
                     app.database.updateChildren(childUpdates)
                     getAllPosts()
 
