@@ -4,9 +4,12 @@ import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -39,12 +42,12 @@ class MainApp : Application() {
     var rem_dateAsString = ""
     var rem_timeAsString = ""
     var timeAsString = ""
-    var reminder_due_date_id : Long = 0
+    var reminder_due_date_id: Long = 0
     var valid_to_String = ""
     var valid_from_String = ""
     var user = Account()
-    lateinit var eventListener : ValueEventListener
-    lateinit var notificationManager : NotificationManager
+    lateinit var eventListener: ValueEventListener
+    lateinit var notificationManager: NotificationManager
     var user_is_online: Boolean = false
 
     override fun onCreate() {
@@ -64,6 +67,13 @@ class MainApp : Application() {
         return user_is_online
     }
 
+    fun copy_invitation(inv_code: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copy Text", inv_code)
+
+        clipboard.setPrimaryClip(clip)
+    }
+
     fun activityResumed(channel: Channel, current_user: Member) {
         user_is_online = true
         database.child("channels").child(channel.id).child(current_user.id)
@@ -73,7 +83,8 @@ class MainApp : Application() {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${channel.id}/members/${current_user.id}/online"] = user_is_online
+                    childUpdates["/channels/${channel.id}/members/${current_user.id}/online"] =
+                        user_is_online
 
                     database.updateChildren(childUpdates)
                     database.child("channels").child(channel.id).child(current_user.id)
@@ -91,7 +102,8 @@ class MainApp : Application() {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${channel.id}/members/${current_user.id}/online"] = user_is_online
+                    childUpdates["/channels/${channel.id}/members/${current_user.id}/online"] =
+                        user_is_online
 
                     database.updateChildren(childUpdates)
                     database.child("channels").child(channel.id).child(current_user.id)
@@ -157,8 +169,9 @@ class MainApp : Application() {
             })
     }
 
-    fun getActiveReminders(channel_id: String){
-        database.child("channels").child(channel_id).child("reminders").child(currentActiveMember.id)
+    fun getActiveReminders(channel_id: String) {
+        database.child("channels").child(channel_id).child("reminders")
+            .child(currentActiveMember.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val children = dataSnapshot.children
@@ -176,19 +189,19 @@ class MainApp : Application() {
             })
     }
 
-    fun checkActiveReminders(){
+    fun checkActiveReminders() {
         generateDateID("1")
         var due_soon = 0
         //var reminders_desc = ArrayList<String>()
         var rems = ""
 
         reminders_list.forEach {
-            if (it.rem_reminder_date_it >= valid_from_cal && it.rem_date_id <= valid_from_cal){
-                due_soon ++
-                rems +="\""+it.rem_msg+ "\""+", "
+            if (it.rem_reminder_date_it >= valid_from_cal && it.rem_date_id <= valid_from_cal) {
+                due_soon++
+                rems += "\"" + it.rem_msg + "\"" + ", "
             }
         }
-        if (due_soon != 0){
+        if (due_soon != 0) {
             rems = rems.substring(0, rems.length - 2)
             createNotificationChannel(
                 "ie.wit.teamcom",
@@ -199,9 +212,9 @@ class MainApp : Application() {
 
     }
 
-    fun getCurrentActiveMember(channel_id: String){
+    fun getCurrentActiveMember(channel_id: String) {
         membersList.forEach {
-            if(it.id == auth.currentUser!!.uid){
+            if (it.id == auth.currentUser!!.uid) {
                 currentActiveMember = it
             }
         }
@@ -211,19 +224,19 @@ class MainApp : Application() {
         /*
         GETS VALID FROM
          */
-        var currentEndDateTime= LocalDateTime.now()
+        var currentEndDateTime = LocalDateTime.now()
         var year = Calendar.getInstance().get(Calendar.YEAR).toString()
         var month = ""
-        month = if (Calendar.getInstance().get(Calendar.MONTH)+1 < 10){
-            "0"+(Calendar.getInstance().get(Calendar.MONTH)+1).toString()
-        }else{
-            (Calendar.getInstance().get(Calendar.MONTH)+1).toString()
+        month = if (Calendar.getInstance().get(Calendar.MONTH) + 1 < 10) {
+            "0" + (Calendar.getInstance().get(Calendar.MONTH) + 1).toString()
+        } else {
+            (Calendar.getInstance().get(Calendar.MONTH) + 1).toString()
         }
 
         var day = ""
-        day = if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) < 10){
-            "0"+(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toString()
-        }else{
+        day = if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) < 10) {
+            "0" + (Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toString()
+        } else {
             (Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toString()
         }
         var hour = currentEndDateTime.format(DateTimeFormatter.ofPattern("HH")).toString()
@@ -233,50 +246,52 @@ class MainApp : Application() {
         /*
         NOW GET FOR VALID TO (+HRS VALID)
          */
-        valid_from_String = day+"/"+month+"/"+year+", "+hour+":"+minutes+":"+seconds
+        valid_from_String =
+            day + "/" + month + "/" + year + ", " + hour + ":" + minutes + ":" + seconds
 
-        var dateId = year+month+day+hour+minutes+seconds
+        var dateId = year + month + day + hour + minutes + seconds
 
         var cal = LocalDateTime.now().plusHours(hrs.toLong())
 
         var year1 = cal.year.toString()
-        var month1  = ""
+        var month1 = ""
         month1 = if (cal.monthValue < 10) {
             "0" + (cal.monthValue).toString()
-        } else{
+        } else {
             (cal.monthValue).toString()
         }
 
-        var day1 =""
+        var day1 = ""
         day1 = if (cal.dayOfMonth < 10) {
             "0" + (cal.dayOfMonth).toString()
-        } else{
+        } else {
             (cal.dayOfMonth).toString()
         }
 
         var hour1 = ""
         hour1 = if (cal.hour < 10) {
             "0" + (cal.hour).toString()
-        } else{
+        } else {
             (cal.hour).toString()
         }
 
         var minutes1 = ""
         minutes1 = if (cal.minute < 10) {
             "0" + (cal.minute).toString()
-        } else{
+        } else {
             (cal.minute).toString()
         }
 
-        var seconds1= ""
+        var seconds1 = ""
         seconds1 = if (cal.second < 10) {
             "0" + (cal.second).toString()
-        } else{
+        } else {
             (cal.second).toString()
         }
 
-        valid_to_String = day1+"/"+month1+"/"+year1+", "+hour1+":"+minutes1+":"+seconds1
-        var dateId_end = year1+month1+day1+hour1+minutes1+seconds1
+        valid_to_String =
+            day1 + "/" + month1 + "/" + year1 + ", " + hour1 + ":" + minutes1 + ":" + seconds1
+        var dateId_end = year1 + month1 + day1 + hour1 + minutes1 + seconds1
 
         /*
         NOW GET AUTO DELETION
@@ -285,42 +300,42 @@ class MainApp : Application() {
         var cal1 = LocalDateTime.now().plusHours(hrs.toLong() + 36)
 
         var year2 = cal1.year.toString()
-        var month2  = ""
-        month2 = if (cal1.monthValue+1 < 10) {
+        var month2 = ""
+        month2 = if (cal1.monthValue + 1 < 10) {
             "0" + (cal1.monthValue + 1).toString()
-        } else{
-            (cal1.monthValue+1).toString()
+        } else {
+            (cal1.monthValue + 1).toString()
         }
 
-        var day2 =""
+        var day2 = ""
         day2 = if (cal1.dayOfMonth < 10) {
             "0" + (cal1.dayOfMonth).toString()
-        } else{
+        } else {
             (cal1.dayOfMonth).toString()
         }
 
         var hour2 = ""
         hour2 = if (cal1.hour < 10) {
             "0" + (cal1.hour).toString()
-        } else{
+        } else {
             (cal1.hour).toString()
         }
 
         var minutes2 = ""
         minutes2 = if (cal1.minute < 10) {
             "0" + (cal1.minute).toString()
-        } else{
+        } else {
             (cal1.minute).toString()
         }
 
-        var seconds2= ""
+        var seconds2 = ""
         seconds2 = if (cal1.second < 10) {
             "0" + (cal1.second).toString()
-        } else{
+        } else {
             (cal1.second).toString()
         }
 
-        var dateId_delete = year2+month2+day2+hour2+minutes2+seconds2
+        var dateId_delete = year2 + month2 + day2 + hour2 + minutes2 + seconds2
 
 
         auto_delete_cal = 100000000000000 - dateId_delete.toLong()
@@ -331,7 +346,6 @@ class MainApp : Application() {
     }
 
 
-
     fun generate_date_reminder_id(
         dd: String,
         m: String,
@@ -339,50 +353,50 @@ class MainApp : Application() {
         hh: String,
         mm: String,
         ss: String
-    ){
+    ) {
         var year = yy
-        var month  = ""
+        var month = ""
         month = if (m.toInt() < 10) {
             "0" + (m.toInt()).toString()
-        } else{
+        } else {
             (m.toInt()).toString()
         }
 
-        var day =""
+        var day = ""
         day = if (dd.toInt() < 10) {
             "0" + (dd.toInt()).toString()
-        } else{
+        } else {
             (dd.toInt()).toString()
         }
 
         var hour = ""
         hour = if (hh.toInt() < 10) {
             "0" + (hh.toInt()).toString()
-        } else{
+        } else {
             (hh.toInt()).toString()
         }
 
         var minutes = ""
         minutes = if (mm.toInt() < 10) {
             "0" + (mm.toInt()).toString()
-        } else{
+        } else {
             (mm.toInt()).toString()
         }
 
         var seconds = ""
         seconds = if (ss.toInt() < 10) {
             "0" + (ss.toInt()).toString()
-        } else{
+        } else {
             (ss.toInt()).toString()
         }
 
-        var date = year+month+day+hour+minutes+seconds
+        var date = year + month + day + hour + minutes + seconds
         rem_dateAsString = "${day}/${month}/${year}"
         rem_timeAsString = "${hour}:${minutes}"
         reminder_due_date_id = 100000000000000 - date.toLong()
     }
 
-    fun getUser(){
+    fun getUser() {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val rootRef = FirebaseDatabase.getInstance().reference
         val uidRef = rootRef.child("users").child(uid)

@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Invite
+import ie.wit.teamcom.models.Meeting
 import kotlinx.android.synthetic.main.card_invite.view.*
 
 
 interface InviteListener {
+    fun onInviteClicked(invite: Invite)
 }
 
 class InviteAdapter constructor(var invites: ArrayList<Invite>,
@@ -45,6 +47,9 @@ class InviteAdapter constructor(var invites: ArrayList<Invite>,
             itemView.txtValidTo_Card.text = invite.valid_to_as_string
             itemView.txtUses_Card.text = invite.invite_uses.toString() + "/" + invite.invite_use_limit.toString()
 
+            itemView.setOnClickListener {
+                listener.onInviteClicked(invite)
+            }
 
             /*itemView.txtRoleNameCard.text = role.role_name
             itemView.txtRoleNameCard.setTextColor(Color.parseColor(role.color_code))

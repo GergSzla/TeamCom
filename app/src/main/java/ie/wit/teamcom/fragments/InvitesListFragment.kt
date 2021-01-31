@@ -1,6 +1,10 @@
 package ie.wit.teamcom.fragments
 
+import android.R.attr.label
 import android.app.Dialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +13,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,23 +25,13 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.InviteAdapter
 import ie.wit.teamcom.adapters.InviteListener
-import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Invite
-import ie.wit.teamcom.models.Log
-import ie.wit.teamcom.models.Member
+import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.fragment_invites_list.view.*
 import kotlinx.android.synthetic.main.fragment_members.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.time.LocalDateTime
-import java.time.Month
-import java.time.MonthDay
-import java.time.Year
-import java.time.format.DateTimeFormatter
 import java.util.*
-
 
 
 class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
@@ -45,6 +41,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
     var invitesList = ArrayList<Invite>()
     var invite = Invite()
     var key_set : String = ""
+    var myClipboard: ClipboardManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,15 +71,20 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         return root
     }
 
+    override fun onInviteClicked(invite: Invite) {
+        app.copy_invitation(invite.invite_code)
+        Toast.makeText(context,"Invite Code Copied to Clipboard!",Toast.LENGTH_SHORT).show()
+    }
+
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllChannelInvites()
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
     fun getAllChannelInvites() {
@@ -204,11 +206,19 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
 
                     child1Updates["/invites/${invite.invite_code}/"] = invite
                     app.database.updateChildren(child1Updates)
-                    childUpdates["/channels/${currentChannel.id}/invites/${invite.invite_code}"] = invite
-                    childUpdates["/invites/${invite.invite_code}/belongs_to/${currentChannel.id}"] = currentChannel
+                    childUpdates["/channels/${currentChannel.id}/invites/${invite.invite_code}"] =
+                        invite
+                    childUpdates["/invites/${invite.invite_code}/belongs_to/${currentChannel.id}"] =
+                        currentChannel
                     app.database.updateChildren(childUpdates)
 
-                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "Invite was created [${invite.invite_code}] with ${invite.invite_use_limit} uses and expires on ${invite.valid_to_as_string}.")
+                    var new_log = Log(
+                        log_id = app.valid_from_cal,
+                        log_triggerer = app.currentActiveMember,
+                        log_date = app.dateAsString,
+                        log_time = app.timeAsString,
+                        log_content = "Invite was created [${invite.invite_code}] with ${invite.invite_use_limit} uses and expires on ${invite.valid_to_as_string}."
+                    )
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
