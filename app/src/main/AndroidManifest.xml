@@ -30,12 +30,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.LoginRegActivity"
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.ChannelsListActivity"
             tools:ignore="LockedOrientationActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_channels_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.LoginRegActivity">
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
