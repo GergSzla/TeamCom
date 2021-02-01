@@ -110,7 +110,8 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                         if (task.isSuccessful) {
                             val user = app.auth.currentUser
                             app.database = FirebaseDatabase.getInstance().reference
-                            startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+//                            startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                            getUser()
                         } else {
                             Toast.makeText(baseContext, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
@@ -163,7 +164,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                         val childUpdates = HashMap<String, Any>()
                         childUpdates["/users/$uid"] = user
                         app.database.updateChildren(childUpdates)
-                        startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+//                        startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
                     }
                     getUser()
                     app.database.child("users")
