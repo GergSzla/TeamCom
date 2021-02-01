@@ -51,6 +51,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
     var channelsList = ArrayList<Channel>()
     val layoutManager = LinearLayoutManager(this)
     var user = Account()
+    var is_edited = false
     val IMAGE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,23 +64,23 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         //app.getAllMembers(currentChannel.id)
         user = intent.extras!!.getParcelable<Account>("user_key")!!
 
-        if(user.image == 0) {
+        if (user.image == 0) {
             if (app.auth.currentUser?.photoUrl != null) {
                 Picasso.get().load(app.auth.currentUser?.photoUrl)
                     .resize(260, 260)
                     .transform(CropCircleTransformation())
                     .into(profImage, object : Callback {
-                    override fun onSuccess() {
-                        // Drawable is ready
-                        uploadProfileImageView(app, profImage)
-                        user.image = 1
-                        updateUserProfile(app.auth.currentUser!!.uid, user.image)
-                    }
+                        override fun onSuccess() {
+                            // Drawable is ready
+                            uploadProfileImageView(app, profImage)
+                            user.image = 1
+                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                        }
 
-                    override fun onError(e: Exception) {
-                    }
+                        override fun onError(e: Exception) {
+                        }
 
-                })
+                    })
             } else {
                 Picasso.get().load(R.mipmap.user)
                     .resize(260, 260)
@@ -95,8 +96,9 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                         override fun onError(e: Exception) {}
                     })
             }
-        } else if (user.image == 1){
-            var ref = FirebaseStorage.getInstance().getReference("photos/${app.auth.currentUser!!.uid}.jpg")
+        } else if (user.image == 1) {
+            var ref = FirebaseStorage.getInstance()
+                .getReference("photos/${app.auth.currentUser!!.uid}.jpg")
             ref.downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it)
                     .resize(260, 260)
@@ -128,7 +130,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
             editTxtDisplayEmail.isVisible = true
             txtSaveProfile.isVisible = true
             txtClickChangeImg.isVisible = true
-            editTxtDisplayFullName.setText(user.firstName+" "+user.surname)
+            editTxtDisplayFullName.setText(user.firstName + " " + user.surname)
             editTxtDisplayEmail.setText(user.email)
 
 
@@ -159,7 +161,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
             txtDisplayFullName.isVisible = true
             txtDisplayEmail.isVisible = true
             txtEditProfile.isVisible = true
-            uploadProfileImageView(app,profImage)
+            uploadProfileImageView(app, profImage)
 
             app.database.child("users").child(user.id)
                 .addValueEventListener(object : ValueEventListener {
@@ -169,11 +171,15 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val childUpdates = HashMap<String, Any>()
                         childUpdates["/users/${user.id}/firstName"] = user.firstName
-                        childUpdates["/users/${user.id}/surname"] = user.surname
+                        val childUpdates_ = HashMap<String, Any>()
+
+                        childUpdates_["/users/${user.id}/surname"] = user.surname
 
                         app.database.updateChildren(childUpdates)
+                        app.database.updateChildren(childUpdates_)
 
-                        app.database.child("channels").child(currentChannel!!.id)
+                        change_user_details_in_channels()
+                        app.database.child("users").child(user.id)
                             .removeEventListener(this)
                     }
                 })
@@ -205,6 +211,11 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         btnAddNew.setOnClickListener {
             dialog?.show()
         }
+    }
+
+    fun change_user_details_in_channels() {
+        is_edited = true
+        getAllUserChannels(app.auth.currentUser!!.uid)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -251,14 +262,41 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                     //hideLoader(loader)
                     val children = snapshot.children
 
-                    children.forEach {
-                        val channel = it.
-                        getValue<Channel>(Channel::class.java)
+                    children.forEach { it ->
+                        val channel = it.getValue<Channel>(Channel::class.java)
                         channelsRecyclerView.layoutManager = layoutManager
                         channelsList.add(channel!!)
-                        channelsRecyclerView.adapter = ChannelsAdapter(channelsList, this@ChannelsListActivity)
+                        channelsRecyclerView.adapter =
+                            ChannelsAdapter(channelsList, this@ChannelsListActivity)
                         channelsRecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
+                        if (is_edited) {
+                            channelsList.forEach {
+                                app.database.child("channels").child(it.id).child("members").child(userId)
+                                    .addValueEventListener(object : ValueEventListener {
+                                        override fun onCancelled(error: DatabaseError) {
+                                        }
+
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            val childUpdates = HashMap<String, Any>()
+                                            childUpdates["/channels/${it.id}/members/$userId/firstName"] =
+                                                user.firstName
+                                            val childUpdates_ = HashMap<String, Any>()
+
+                                            childUpdates_["/channels/${it.id}/members/$userId/surname"] =
+                                                user.surname
+
+                                            app.database.updateChildren(childUpdates)
+                                            app.database.updateChildren(childUpdates_)
+
+                                            change_user_details_in_channels()
+                                            app.database.child("channels").child(it.id).child("members").child(userId)
+                                                .child(currentChannel!!.id)
+                                                .removeEventListener(this)
+                                        }
+                                    })
+                            }
+                        }
                         app.database.child("users").child(userId).child("channels")
                             .removeEventListener(this)
                     }
@@ -281,9 +319,8 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
     }
 
 
-
     override fun onChannelClick(channel: Channel) {
-        startActivity(intentFor<Home>().putExtra("channel_key",channel))
+        startActivity(intentFor<Home>().putExtra("channel_key", channel))
     }
 
     private fun navigateTo(fragment: Fragment) {
