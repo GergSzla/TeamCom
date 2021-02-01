@@ -24,7 +24,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class ChannelJoin : AppCompatActivity() , AnkoLogger {
+class ChannelJoin : AppCompatActivity(), AnkoLogger {
 
 
     lateinit var app: MainApp
@@ -56,9 +56,12 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.hasChild(invite_code)){
+                    if (snapshot.hasChild(invite_code)) {
                         app.generateDateID("1")
-                        if(snapshot.child(invite_code).child("valid_to").value.toString().toLong() < app.valid_from_cal){
+                        if (snapshot.child(invite_code).child("valid_to").value.toString()
+                                .toLong() < app.valid_from_cal && snapshot.child(invite_code)
+                                .child("available").value == true
+                        ) {
                             val childUpdates = HashMap<String, Any>()
                             app.database.child("invites").child(invite_code).child("belongs_to")
                                 .addValueEventListener(object : ValueEventListener {
@@ -69,42 +72,101 @@ class ChannelJoin : AppCompatActivity() , AnkoLogger {
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         val children = snapshot.children
                                         children.forEach {
-                                            val channel = it.
-                                            getValue<Channel>(Channel::class.java)
+                                            val channel = it.getValue<Channel>(Channel::class.java)
 
                                             channelList.add(channel!!)
                                             val channelUpd = HashMap<String, Any>()
-                                            childUpdates["/users/$uid/channels/${channelList[0].id}"] = channelList[0]
-                                            childUpdates["/channels/${channelList[0].id}/members/$uid"] = app.user
-                                            channelUpd["/users/$uid/channels/${channelList[0].id}/orderDateId"] = app.valid_from_cal
+                                            childUpdates["/users/$uid/channels/${channelList[0].id}"] =
+                                                channelList[0]
+                                            childUpdates["/channels/${channelList[0].id}/members/$uid"] =
+                                                app.user
+                                            channelUpd["/users/$uid/channels/${channelList[0].id}/orderDateId"] =
+                                                app.valid_from_cal
 
                                             app.database.updateChildren(childUpdates)
                                             app.database.updateChildren(channelUpd)
 
                                             app.getAllMembers(channelList[0].id)
                                             val logUpdates = HashMap<String, Any>()
-                                            var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "${app.user.firstName} ${app.user.surname} has joined the channel.")
-                                            logUpdates["/channels/${channelList[0].id}/logs/${new_log.log_id}"] = new_log
+                                            var new_log = Log(
+                                                log_id = app.valid_from_cal,
+                                                log_triggerer = app.currentActiveMember,
+                                                log_date = app.dateAsString,
+                                                log_time = app.timeAsString,
+                                                log_content = "${app.user.firstName} ${app.user.surname} has joined the channel."
+                                            )
+                                            logUpdates["/channels/${channelList[0].id}/logs/${new_log.log_id}"] =
+                                                new_log
                                             app.database.updateChildren(logUpdates)
 
-                                            app.database.child("invites").child(invite_code).child("belongs_to")
+                                            app.database.child("invites").child(invite_code)
+                                                .child("belongs_to")
                                                 .removeEventListener(this)
                                         }
                                     }
                                 })
+                            app.database.child("invites").child(invite_code)
+                                .addValueEventListener(object : ValueEventListener {
+                                    override fun onCancelled(error: DatabaseError) {
+                                        info("Firebase error : ${error.message}")
+                                    }
+
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+
+
+                                        var invite_uses =
+                                            snapshot.child("invite_uses").value.toString()
+                                                .toInt()
+                                        var invite_use_limit =
+                                            snapshot.child("invite_use_limit").value.toString()
+                                                .toInt()
+                                        invite_uses += 1
+
+                                        val inv_update_uses = HashMap<String, Any>()
+                                        val inv_update_uses_ = HashMap<String, Any>()
+                                        inv_update_uses["/channels/${channelList[0].id}/invites/$invite_code/invite_uses/"] =
+                                            invite_uses
+                                        inv_update_uses_["/invites/$invite_code/invite_uses/"] =
+                                            invite_uses
+                                        app.database.updateChildren(inv_update_uses)
+                                        app.database.updateChildren(inv_update_uses_)
+
+                                        if (invite_uses == invite_use_limit) {
+                                            val inv_update_availability = HashMap<String, Any>()
+                                            val inv_update_availability_ = HashMap<String, Any>()
+
+                                            inv_update_availability["/channels/${channelList[0].id}/invites/$invite_code/available/"] =
+                                                false
+                                            inv_update_availability_["/invites/$invite_code/available/"] =
+                                                false
+                                            app.database.updateChildren(inv_update_availability)
+                                            app.database.updateChildren(inv_update_availability_)
+                                        }
+
+                                        app.database.child("invites").child(invite_code)
+                                            .removeEventListener(this)
+
+                                    }
+                                })
                         } else {
-                            Toast.makeText(this@ChannelJoin, "This Invite Has Expired", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                this@ChannelJoin,
+                                "This Invite Has Expired",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(this@ChannelJoin, "This Invite Does Not Exist", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@ChannelJoin,
+                            "This Invite Does Not Exist",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-                    app.database.child("invites").child(invite_code).child("belongs_to")
+                    app.database.child("invites")
                         .removeEventListener(this)
                 }
             })
     }
-
-
 
 
 }

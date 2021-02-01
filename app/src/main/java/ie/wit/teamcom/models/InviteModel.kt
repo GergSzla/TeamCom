@@ -16,7 +16,8 @@ data class Invite (
     var valid_to_as_string : String = "",
     var auto_deletion: Long = 0,
     var invite_uses: Int = 0,
-    var invite_use_limit: Int = 0
+    var invite_use_limit: Int = 0,
+    var available: Boolean = true
 
 ) : Parcelable
 
@@ -30,7 +31,8 @@ data class Invite (
             "valid_to" to valid_to,
             "auto_deletion" to auto_deletion,
             "invite_uses" to invite_uses,
-            "invite_use_limit" to invite_use_limit
+            "invite_use_limit" to invite_use_limit,
+            "available" to available
         )
     }
 }
