@@ -52,7 +52,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     var selected_project = Project()
     var completed_tasks = ArrayList<Task>()
     var active_tasks = ArrayList<Task>()
-    lateinit var loader : androidx.appcompat.app.AlertDialog
+    lateinit var loader: androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +122,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             active_tasks.add(task!!)
                             app.database.child("channels").child(currentChannel!!.id)
                                 .child("projects").child(selected_project.proj_id)
-                                .child("proj_task_stages")
+                                .child("proj_task_stages").child("$i")
                                 .removeEventListener(this)
                         }
                         var active = active_tasks.size
@@ -159,9 +159,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                     children.forEach {
                         val task = it.getValue<Task>(Task::class.java)
                         completed_tasks.add(task!!)
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id)
-                            .child("proj_task_stages").child("stage_tasks")
+                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                            .child(selected_project.proj_id).child("proj_task_stages").child("0")
+                            .child("stage_tasks")
                             .removeEventListener(this)
                     }
                     var completed = completed_tasks.size
@@ -221,9 +221,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             TasksAdapter(task_list_1, this@TasksFragment)
                         root.tasks1RecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id)
-                            .child("proj_task_stages")
+                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                            .child(selected_project.proj_id).child("proj_task_stages").child("0")
+                            .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -250,9 +250,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             TasksAdapter(task_list_2, this@TasksFragment)
                         root.tasks2RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id)
-                            .child("proj_task_stages")
+                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                            .child(selected_project.proj_id).child("proj_task_stages").child("1")
+                            .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -279,9 +279,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             TasksAdapter(task_list_3, this@TasksFragment)
                         root.tasks3RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id)
-                            .child("proj_task_stages")
+                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                            .child(selected_project.proj_id).child("proj_task_stages").child("2")
+                            .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -308,9 +308,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             TasksAdapter(task_list_4, this@TasksFragment)
                         root.tasks4RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id)
-                            .child("proj_task_stages")
+                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                            .child(selected_project.proj_id).child("proj_task_stages").child("3")
+                            .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -336,9 +336,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             TasksAdapter(task_list_5, this@TasksFragment)
                         root.tasks5RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id)
-                            .child("proj_task_stages")
+                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                            .child(selected_project.proj_id).child("proj_task_stages").child("4")
+                            .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }
@@ -364,9 +364,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             TasksAdapter(task_list_6, this@TasksFragment)
                         root.tasks6RecyclerView.adapter?.notifyDataSetChanged()
                         //checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .child("projects").child(selected_project.proj_id)
-                            .child("proj_task_stages")
+                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                            .child(selected_project.proj_id).child("proj_task_stages").child("5")
+                            .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
                 }

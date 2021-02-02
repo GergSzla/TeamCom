@@ -308,18 +308,6 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                     app.database.updateChildren(childUpdates)
 
 
-                    /*app.generateDateID("1")
-                    val logUpdates = HashMap<String, Any>()
-                    var new_log = ie.wit.teamcom.models.Log(
-                        log_id = app.valid_from_cal,
-                        log_triggerer = app.currentActiveMember,
-                        log_date = app.dateAsString,
-                        log_time = app.timeAsString,
-                        log_content = "${app.currentActiveMember.firstName} ${app.currentActiveMember.surname} created a new Meeting [${meeting.meeting_title} on ${meeting.meeting_date_as_string} @ ${meeting.meeting_time_as_string}]."
-                    )
-                    logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
-                    app.database.updateChildren(logUpdates)*/
-
                     hideLoader(loader)
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)

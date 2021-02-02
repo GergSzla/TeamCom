@@ -178,7 +178,7 @@ class MainApp : Application() {
                     children.forEach {
                         val reminder = it.getValue<Reminder>(Reminder::class.java)
                         reminders_list.add(reminder!!)
-                        database.child("channels").child(currentChannel!!.id).child("reminders")
+                        database.child("channels").child(channel_id).child("reminders")
                             .child(currentActiveMember.id).removeEventListener(this)
                     }
                     checkActiveReminders()

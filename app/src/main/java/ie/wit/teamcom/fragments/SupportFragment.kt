@@ -146,7 +146,7 @@ class SupportFragment : Fragment(), AnkoLogger {
                     childUpdates["/bugs/${new_bug.id}/"] = new_bug
                     app.database.updateChildren(childUpdates)
 
-                    app.database.child("channels").child(currentChannel.id)
+                    app.database.child("bugs")
                         .removeEventListener(this)
                 }
             })
