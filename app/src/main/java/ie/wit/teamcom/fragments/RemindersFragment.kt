@@ -22,6 +22,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.ReminderListener
 import ie.wit.teamcom.adapters.RemindersAdapter
@@ -43,6 +46,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     var reminderList = ArrayList<Reminder>()
     var new_reminder = Reminder()
     private var dialog: Dialog? = null
+    lateinit var loader : androidx.appcompat.app.AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +66,8 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         root = inflater.inflate(R.layout.fragment_reminders, container, false)
         activity?.title = getString(R.string.title_reminders)
         root.remindersRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        loader = createLoader(requireActivity())
 
         root.btnAddNewReminder.setOnClickListener {
             addReminder()
@@ -128,8 +134,11 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         }
 
         add.setOnClickListener {
+            showLoader(loader, "Loading . . . ", "Validating . . . ")
             validateForm()
+            hideLoader(loader)
             if (validateForm()){
+                showLoader(loader, "Loading . . . ", "Creating Reminder ${new_reminder.rem_msg} . . . ")
                 val remind_date = newDate
                 new_reminder.rem_date = remind_date.toString()
                 new_reminder.id = UUID.randomUUID().toString()
@@ -202,6 +211,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                     childUpdates["/channels/${currentChannel!!.id}/reminders/${app.currentActiveMember.id}/${new_reminder.id}/"] = new_reminder
                     app.database.updateChildren(childUpdates)
 
+                    hideLoader(loader)
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
                     dialog!!.dismiss()

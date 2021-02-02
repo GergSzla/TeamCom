@@ -2,17 +2,13 @@ package ie.wit.teamcom.activities
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -23,8 +19,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import ie.wit.adventurio.helpers.showImagePicker
-import ie.wit.adventurio.helpers.uploadProfileImageView
+import ie.wit.adventurio.helpers.*
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.ChannelListener
 import ie.wit.teamcom.adapters.ChannelsAdapter
@@ -33,14 +28,12 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.startActivity
 import java.io.IOException
 import java.util.*
 
@@ -53,6 +46,8 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
     var user = Account()
     var is_edited = false
     val IMAGE_REQUEST = 1
+    lateinit var loader : androidx.appcompat.app.AlertDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +56,9 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         app.auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
-        //app.getAllMembers(currentChannel.id)
+
+        loader = createLoader(this)
+
         user = intent.extras!!.getParcelable<Account>("user_key")!!
 
         if (user.image == 0) {
@@ -107,8 +104,9 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
             }
         }
 
-
+        showLoader(loader,"Loading . . .", "Loading User Data . . .")
         app.getUser()
+        hideLoader(loader)
 
         txtClickChangeImg.isVisible = false
         editTxtDisplayFullName.isVisible = false
@@ -117,7 +115,6 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         txtSaveProfile.isVisible = false
         editTxtDisplayWhatIDo.isVisible = false
 
-        //user = intent.getParcelableExtra("user_key")
         setSwipeRefresh()
         getAllUserChannels(app.auth.currentUser!!.uid)
 
@@ -250,7 +247,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
     }
 
     fun getAllUserChannels(userId: String?) {
-        //loader = createLoader(activity!!)
+        showLoader(loader, "Loading . . .", "Loading Channels . . . ")
         channelsList = ArrayList<Channel>()
         app.database.child("users").child(userId!!).child("channels").orderByChild("orderDateId")
             .addValueEventListener(object : ValueEventListener {
@@ -297,7 +294,8 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                                     })
                             }
                         }
-                        app.database.child("users").child(userId).child("channels")
+                        hideLoader(loader)
+                        app.database.child("users").child(userId).child("channels").orderByChild("orderDateId")
                             .removeEventListener(this)
                     }
                 }

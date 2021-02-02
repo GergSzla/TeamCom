@@ -16,6 +16,9 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.activities.Home
 import ie.wit.teamcom.main.MainApp
@@ -45,6 +48,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
     var yyyy = ""
     var h = ""
     var m = ""
+    lateinit var loader : androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,10 +68,12 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         root = inflater.inflate(R.layout.fragment_task_stages, container, false)
         activity?.title = getString(R.string.taskStages)
 
+        loader = createLoader(requireActivity())
+
+        showLoader(loader, "Loading . . . ", "Loading Page . . . ")
         page_setup()
-
         create_def_stages()
-
+        hideLoader(loader)
 
         root.checkboxStage3.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
@@ -250,7 +256,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         root.btnSaveStages.setOnClickListener {
+            showLoader(loader, "Loading . . . ", "Validating . . . ")
             validateForm()
+            hideLoader(loader)
             if (validateForm()){
                 save_stages_changes()
             }
@@ -517,7 +525,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
     }
 
     fun save_stages_changes() {
-
+        showLoader(loader, "Loading . . . ", "Saving Task Stages . . . ")
         //stage 1
         task_stage_1.id = UUID.randomUUID().toString()
         task_stage_1.stage_no = 1
@@ -604,12 +612,14 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         project.proj_due_date = "$dd/$mm/$yyyy"
         project.proj_due_time = "$h:$m"
         project.proj_task_stages = updated_stages
+        hideLoader(loader)
         create_project()
     }
 
 
 
     fun create_project() {
+        showLoader(loader, "Loading . . . ", "Creating Project ${project.proj_name} . . . ")
         app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -634,6 +644,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
+                    hideLoader(loader)
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
                     navigateTo(ProjectListFragment.newInstance(currentChannel))

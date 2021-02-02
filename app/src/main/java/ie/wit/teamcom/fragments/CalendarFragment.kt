@@ -17,6 +17,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.EventAdapter
 import ie.wit.teamcom.adapters.EventListener_
@@ -42,6 +45,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
     var month = ""
     var event = Event()
     var eventsList = ArrayList<Event>()
+    lateinit var loader : androidx.appcompat.app.AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +66,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         activity?.title = getString(R.string.title_calendar)
         root.calendarRecyclerView.layoutManager = LinearLayoutManager(activity)
 
+        loader = createLoader(requireActivity())
 
         var cal = Calendar.getInstance()
         val dateDialog = root.calPickDate
@@ -187,8 +192,13 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         }
 
         create_event.setOnClickListener{
+            showLoader(loader, "Loading . . .", "Validating . . .")
             validateForm()
+            hideLoader(loader)
+
+
             if (validateForm()){
+                showLoader(loader, "Loading . . .", "Creating Event ${event.event_name} . . .")
                 event.event_name = txt_event_name.text.toString()
                 event.event_desc = txt_event_desc.text.toString()
 
@@ -208,6 +218,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
                             childUpdates["/channels/${currentChannel.id}/events/${event.event_date}/${event.event_id}"] = event
                             app.database.updateChildren(childUpdates)
 
+                            hideLoader(loader)
                             app.database.child("channels").child(currentChannel.id)
                                 .removeEventListener(this)
                         }

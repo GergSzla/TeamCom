@@ -56,7 +56,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
 
         root.imgBtnSend.setOnClickListener {
             validateForm()
-            if (root.editTextPost.text.toString() !== ""){
+            if (validateForm()){
                 sendPost()
             }
         }

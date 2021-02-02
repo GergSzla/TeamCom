@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -18,6 +19,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
@@ -35,6 +39,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
     lateinit var app: MainApp
     lateinit var eventListener : ValueEventListener
+    lateinit var loader : AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +50,8 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
         app.auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
+
+        loader = createLoader(this)
 
         txtFirstName.isVisible = false
         txtSurname.isVisible = false
@@ -73,10 +80,9 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
 
         btnRegister.setOnClickListener{
-            //val AccountList = app.users.getAllAccounts() as ArrayList<Account>
-
+            showLoader(loader, "Loading . . .","Validating . . .")
             validateForm(true)
-
+            hideLoader(loader)
             if(!(txtEmail.text.toString() == "" ||
                         txtFirstName.text.toString() == "" ||
                         txtSurname.text.toString() == "" ||
@@ -189,9 +195,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun createAccount(email: String, password: String) {
-        /*if (!validateForm()) {
-            return
-        }*/
+        showLoader(loader, "Loading . . .", "Registering User . . .")
         app.auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -200,18 +204,19 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     app.database = FirebaseDatabase.getInstance().reference
                     writeNewUserStats(Account(id = app.auth.currentUser!!.uid, email = app.auth.currentUser!!.email.toString(), firstName = txtFirstName.text.toString(),
                         surname = txtSurname.text.toString(), login_used = "firebaseAuth"))
-
+                    hideLoader(loader)
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
+                    hideLoader(loader)
                 }
             } }
 
     fun writeNewUserStats(user: Account) {
+        showLoader(loader, "Loading . . .", "Adding User to Firebase")
+
         val uid = app.auth.currentUser!!.uid
-
-
         app.database.child("users")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -222,7 +227,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                         val childUpdates = HashMap<String, Any>()
                         childUpdates["/users/$uid"] = user
                         app.database.updateChildren(childUpdates)
-//                        startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                        hideLoader(loader)
                     }
                     getUser()
                     app.database.child("users")
@@ -233,6 +238,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
     var user = Account()
     fun getUser(){
+        showLoader(loader, "Loading . . .", "Loading User Data . . . ")
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val rootRef = FirebaseDatabase.getInstance().reference
         val uidRef = rootRef.child("users").child(uid)
@@ -244,18 +250,9 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                 user.id = dataSnapshot.child("id").value.toString()
                 user.image = dataSnapshot.child("image").value.toString().toInt()
                 user.login_used = dataSnapshot.child("login_used").value.toString()
-                /*var array_of_ids = ArrayList<String>()
-                dataSnapshot.child("channels").children.forEach {
-                    array_of_ids.add(it.toString())
-                    //dataSnapshot.child("channels").child("${it.}").children.forEach {
-
-
-                    val channel = it.
-                    getValue<Channel>(Channel::class.java)
-                    user.channels.add(channel!!)
-                }*/
 
                 uidRef.removeEventListener(this)
+                hideLoader(loader)
                 startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
             }
 
@@ -286,6 +283,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        showLoader(loader, "Loading . . .", "Logging In with Google...")
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         app.auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -301,6 +299,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                 }
+                hideLoader(loader)
             }
     }
 

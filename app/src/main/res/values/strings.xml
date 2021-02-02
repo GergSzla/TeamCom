@@ -109,6 +109,9 @@
     <string name="passcode">Meeting Passcode</string>
 
 
+    <!--loader-->
+    <string name="messageLoading">Loading User . . . </string>
+
     <!--fragment_roles-->
     <string name="permissions">Permissions</string>
     <string name="bugs">Report Bugs</string>

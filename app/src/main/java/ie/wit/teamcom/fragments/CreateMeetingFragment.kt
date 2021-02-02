@@ -19,6 +19,9 @@ import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
@@ -42,6 +45,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
     var depts = ArrayList<String>()
     var deptsList = ArrayList<Department>()
     var member_dept = Department()
+    lateinit var loader : androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +65,9 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         root = inflater.inflate(R.layout.fragment_create_meeting, container, false)
         activity?.title = getString(R.string.title_create_meetings)
 
+        loader = createLoader(requireActivity())
+
+        showLoader(loader, "Loading . . . ", "Loading Page . . . ")
         getAllDepartments()
 
         val date = Calendar.getInstance()
@@ -98,6 +105,8 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         root.editTxtLoc.isVisible = false
         root.textViewOtherPlatform.isVisible = false
         root.editTxtOtherPlatform.isVisible = false
+
+        hideLoader(loader)
 
         root.checkBoxCheckOnline.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
             if (!b) {
@@ -233,7 +242,9 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         }
 
         root.btnCreateNewMeeting.setOnClickListener {
+            showLoader(loader, "Loading . . . ", "Validating . . .")
             validateForm()
+            hideLoader(loader)
             if (validateForm()) {
                 createMeeting()
             }
@@ -304,6 +315,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
     }
 
     fun createMeeting() {
+        showLoader(loader, "Loading . . . ", "Creating Meeting ${new_meeting.meeting_title} . . .")
         new_meeting.meeting_date_as_string = "$dd/$mm/$yyyy"
         new_meeting.meeting_time_as_string = "$h:$m"
 
@@ -345,7 +357,6 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
             }
         }
 
-
         writeNewMeeting(new_meeting)
     }
 
@@ -374,6 +385,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
+                    hideLoader(loader)
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
                 }

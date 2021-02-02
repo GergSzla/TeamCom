@@ -1,8 +1,10 @@
 package ie.wit.teamcom.fragments
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +21,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import ie.wit.adventurio.helpers.*
 import ie.wit.teamcom.R
+import ie.wit.teamcom.activities.LoginRegActivity
 import ie.wit.teamcom.adapters.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
@@ -48,6 +52,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     var selected_project = Project()
     var completed_tasks = ArrayList<Task>()
     var active_tasks = ArrayList<Task>()
+    lateinit var loader : androidx.appcompat.app.AlertDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +79,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         root.tasks5RecyclerView.layoutManager = LinearLayoutManager(activity)
         root.tasks6RecyclerView.layoutManager = LinearLayoutManager(activity)
 
+        loader = createLoader(requireActivity())
 
         root.btnCreateTask.setOnClickListener {
             navigateTo(CreateTaskFragment.newInstance(currentChannel, selected_project))
@@ -251,6 +258,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 }
             })
 
+
         task_list_3 = ArrayList<Task>()
         root.tasks3RecyclerView.adapter = TasksAdapter(task_list_3, this@TasksFragment)
         app.database.child("channels").child(currentChannel!!.id).child("projects")
@@ -278,6 +286,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                     }
                 }
             })
+
 
         task_list_4 = ArrayList<Task>()
         root.tasks4RecyclerView.adapter = TasksAdapter(task_list_4, this@TasksFragment)

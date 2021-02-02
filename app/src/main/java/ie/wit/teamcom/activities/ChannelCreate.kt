@@ -7,34 +7,26 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import ie.wit.adventurio.helpers.showImagePicker
-import ie.wit.adventurio.helpers.uploadChannelImageView
-import ie.wit.adventurio.helpers.uploadProfileImageView
+import ie.wit.adventurio.helpers.*
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_channel_create.*
-import kotlinx.android.synthetic.main.activity_channels_list.*
 import org.jetbrains.anko.AnkoLogger
 import java.io.IOException
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
     lateinit var app: MainApp
     val IMAGE_REQUEST = 1
-
+    lateinit var loader : AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,23 +37,26 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
+        loader = createLoader(this)
+        
+        showLoader(loader, "Loading . . .", "Loading User Details . . .")
         app.getUser()
 
         Picasso.get().load(R.mipmap.socialnetwork)
             .resize(300, 300)
             .transform(CropCircleTransformation())
             .into(imageView2)
+        hideLoader(loader)
         //Icons made by <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
-
-
-        //user = intent.getParcelableExtra("user_key")
-
+        
         btnChannelImage.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
         }
 
         btnCreateNew.setOnClickListener {
+            showLoader(loader,"Loading . . .","Validating . . . ")
             validateForm()
+            hideLoader(loader)
             if (!(txtChannelName.text.toString() == "" || txtChannelDesc.text.toString() == "")){
                 createChannel(
                     Channel(
@@ -116,6 +111,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
     }
 
     private fun createChannel(channel: Channel){
+        showLoader(loader, "Loading . . .","Creating Channel ${channel.id} . . .")
         val uid = app.auth.currentUser!!.uid
         val userValues = app.user
         var role = Role(id = UUID.randomUUID().toString(), role_name = "Admin", permission_code = "10000000000000", color_code = "b20202", isDefault = true)
@@ -162,7 +158,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         logChildUpdate["/channels/${channel.id}/logs/${new_log.log_id}"] = new_log
         app.database.updateChildren(logChildUpdate)
 
-
+        hideLoader(loader)
         finish()
     }
 }

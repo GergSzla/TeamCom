@@ -18,6 +18,9 @@ import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
@@ -43,6 +46,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
     var m = ""
     var selected_stage = TaskStage()
     var project = Project()
+    lateinit var loader : androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +67,9 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         root = inflater.inflate(R.layout.fragment_create_task, container, false)
         activity?.title = getString(R.string.title_create_tasks)
 
+        loader = createLoader(requireActivity())
+
+        showLoader(loader, "Loading . . .", "Loading Page . . .")
         getStages()
         root.txtImportanceStatus.text = "(1) Very Low"
         new_task.task_importance = 1
@@ -97,6 +104,8 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
 
         root.txtDandT.text = " $dd/$mm/$yyyy @ $h:$m"
+
+        hideLoader(loader)
 
         root.seekBarImportance.setOnSeekBarChangeListener(
             object : OnSeekBarChangeListener {
@@ -206,7 +215,9 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         }
 
         root.btnAddTask.setOnClickListener {
+            showLoader(loader, "Loading . . .", "Validating . . .")
             validateForm()
+            hideLoader(loader)
             if (validateForm()){
                 createNewTask()
             }
@@ -226,9 +237,13 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
             root.txtTaskName.error = null
         }
 
-        if (root.txt_project_desc.text.toString() == ""){
-            new_task.task_desc = " "
-        }
+//        val task_desc = root.txt_project_desc.text.toString()
+//        if (TextUtils.isEmpty(task_desc)) {
+//            root.txt_project_desc.error = "Task Description Required."
+//            valid = false
+//        } else {
+//            root.txt_project_desc.error = null
+//        }
 
         return valid
     }
@@ -244,6 +259,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
     }
 
     fun createNewTask(){
+        showLoader(loader, "Loading . . .", "Creating New Task ${new_task.task_msg} . . .")
         new_task.id = UUID.randomUUID().toString()
 
         var i = 0
@@ -304,6 +320,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)*/
 
+                    hideLoader(loader)
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
                 }

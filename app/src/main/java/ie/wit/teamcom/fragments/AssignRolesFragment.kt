@@ -11,6 +11,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
@@ -34,6 +37,7 @@ class AssignRolesFragment : Fragment(), AnkoLogger {
     lateinit var eventListener : ValueEventListener
     lateinit var root: View
     var currentChannel: Channel? = null
+    lateinit var loader : androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,12 +57,17 @@ class AssignRolesFragment : Fragment(), AnkoLogger {
         root = inflater.inflate(R.layout.fragment_assign_roles, container, false)
         activity?.title = getString(R.string.title_members_assignments)
 
+        loader = createLoader(requireActivity())
 
         root.txtMemberName.text = "${selectedMember.firstName} ${selectedMember.surname}"
+
+        showLoader(loader,"Loading . . .", "Getting Roles and Departments . . .")
         getRoleNames()
         getDeptNames()
+        hideLoader(loader)
 
         root.btnReassignMember.setOnClickListener {
+            showLoader(loader, "Loading . . .", "Assigning Roles and Departments . . . ")
             var role_selected = root.spinnerRole.selectedItem.toString()
             var dept_selected = root.spinnerDepartment.selectedItem.toString()
             var i = 0
@@ -107,6 +116,7 @@ class AssignRolesFragment : Fragment(), AnkoLogger {
                         logUpdates["/channels/${currentChannel!!.id}/logs/${new_log.log_id}"] = new_log
                         app.database.updateChildren(logUpdates)
 
+                        hideLoader(loader)
                         app.database.child("channels").child(currentChannel!!.id).child("members").child(selectedMember.id)
                             .removeEventListener(this)
                     }
