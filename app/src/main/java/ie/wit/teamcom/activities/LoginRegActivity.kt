@@ -3,6 +3,7 @@ package ie.wit.teamcom.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -74,7 +75,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
         btnRegister.setOnClickListener{
             //val AccountList = app.users.getAllAccounts() as ArrayList<Account>
 
-            //validateForm()
+            validateForm(true)
 
             if(!(txtEmail.text.toString() == "" ||
                         txtFirstName.text.toString() == "" ||
@@ -103,7 +104,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
             finish()
         }
         btnLogin.setOnClickListener {
-            //validateForm()
+            validateForm(false)
             if(!(txtEmail.text.toString() == "" || txtPassword.text.toString() == "")){
                 app.auth.signInWithEmailAndPassword(txtEmail.text.toString(), txtPassword.text.toString())
                     .addOnCompleteListener(this) { task ->
@@ -123,6 +124,63 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
+    private fun validateForm(register: Boolean): Boolean {
+        var valid = true
+
+        if (register){
+
+            val fname = txtFirstName.text.toString()
+            if (TextUtils.isEmpty(fname)) {
+                txtFirstName.error = "First Name Required."
+                valid = false
+            } else {
+                txtFirstName.error = null
+            }
+
+            val sname = txtSurname.text.toString()
+            if (TextUtils.isEmpty(sname)) {
+                txtSurname.error = "Surname/Second Name Required."
+                valid = false
+            } else {
+                txtSurname.error = null
+            }
+
+            val email = txtEmail.text.toString()
+            if (TextUtils.isEmpty(email)) {
+                txtEmail.error = "Email Required."
+                valid = false
+            } else {
+                txtEmail.error = null
+            }
+
+            val password = txtPassword.text.toString()
+            if (TextUtils.isEmpty(password)) {
+                txtPassword.error = "Password Required."
+                valid = false
+            } else {
+                txtPassword.error = null
+            }
+
+        } else {
+            val email = txtEmail.text.toString()
+            if (TextUtils.isEmpty(email)) {
+                txtEmail.error = "Email Required."
+                valid = false
+            } else {
+                txtEmail.error = null
+            }
+
+            val password = txtPassword.text.toString()
+            if (TextUtils.isEmpty(password)) {
+                txtPassword.error = "Password Required."
+                valid = false
+            } else {
+                txtPassword.error = null
+            }
+
+        }
+        return valid
+    }
 
 
     companion object {

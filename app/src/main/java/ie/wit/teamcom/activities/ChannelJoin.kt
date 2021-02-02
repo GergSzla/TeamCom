@@ -2,6 +2,7 @@ package ie.wit.teamcom.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -14,6 +15,7 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
+import kotlinx.android.synthetic.main.activity_channel_create.*
 import kotlinx.android.synthetic.main.activity_channel_join.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -42,9 +44,26 @@ class ChannelJoin : AppCompatActivity(), AnkoLogger {
 
         app.getUser()
         btnJoinNew.setOnClickListener {
-            app.generateDateID("1")
-            checkInvite(txtChannelCode.text.toString())
+            validateForm()
+            if (txtChannelCode.text.toString() !== "") {
+                app.generateDateID("1")
+                checkInvite(txtChannelCode.text.toString())
+            }
         }
+    }
+
+    private fun validateForm(): Boolean {
+        var valid = true
+
+        val inv_code = txtChannelCode.text.toString()
+        if (TextUtils.isEmpty(inv_code)) {
+            txtChannelCode.error = "Channel Invite Code Required."
+            valid = false
+        } else {
+            txtChannelCode.error = null
+        }
+
+        return valid
     }
 
     private fun checkInvite(invite_code: String) {

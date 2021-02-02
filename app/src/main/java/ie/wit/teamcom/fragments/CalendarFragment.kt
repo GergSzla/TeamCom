@@ -3,6 +3,7 @@ package ie.wit.teamcom.fragments
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,11 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Event
 import kotlinx.android.synthetic.main.fragment_calendar.view.*
+import kotlinx.android.synthetic.main.fragment_create_task.view.*
 import kotlinx.android.synthetic.main.fragment_invites_list.view.*
+import kotlinx.android.synthetic.main.fragment_task_stages.*
+import kotlinx.android.synthetic.main.fragment_task_stages.view.*
+import kotlinx.android.synthetic.main.popup_create_event.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.*
@@ -182,34 +187,56 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         }
 
         create_event.setOnClickListener{
-            event.event_name = txt_event_name.text.toString()
-            event.event_desc = txt_event_desc.text.toString()
+            validateForm()
+            if (validateForm()){
+                event.event_name = txt_event_name.text.toString()
+                event.event_desc = txt_event_desc.text.toString()
 
-            var edited_date = txt_date_selected.text.toString().replace("-","/",false)
-            event.event_date = edited_date
-            event.event_type = "[TODO]"
-            event.event_id = UUID.randomUUID().toString()
-            event.event_participants = app.currentActiveMember
+                var edited_date = txt_date_selected.text.toString().replace("-","/",false)
+                event.event_date = edited_date
+                event.event_type = "[TODO]"
+                event.event_id = UUID.randomUUID().toString()
+                event.event_participants = app.currentActiveMember
 
-            app.database.child("channels").child(currentChannel.id)
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                    }
+                app.database.child("channels").child(currentChannel.id)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(error: DatabaseError) {
+                        }
 
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val childUpdates = HashMap<String, Any>()
-                        childUpdates["/channels/${currentChannel.id}/events/${event.event_date}/${event.event_id}"] = event
-                        app.database.updateChildren(childUpdates)
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val childUpdates = HashMap<String, Any>()
+                            childUpdates["/channels/${currentChannel.id}/events/${event.event_date}/${event.event_id}"] = event
+                            app.database.updateChildren(childUpdates)
 
-                        app.database.child("channels").child(currentChannel.id)
-                            .removeEventListener(this)
-                    }
-                })
+                            app.database.child("channels").child(currentChannel.id)
+                                .removeEventListener(this)
+                        }
+                    })
+            }
         }
         cancel.setOnClickListener {
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+
+    private fun validateForm(): Boolean{
+        var valid = true
+
+        val name = txt_event_name.text.toString()
+        if (TextUtils.isEmpty(name)) {
+            txt_event_name.error = "Event Name Required."
+            valid = false
+        } else {
+            txt_event_name.error = null
+        }
+
+        if (txt_event_desc.text.toString() == ""){
+            event.event_desc = " "
+        }
+
+        return valid
     }
 
     fun setSwipeRefresh(yyyy: String, mm: String, dd: String) {

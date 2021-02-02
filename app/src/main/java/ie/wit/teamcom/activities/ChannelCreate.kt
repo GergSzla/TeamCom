@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.TextUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -60,14 +61,17 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         }
 
         btnCreateNew.setOnClickListener {
-            createChannel(
-                Channel(
-                    id = UUID.randomUUID().toString(),
-                    channelName = txtChannelName.text.toString(),
-                    channelDescription = txtChannelDesc.text.toString(),
-                    image = 0
+            validateForm()
+            if (!(txtChannelName.text.toString() == "" || txtChannelDesc.text.toString() == "")){
+                createChannel(
+                    Channel(
+                        id = UUID.randomUUID().toString(),
+                        channelName = txtChannelName.text.toString(),
+                        channelDescription = txtChannelDesc.text.toString(),
+                        image = 0
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -87,6 +91,28 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun validateForm(): Boolean {
+        var valid = true
+
+        val channel_name = txtChannelName.text.toString()
+        if (TextUtils.isEmpty(channel_name)) {
+            txtChannelName.error = "Channel Name Required."
+            valid = false
+        } else {
+            txtChannelName.error = null
+        }
+
+        val channel_desc = txtChannelDesc.text.toString()
+        if (TextUtils.isEmpty(channel_desc)) {
+            txtChannelDesc.error = "Channel Description Required."
+            valid = false
+        } else {
+            txtChannelDesc.error = null
+        }
+
+        return valid
     }
 
     private fun createChannel(channel: Channel){

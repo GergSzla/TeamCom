@@ -2,6 +2,7 @@ package ie.wit.teamcom.fragments
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Bug
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.TaskStage
+import kotlinx.android.synthetic.main.dialog_create_dept.view.*
 import kotlinx.android.synthetic.main.fragment_assign_roles.view.*
 import kotlinx.android.synthetic.main.fragment_support.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -61,21 +63,46 @@ class SupportFragment : Fragment(), AnkoLogger {
         getAllBugs()
 
         root.btnSubmitBug.setOnClickListener {
-            new_bug.bug_no = bugs_list.size + 1
-            new_bug.channel = currentChannel.channelName
-            app.generateDateID("1")
-            new_bug.date_reported = app.dateAsString
-            new_bug.date_resolved = "-"
-            new_bug.fixed = false
-            new_bug.issue = root.editTxtIssue.text.toString()
-            new_bug.issue_desc = root.editTxtIssueDesc.text.toString()
-            new_bug.reported_by = app.currentActiveMember
-            new_bug.id = "Bug_${bugs_list.size + 1}"
-            new_bug.page = root.spinnerPages.selectedItem.toString()
-            addBugReport()
+            validateForm()
+            if (validateForm()){
+                new_bug.bug_no = bugs_list.size + 1
+                new_bug.channel = currentChannel.channelName
+                app.generateDateID("1")
+                new_bug.date_reported = app.dateAsString
+                new_bug.date_resolved = "-"
+                new_bug.fixed = false
+                new_bug.issue = root.editTxtIssue.text.toString()
+                new_bug.issue_desc = root.editTxtIssueDesc.text.toString()
+                new_bug.reported_by = app.currentActiveMember
+                new_bug.id = "Bug_${bugs_list.size + 1}"
+                new_bug.page = root.spinnerPages.selectedItem.toString()
+                addBugReport()
+            }
         }
 
         return root
+    }
+
+    private fun validateForm(): Boolean{
+        var valid = true
+
+        val issue = root.editTxtIssue.text.toString()
+        if (TextUtils.isEmpty(issue)) {
+            root.editTxtIssue.error = "Issue Required."
+            valid = false
+        } else {
+            root.editTxtIssue.error = null
+        }
+
+        val desc = root.editTxtIssueDesc.text.toString()
+        if (TextUtils.isEmpty(desc)) {
+            root.editTxtIssueDesc.error = "Issue Description Required."
+            valid = false
+        } else {
+            root.editTxtIssueDesc.error = null
+        }
+
+        return valid
     }
 
     override fun onResume() {

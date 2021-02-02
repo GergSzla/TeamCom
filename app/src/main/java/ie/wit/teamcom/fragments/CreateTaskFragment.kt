@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
+import kotlinx.android.synthetic.main.fragment_task_stages.view.*
 import org.jetbrains.anko.AnkoLogger
 import java.util.*
 
@@ -204,10 +206,31 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         }
 
         root.btnAddTask.setOnClickListener {
-            createNewTask()
+            validateForm()
+            if (validateForm()){
+                createNewTask()
+            }
         }
 
         return root
+    }
+
+    private fun validateForm(): Boolean{
+        var valid = true
+
+        val task_name = root.txtTaskName.text.toString()
+        if (TextUtils.isEmpty(task_name)) {
+            root.txtTaskName.error = "Task Name Required."
+            valid = false
+        } else {
+            root.txtTaskName.error = null
+        }
+
+        if (root.txt_project_desc.text.toString() == ""){
+            new_task.task_desc = " "
+        }
+
+        return valid
     }
 
     override fun onResume() {

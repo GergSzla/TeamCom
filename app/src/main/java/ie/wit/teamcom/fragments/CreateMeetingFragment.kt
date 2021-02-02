@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Department
 import ie.wit.teamcom.models.Meeting
 import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
+import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import org.jetbrains.anko.AnkoLogger
 import java.util.*
 
@@ -65,26 +67,26 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
         dd = if (date.get(Calendar.DATE) < 10) {
             "0" + "${date.get(Calendar.DATE)}"
-        } else{
+        } else {
             "${date.get(Calendar.DATE)}"
         }
 
-        mm = if ((date.get(Calendar.MONTH)+1) < 10) {
-            "0" + "${(date.get(Calendar.MONTH)+1)}"
-        } else{
-            "${(date.get(Calendar.MONTH)+1)}"
+        mm = if ((date.get(Calendar.MONTH) + 1) < 10) {
+            "0" + "${(date.get(Calendar.MONTH) + 1)}"
+        } else {
+            "${(date.get(Calendar.MONTH) + 1)}"
         }
 
         yyyy = "${date.get(Calendar.YEAR)}"
-        h = if ((date.get(Calendar.HOUR_OF_DAY) +1 )< 10) {
-            "0" + "${(date.get(Calendar.HOUR_OF_DAY) +1 )}"
-        } else{
-            "${(date.get(Calendar.HOUR_OF_DAY) +1 )}"
+        h = if ((date.get(Calendar.HOUR_OF_DAY) + 1) < 10) {
+            "0" + "${(date.get(Calendar.HOUR_OF_DAY) + 1)}"
+        } else {
+            "${(date.get(Calendar.HOUR_OF_DAY) + 1)}"
         }
 
         m = if (date.get(Calendar.MINUTE) < 10) {
             "0" + "${date.get(Calendar.MINUTE)}"
-        } else{
+        } else {
             "${date.get(Calendar.MINUTE)}"
         }
 
@@ -98,7 +100,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         root.editTxtOtherPlatform.isVisible = false
 
         root.checkBoxCheckOnline.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
-            if(!b){
+            if (!b) {
                 root.textViewLoc.isVisible = true
                 root.editTxtLoc.isVisible = true
 
@@ -136,7 +138,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
                 position: Int,
                 id: Long
             ) {
-                if(root.spinnerPlatform.selectedItem == "Other"){
+                if (root.spinnerPlatform.selectedItem == "Other") {
                     root.textViewOtherPlatform.isVisible = true
                     root.editTxtOtherPlatform.isVisible = true
                 }
@@ -161,30 +163,31 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
                             dd = if (dayOfMonth < 10) {
                                 "0$dayOfMonth"
-                            } else{
+                            } else {
                                 "$dayOfMonth"
                             }
 
-                            mm = if ((month +1) < 10) {
-                                "0" + "${((month )+1)}"
-                            } else{
-                                "${((month )+1)}"
+                            mm = if ((month + 1) < 10) {
+                                "0" + "${((month) + 1)}"
+                            } else {
+                                "${((month) + 1)}"
                             }
 
                             yyyy = "$year"
                             h = if (hourOfDay < 10) {
                                 "0$hourOfDay"
-                            } else{
+                            } else {
                                 "$hourOfDay"
                             }
 
                             m = if (minute < 10) {
                                 "0$minute"
-                            } else{
+                            } else {
                                 "$minute"
                             }
 
-                            if (date.timeInMillis - tem.timeInMillis > 0) root.txtDandT.text = "$dd/$mm/$yyyy @ $h:$m" else Toast.makeText(
+                            if (date.timeInMillis - tem.timeInMillis > 0) root.txtDandT.text =
+                                "$dd/$mm/$yyyy @ $h:$m" else Toast.makeText(
                                 requireContext(),
                                 "Invalid time",
                                 Toast.LENGTH_SHORT
@@ -203,26 +206,26 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
             dd = if (date.get(Calendar.DATE) < 10) {
                 "0" + "${date.get(Calendar.DATE)}"
-            } else{
+            } else {
                 "${date.get(Calendar.DATE)}"
             }
 
-            mm = if ((date.get(Calendar.MONTH)+1) < 10) {
-                "0" + "${(date.get(Calendar.MONTH)+1)}"
-            } else{
-                "${(date.get(Calendar.MONTH)+1)}"
+            mm = if ((date.get(Calendar.MONTH) + 1) < 10) {
+                "0" + "${(date.get(Calendar.MONTH) + 1)}"
+            } else {
+                "${(date.get(Calendar.MONTH) + 1)}"
             }
 
             yyyy = "${date.get(Calendar.YEAR)}"
             h = if (date.get(Calendar.HOUR_OF_DAY) < 10) {
                 "0" + "${date.get(Calendar.HOUR_OF_DAY)}"
-            } else{
+            } else {
                 "${date.get(Calendar.HOUR_OF_DAY)}"
             }
 
             m = if (date.get(Calendar.MINUTE) < 10) {
                 "0" + "${date.get(Calendar.MINUTE)}"
-            } else{
+            } else {
                 "${date.get(Calendar.MINUTE)}"
             }
 
@@ -230,27 +233,81 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         }
 
         root.btnCreateNewMeeting.setOnClickListener {
-            createMeeting()
+            validateForm()
+            if (validateForm()) {
+                createMeeting()
+            }
         }
 
         return root
     }
 
+    private fun validateForm(): Boolean {
+        var valid = true
+
+        val title = root.editTxtTitle.text.toString()
+        if (TextUtils.isEmpty(title)) {
+            root.editTxtTitle.error = "Title Required."
+            valid = false
+        } else {
+            root.editTxtTitle.error = null
+        }
+
+        val desc = root.editTxtDesc.text.toString()
+        if (TextUtils.isEmpty(desc)) {
+            root.editTxtDesc.error = "Description Required."
+            valid = false
+        } else {
+            root.editTxtDesc.error = null
+        }
+
+        if (root.checkBoxCheckOnline.isChecked) {
+            if (root.spinnerPlatform.selectedItem.toString() !== "Zoom") {
+                val meeting_id = root.editTxtID.text.toString()
+                if (TextUtils.isEmpty(meeting_id)) {
+                    root.editTxtID.error = "Manual Meeting ID Required for Non-Zoom Meetings."
+                    valid = false
+                } else {
+                    root.editTxtID.error = null
+                }
+
+                val passcode = root.editTxtPasscode.text.toString()
+                if (TextUtils.isEmpty(passcode)) {
+                    root.editTxtPasscode.error =
+                        "Manual Meeting Passcode Required for Non-Zoom Meetings."
+                    valid = false
+                } else {
+                    root.editTxtPasscode.error = null
+                }
+            }
+        } else {
+            val location = root.editTxtLoc.text.toString()
+            if (TextUtils.isEmpty(location)) {
+                root.editTxtLoc.error = "Location Required for In-Person Meetings."
+                valid = false
+            } else {
+                root.editTxtLoc.error = null
+            }
+        }
+
+        return valid
+    }
+
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
-    fun createMeeting(){
+    fun createMeeting() {
         new_meeting.meeting_date_as_string = "$dd/$mm/$yyyy"
         new_meeting.meeting_time_as_string = "$h:$m"
 
-        app.generate_date_reminder_id(dd, mm, yyyy, h, mm,"00")
+        app.generate_date_reminder_id(dd, mm, yyyy, h, mm, "00")
         new_meeting.meeting_date_id = app.reminder_due_date_id
         new_meeting.meeting_creator = app.currentActiveMember
 
@@ -258,13 +315,13 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         new_meeting.meeting_desc = root.editTxtDesc.text.toString()
         new_meeting.meeting_uuid = UUID.randomUUID().toString()
 
-        if(!root.checkBoxCheckOnline.isChecked){
+        if (!root.checkBoxCheckOnline.isChecked) {
             new_meeting.meeting_location = root.editTxtLoc.text.toString()
-        } else if (root.checkBoxCheckOnline.isChecked && root.spinnerPlatform.selectedItem.toString() !== "Other"){
+        } else if (root.checkBoxCheckOnline.isChecked && root.spinnerPlatform.selectedItem.toString() !== "Other") {
             new_meeting.meeting_platform = root.spinnerPlatform.selectedItem.toString()
             new_meeting.meeting_passcode = root.editTxtPasscode.text.toString()
             new_meeting.meeting_id = root.editTxtID.text.toString()
-        } else if (root.checkBoxCheckOnline.isChecked && root.spinnerPlatform.selectedItem.toString() == "Other"){
+        } else if (root.checkBoxCheckOnline.isChecked && root.spinnerPlatform.selectedItem.toString() == "Other") {
             new_meeting.meeting_platform = root.editTxtOtherPlatform.text.toString()
         }
 
@@ -282,7 +339,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
             }
         } else {
             deptsList.forEach {
-                it.dept_members.forEach{ member_it ->
+                it.dept_members.forEach { member_it ->
                     new_meeting.participants.add(member_it)
                 }
             }
@@ -300,7 +357,8 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel!!.id}/meetings/${new_meeting.meeting_uuid}"] = meeting
+                    childUpdates["/channels/${currentChannel!!.id}/meetings/${new_meeting.meeting_uuid}"] =
+                        meeting
                     app.database.updateChildren(childUpdates)
 
 
@@ -331,7 +389,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
             .commit()
     }
 
-    fun getAllDepartments(){
+    fun getAllDepartments() {
         app.database.child("channels").child(currentChannel!!.id).child("departments")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -341,13 +399,13 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
                     val children = snapshot.children
                     depts.add("All")
                     children.forEach {
-                        val dept = it.
-                        getValue<Department>(Department::class.java)
+                        val dept = it.getValue<Department>(Department::class.java)
 
                         depts.add(dept!!.dept_name)
                         deptsList.add(dept)
 
-                        app.database.child("channel").child(currentChannel!!.id).child("departments")
+                        app.database.child("channel").child(currentChannel!!.id)
+                            .child("departments")
                             .removeEventListener(this)
                     }
                     val adapter2 = ArrayAdapter(

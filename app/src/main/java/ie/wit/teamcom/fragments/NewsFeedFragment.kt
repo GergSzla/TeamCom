@@ -1,6 +1,7 @@
 package ie.wit.teamcom.fragments
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Post
+import kotlinx.android.synthetic.main.activity_channel_join.*
 import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -53,12 +55,28 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         //getAllPosts()
 
         root.imgBtnSend.setOnClickListener {
-            sendPost()
+            validateForm()
+            if (root.editTextPost.text.toString() !== ""){
+                sendPost()
+            }
         }
         setSwipeRefresh()
         return root
     }
 
+    private fun validateForm(): Boolean {
+        var valid = true
+
+        val post_input = root.editTextPost.text.toString()
+        if (TextUtils.isEmpty(post_input)) {
+            root.editTextPost.error = "You Cannot Send An Empty Post!"
+            valid = false
+        } else {
+            root.editTextPost.error = null
+        }
+
+        return valid
+    }
 
     fun sendPost(){
         app.generateDateID("1")

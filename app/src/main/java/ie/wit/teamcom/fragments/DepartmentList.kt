@@ -2,6 +2,7 @@ package ie.wit.teamcom.fragments
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,9 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Department
 import ie.wit.teamcom.models.Log
+import kotlinx.android.synthetic.main.dialog_create_dept.view.*
+import kotlinx.android.synthetic.main.dialog_create_invite.view.*
+import kotlinx.android.synthetic.main.dialog_create_invite.view.txtExpires
 import kotlinx.android.synthetic.main.fragment_department_list.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -72,14 +76,30 @@ class DepartmentList : Fragment(),AnkoLogger, DepartmentListener {
         val cancel = dialog.findViewById(R.id.buttonCancelDept) as Button
         val dept_name = dialog.findViewById(R.id.txtDeptName) as EditText
         create.setOnClickListener {
-            createDept(dept_name.text.toString())
-            dialog.dismiss()
+            validateForm()
+            if (validateForm()){
+                createDept(dept_name.text.toString())
+                dialog.dismiss()
+            }
         }
         cancel.setOnClickListener {
             dialog.dismiss()
         }
         dialog.show()
+    }
 
+    private fun validateForm(): Boolean{
+        var valid = true
+
+        val dept = root.txtDeptName.text.toString()
+        if (TextUtils.isEmpty(dept)) {
+            root.txtDeptName.error = "Department Required."
+            valid = false
+        } else {
+            root.txtDeptName.error = null
+        }
+
+        return valid
     }
 
     private fun showEditDialog(dept:Department) {

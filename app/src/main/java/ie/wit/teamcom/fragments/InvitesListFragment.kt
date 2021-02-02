@@ -7,6 +7,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,8 @@ import ie.wit.teamcom.adapters.InviteAdapter
 import ie.wit.teamcom.adapters.InviteListener
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
+import kotlinx.android.synthetic.main.dialog_create_invite.view.*
+import kotlinx.android.synthetic.main.floating_popup.*
 import kotlinx.android.synthetic.main.fragment_invites_list.view.*
 import kotlinx.android.synthetic.main.fragment_members.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -69,6 +72,31 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         setSwipeRefresh()
 
         return root
+    }
+
+    private fun validateForm(): Boolean{
+        var valid = true
+
+        val exp = root.txtExpires.text.toString()
+        if (TextUtils.isEmpty(exp)) {
+            root.txtExpires.error = "Expires In (Hrs) Required."
+            valid = false
+        } else {
+            root.txtExpires.error = null
+        }
+
+        if (root.txtUses.text.toString().toInt() >= 1){
+            val uses = root.txtUses.text.toString()
+            if (TextUtils.isEmpty(uses)) {
+                root.txtUses.error = "Uses (Minimum 1) Required."
+                valid = false
+            } else {
+                root.txtUses.error = null
+            }
+        }
+
+
+        return valid
     }
 
     override fun onInviteClicked(invite: Invite) {
@@ -152,8 +180,11 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         val hrs_active = dialog.findViewById(R.id.txtExpires) as EditText
         val uses = dialog.findViewById(R.id.txtUses) as EditText
         create.setOnClickListener {
-            createInvite(hrs_active.text.toString(), uses.text.toString())
-            dialog.dismiss()
+            validateForm()
+            if (validateForm()){
+                createInvite(hrs_active.text.toString(), uses.text.toString())
+                dialog.dismiss()
+            }
         }
         cancel.setOnClickListener {
             dialog.dismiss()

@@ -1,6 +1,7 @@
 package ie.wit.teamcom.fragments
 
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Post
+import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -58,10 +60,27 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
 
 
         root.imgBtnPostComment.setOnClickListener {
-            sendComment()
+            validateForm()
+            if (root.editComment.text.toString() !== ""){
+                sendComment()
+            }
         }
         setSwipeRefresh()
         return root
+    }
+
+    private fun validateForm(): Boolean {
+        var valid = true
+
+        val comment_input = root.editComment.text.toString()
+        if (TextUtils.isEmpty(comment_input)) {
+            root.editComment.error = "You Cannot Send An Empty Comment!"
+            valid = false
+        } else {
+            root.editComment.error = null
+        }
+
+        return valid
     }
 
     override fun onResume() {

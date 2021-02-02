@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.activities.Home
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
+import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
 import kotlinx.android.synthetic.main.fragment_task_stages.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -248,7 +250,10 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         root.btnSaveStages.setOnClickListener {
-            save_stages_changes()
+            validateForm()
+            if (validateForm()){
+                save_stages_changes()
+            }
         }
 
 
@@ -337,6 +342,158 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         return root
+    }
+
+    private fun validateForm(): Boolean {
+        var valid = true
+
+        val proj_name = root.txt_project_name.text.toString()
+        if (TextUtils.isEmpty(proj_name)) {
+            root.txt_project_name.error = "Project Name Required."
+            valid = false
+        } else {
+            root.txt_project_name.error = null
+        }
+
+        val proj_desc = root.txt_project_desc.text.toString()
+        if (TextUtils.isEmpty(proj_desc)) {
+            root.txt_project_desc.error = "Project Description Required."
+            valid = false
+        } else {
+            root.txt_project_desc.error = null
+        }
+
+        if (root.txtProjDateAndTime.text.toString() == "No Due Date Selected"){
+            val proj_date = root.txtProjDateAndTime.text.toString()
+            if (TextUtils.isEmpty(proj_date)) {
+                root.txtProjDateAndTime.error = "Project Due Date Required."
+                valid = false
+            } else {
+                root.txtProjDateAndTime.error = null
+            }
+        }
+
+        val stage_1 = root.txtChannelStage1.text.toString()
+        if (TextUtils.isEmpty(stage_1)) {
+            root.txtChannelStage1.error = "Stage One Name Required."
+            valid = false
+        } else {
+            root.txtChannelStage1.error = null
+        }
+
+        val stage_1_color = root.txtColorCodeStage1.text.toString()
+        if (TextUtils.isEmpty(stage_1_color)) {
+            root.txtColorCodeStage1.error = "Stage One Color Required."
+            valid = false
+        } else {
+            root.txtColorCodeStage1.error = null
+        }
+
+        val stage_2 = root.txtChannelStage2.text.toString()
+        if (TextUtils.isEmpty(stage_2)) {
+            root.txtChannelStage2.error = "Stage Two Name Required."
+            valid = false
+        } else {
+            root.txtChannelStage2.error = null
+        }
+
+        val stage_2_color = root.txtColorCodeStage2.text.toString()
+        if (TextUtils.isEmpty(stage_2_color)) {
+            root.txtColorCodeStage2.error = "Stage Two Color Required."
+            valid = false
+        } else {
+            root.txtColorCodeStage2.error = null
+        }
+
+        //Opt Stage 3
+        if (root.checkboxStage3.isChecked){
+            val stage_3 = root.txtChannelStage3.text.toString()
+            if (TextUtils.isEmpty(stage_3)) {
+                root.txtChannelStage3.error = "Stage Three Name Required."
+                valid = false
+            } else {
+                root.txtChannelStage3.error = null
+            }
+
+            val stage_3_color = root.txtColorCodeStage3.text.toString()
+            if (TextUtils.isEmpty(stage_3_color)) {
+                root.txtColorCodeStage3.error = "Stage Three Color Required."
+                valid = false
+            } else {
+                root.txtColorCodeStage3.error = null
+            }
+        } else {
+            root.txtColorCodeStage3.error = null
+            root.txtChannelStage3.error = null
+        }
+
+        //Opt Stage 4
+        if (root.checkboxStage4.isChecked){
+            val stage_4 = root.txtChannelStage4.text.toString()
+            if (TextUtils.isEmpty(stage_4)) {
+                root.txtChannelStage4.error = "Stage Four Name Required."
+                valid = false
+            } else {
+                root.txtChannelStage4.error = null
+            }
+
+            val stage_4_color = root.txtColorCodeStage4.text.toString()
+            if (TextUtils.isEmpty(stage_4_color)) {
+                root.txtColorCodeStage4.error = "Stage Four Color Required."
+                valid = false
+            } else {
+                root.txtColorCodeStage4.error = null
+            }
+        } else {
+            root.txtChannelStage4.error = null
+            root.txtColorCodeStage4.error = null
+        }
+
+        //Opt Stage 5
+        if (root.checkboxStage5.isChecked){
+            val stage_5 = root.txtChannelStage5.text.toString()
+            if (TextUtils.isEmpty(stage_5)) {
+                root.txtChannelStage5.error = "Stage Five Name Required."
+                valid = false
+            } else {
+                root.txtChannelStage5.error = null
+            }
+
+            val stage_5_color = root.txtColorCodeStage5.text.toString()
+            if (TextUtils.isEmpty(stage_5_color)) {
+                root.txtColorCodeStage5.error = "Stage Five Color Required."
+                valid = false
+            } else {
+                root.txtColorCodeStage5.error = null
+            }
+        } else {
+            root.txtColorCodeStage5.error = null
+            root.txtChannelStage5.error = null
+        }
+
+        //Opt Stage 6
+        if (root.checkboxStage6.isChecked){
+            val stage_6 = root.txtChannelStage6.text.toString()
+            if (TextUtils.isEmpty(stage_6)) {
+                root.txtChannelStage6.error = "Stage Six Name Required."
+                valid = false
+            } else {
+                root.txtChannelStage6.error = null
+            }
+
+            val stage_6_color = root.txtColorCodeStage6.text.toString()
+            if (TextUtils.isEmpty(stage_6_color)) {
+                root.txtColorCodeStage6.error = "Stage Six Color Required."
+                valid = false
+            } else {
+                root.txtColorCodeStage6.error = null
+            }
+        } else {
+            root.txtColorCodeStage6.error = null
+            root.txtChannelStage6.error = null
+        }
+
+        return valid
     }
 
     override fun onResume() {
