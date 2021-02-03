@@ -15,6 +15,7 @@ data class Account (
     var email: String = "",
     var image: Int = 0,
     var login_used: String ="",
+    var auto_login: Boolean = false,
     var channels:  ArrayList<Channel> = ArrayList<Channel>()) : Parcelable
 
 

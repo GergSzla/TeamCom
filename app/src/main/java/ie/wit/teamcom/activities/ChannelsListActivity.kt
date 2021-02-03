@@ -108,79 +108,73 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         app.getUser()
         hideLoader(loader)
 
-        txtClickChangeImg.isVisible = false
-        editTxtDisplayFullName.isVisible = false
-        editTxtDisplayEmail.isEnabled = false //TODO: ALLOW USER TO SWITCH FROM GOOGLE ACC TO NORMAL
-        editTxtDisplayEmail.isVisible = false
-        txtSaveProfile.isVisible = false
-        editTxtDisplayWhatIDo.isVisible = false
-
         setSwipeRefresh()
         getAllUserChannels(app.auth.currentUser!!.uid)
 
-        txtDisplayFullName.text = user.firstName + " " + user.surname
-        txtDisplayEmail.text = user.email
+        card_full_name.text = user.firstName + " " + user.surname
+        card_email.text = user.email
         //TODO: txtDisplayWhatIDo.text = user.what_i_do
 
-        txtEditProfile.setOnClickListener {
-            editTxtDisplayFullName.isVisible = true
-            editTxtDisplayEmail.isVisible = true
-            txtSaveProfile.isVisible = true
-            txtClickChangeImg.isVisible = true
-            editTxtDisplayFullName.setText(user.firstName + " " + user.surname)
-            editTxtDisplayEmail.setText(user.email)
+        btn_edit_prof.setOnClickListener {
+            startActivity(intentFor<ProfileActivity>().putExtra("user_key",user))
+//            editTxtDisplayFullName.isVisible = true
+//            editTxtDisplayEmail.isVisible = true
+//            txtSaveProfile.isVisible = true
+//            txtClickChangeImg.isVisible = true
+//            editTxtDisplayFullName.setText(user.firstName + " " + user.surname)
+//            editTxtDisplayEmail.setText(user.email)
 
 
 
-            txtDisplayFullName.isVisible = false
-            txtDisplayEmail.isVisible = false
-            txtEditProfile.isVisible = false
-            txtDisplayWhatIDo.isVisible = false
+//            txtDisplayFullName.isVisible = false
+//            txtDisplayEmail.isVisible = false
+//            txtEditProfile.isVisible = false
+//            txtDisplayWhatIDo.isVisible = false
         }
 
-        txtClickChangeImg.setOnClickListener {
-            showImagePicker(this, IMAGE_REQUEST)
-        }
+//        txtClickChangeImg.setOnClickListener {
+//            showImagePicker(this, IMAGE_REQUEST)
+//        }
 
-        txtSaveProfile.setOnClickListener {
-            user.firstName = editTxtDisplayFullName.text.toString().substringBefore(" ")
-            user.surname = editTxtDisplayFullName.text.toString().substringAfter(" ")
-            user.email = editTxtDisplayEmail.text.toString()
-            //TODO: user.what_i_do = editTxtDisplayWhatIDo.text.toString()
+//        txtSaveProfile.setOnClickListener {
+//            user.firstName = editTxtDisplayFullName.text.toString().substringBefore(" ")
+//            user.surname = editTxtDisplayFullName.text.toString().substringAfter(" ")
+//            user.email = editTxtDisplayEmail.text.toString()
+//            //TODO: user.what_i_do = editTxtDisplayWhatIDo.text.toString()
+//
+//
+//            editTxtDisplayFullName.isVisible = false
+//            editTxtDisplayEmail.isVisible = false
+//            txtSaveProfile.isVisible = false
+//            txtClickChangeImg.isVisible = false
+//
+//
+//            txtDisplayFullName.isVisible = true
+//            txtDisplayEmail.isVisible = true
+//            txtEditProfile.isVisible = true
+//            uploadProfileImageView(app, profImage)
+//
+//            app.database.child("users").child(user.id)
+//                .addValueEventListener(object : ValueEventListener {
+//                    override fun onCancelled(error: DatabaseError) {
+//                    }
+//
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        val childUpdates = HashMap<String, Any>()
+//                        childUpdates["/users/${user.id}/firstName"] = user.firstName
+//                        val childUpdates_ = HashMap<String, Any>()
+//
+//                        childUpdates_["/users/${user.id}/surname"] = user.surname
+//
+//                        app.database.updateChildren(childUpdates)
+//                        app.database.updateChildren(childUpdates_)
+//
+//                        change_user_details_in_channels()
+//                        app.database.child("users").child(user.id)
+//                            .removeEventListener(this)
+//                    }
+//                })
 
-
-            editTxtDisplayFullName.isVisible = false
-            editTxtDisplayEmail.isVisible = false
-            txtSaveProfile.isVisible = false
-            txtClickChangeImg.isVisible = false
-
-
-            txtDisplayFullName.isVisible = true
-            txtDisplayEmail.isVisible = true
-            txtEditProfile.isVisible = true
-            uploadProfileImageView(app, profImage)
-
-            app.database.child("users").child(user.id)
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                    }
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val childUpdates = HashMap<String, Any>()
-                        childUpdates["/users/${user.id}/firstName"] = user.firstName
-                        val childUpdates_ = HashMap<String, Any>()
-
-                        childUpdates_["/users/${user.id}/surname"] = user.surname
-
-                        app.database.updateChildren(childUpdates)
-                        app.database.updateChildren(childUpdates_)
-
-                        change_user_details_in_channels()
-                        app.database.child("users").child(user.id)
-                            .removeEventListener(this)
-                    }
-                })
-        }
 
         val builder: AlertDialog.Builder? = this.let {
             AlertDialog.Builder(it)
