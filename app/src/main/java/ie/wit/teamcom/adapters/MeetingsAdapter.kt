@@ -46,6 +46,7 @@ class MeetingsAdapter constructor(
             itemView.txtMTitle.text = meeting.meeting_title
             itemView.txtMDesc.text = meeting.meeting_desc
             itemView.txtMDateAndTime.text = "${meeting.meeting_date_as_string} @ ${meeting.meeting_time_as_string}"
+            itemView.txtMDateAndTime_end.text = "${meeting.meeting_date_as_string_end} @ ${meeting.meeting_time_as_string_end}"
 
             if(meeting.online){
                 itemView.txtMLocationElsePlatform.text = "Online via: ${meeting.meeting_platform}"

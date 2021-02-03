@@ -98,6 +98,8 @@
 
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="end">Meeting Duration</string>
+    <string name="end_">Meeting Duration (Hours)</string>
     <string name="select_date">Date</string>
     <string name="btnDateSelect">Select Date</string>
     <string name="btnDateRes">Reschedule</string>

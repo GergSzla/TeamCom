@@ -80,6 +80,23 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textViewEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/end" />
+
+            <EditText
+                android:id="@+id/editTxtEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/end_"
+                android:inputType="number" />
+
+
+            <TextView
                 android:id="@+id/textViewDept"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

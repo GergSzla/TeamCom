@@ -30,6 +30,8 @@ import ie.wit.teamcom.models.Meeting
 import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
 import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import org.jetbrains.anko.AnkoLogger
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 
 class CreateMeetingFragment : Fragment(), AnkoLogger {
@@ -45,7 +47,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
     var depts = ArrayList<String>()
     var deptsList = ArrayList<Department>()
     var member_dept = Department()
-    lateinit var loader : androidx.appcompat.app.AlertDialog
+    lateinit var loader: androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +73,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         getAllDepartments()
 
         val date = Calendar.getInstance()
+
 
         dd = if (date.get(Calendar.DATE) < 10) {
             "0" + "${date.get(Calendar.DATE)}"
@@ -237,8 +240,6 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
             } else {
                 "${date.get(Calendar.MINUTE)}"
             }
-
-
         }
 
         root.btnCreateNewMeeting.setOnClickListener {
@@ -270,6 +271,14 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
             valid = false
         } else {
             root.editTxtDesc.error = null
+        }
+
+        val duration = root.editTxtEnd.text.toString()
+        if (TextUtils.isEmpty(duration)) {
+            root.editTxtEnd.error = "Duration Required."
+            valid = false
+        } else {
+            root.editTxtEnd.error = null
         }
 
         if (root.checkBoxCheckOnline.isChecked) {
@@ -319,9 +328,26 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         new_meeting.meeting_date_as_string = "$dd/$mm/$yyyy"
         new_meeting.meeting_time_as_string = "$h:$m"
 
-        app.generate_date_reminder_id(dd, mm, yyyy, h, mm, "00")
+        app.generate_date_reminder_id(dd, mm, yyyy, (h.toInt() - 1).toString(), mm, "00")
         new_meeting.meeting_date_id = app.reminder_due_date_id
         new_meeting.meeting_creator = app.currentActiveMember
+
+        var cal = LocalDateTime.of(yyyy.toInt(), mm.toInt(), dd.toInt(), h.toInt(), m.toInt())
+        cal.plusHours(root.editTxtEnd.text.toString().toLong())
+
+        app.generate_date_reminder_id(
+            cal.dayOfMonth.toString(),
+            cal.monthValue.toString(),
+            cal.year.toString(),
+            (cal.hour - 1).toString(),
+            cal.minute.toString(),
+            "00"
+        )
+
+        new_meeting.meeting_date_end_id = app.reminder_due_date_id
+
+        new_meeting.meeting_date_as_string_end = "${cal.dayOfMonth}/${cal.monthValue}/${cal.year}"
+        new_meeting.meeting_time_as_string_end = "${cal.hour}:${cal.minute}"
 
         new_meeting.meeting_title = root.editTxtTitle.text.toString()
         new_meeting.meeting_desc = root.editTxtDesc.text.toString()
