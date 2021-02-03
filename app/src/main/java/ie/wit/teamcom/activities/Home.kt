@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -28,7 +29,9 @@ import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Meeting
 import ie.wit.teamcom.models.Reminder
+import ie.wit.teamcom.services.RecurringServices
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.app_bar_home.*
@@ -54,6 +57,7 @@ class Home : AppCompatActivity(),
     var num_reminders = 0
     lateinit var notificationManager: NotificationManager
     var reminders_list = ArrayList<Reminder>()
+    var meetings_list = ArrayList<Meeting>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +70,7 @@ class Home : AppCompatActivity(),
 
         navView.setNavigationItemSelectedListener(this)
 
+        startService(Intent(this, RecurringServices::class.java))
 
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar,
@@ -93,6 +98,25 @@ class Home : AppCompatActivity(),
 
     }
 
+    fun getMeetings(channel_id: String) {
+        app.database.child("channels").child(channel_id).child("meetings")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val children = dataSnapshot.children
+                    children.forEach {
+                        val meeting = it.getValue<Meeting>(Meeting::class.java)
+                        meetings_list.add(meeting!!)
+                        app.database.child("channels").child(channel_id).child("meetings")
+                            .removeEventListener(this)
+                    }
+//                    checkActiveReminders()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+            })
+    }
+
     fun getActiveReminders(channel_id: String) {
         app.database.child("channels").child(channel_id).child("reminders")
             .child(app.currentActiveMember.id)
@@ -105,7 +129,7 @@ class Home : AppCompatActivity(),
                         app.database.child("channels").child(currentChannel!!.id).child("reminders")
                             .child(app.currentActiveMember.id).removeEventListener(this)
                     }
-                    checkActiveReminders()
+//                    checkActiveReminders()
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -170,6 +194,7 @@ class Home : AppCompatActivity(),
                 user.image = dataSnapshot.child("image").value.toString().toInt()
                 user.login_used = dataSnapshot.child("login_used").value.toString()
                 getActiveReminders(channel.id)
+                getMeetings(channel.id)
 
                 var newsFeedFragment = NewsFeedFragment.newInstance(channel)
                 navigateTo(NewsFeedFragment.newInstance(channel))
@@ -271,62 +296,66 @@ class Home : AppCompatActivity(),
         notificationManager?.notify(notificationID, notification)
     }
 
-    fun recurring_methods() {
-        getActiveReminders(channel.id)
+//    fun recurring_methods() {
+//        getActiveReminders(channel.id)
+//    }
 
-    }
+//    override fun onResume(){
+//        super.onResume()
+//        recurring_methods()
+//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             ///social
             R.id.nav_news_feed -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(NewsFeedFragment.newInstance(channel))
             }
             R.id.nav_conversations -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(ConversationFragment.newInstance(channel))
             }
             R.id.nav_meetings -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(MeetingsFragment.newInstance(channel))
             }
 
 
             ///Organizational
             R.id.nav_calendar -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(CalendarFragment.newInstance(channel))
             }
 
             R.id.nav_tasks -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(ProjectListFragment.newInstance(channel))
             }
 
             R.id.nav_reminders -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(RemindersFragment.newInstance(channel))
             }
 
 
             ///Channel
             R.id.nav_channel_settings -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(SettingsFragment.newInstance(channel))
             }
 
             R.id.nav_log -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(LogFragment.newInstance(channel))
             }
 
             R.id.nav_members -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(MembersFragment.newInstance(channel))
             }
             R.id.nav_support -> {
-                recurring_methods()
+//                recurring_methods()
                 navigateTo(SupportFragment.newInstance(channel))
             }
             /////////////////////////

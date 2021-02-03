@@ -46,7 +46,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     var reminderList = ArrayList<Reminder>()
     var new_reminder = Reminder()
     private var dialog: Dialog? = null
-    lateinit var loader : androidx.appcompat.app.AlertDialog
+//    lateinit var loader : androidx.appcompat.app.AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         activity?.title = getString(R.string.title_reminders)
         root.remindersRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        loader = createLoader(requireActivity())
+//        loader = createLoader(requireActivity())
 
         root.btnAddNewReminder.setOnClickListener {
             addReminder()
@@ -78,19 +78,19 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllReminders()
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
     val newDate = Calendar.getInstance()
     val newTime = Calendar.getInstance()
 
-    fun addReminder(){
+    fun addReminder() {
         dialog = Dialog(requireContext())
         dialog!!.setContentView(R.layout.floating_popup)
 
@@ -102,7 +102,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         val message: EditText = dialog!!.findViewById<EditText>(R.id.message)
         val newCalender = Calendar.getInstance()
 
-        select.setOnClickListener{
+        select.setOnClickListener {
             val dialog = DatePickerDialog(
                 requireContext(),
                 { view, year, month, dayOfMonth ->
@@ -134,51 +134,66 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         }
 
         add.setOnClickListener {
-            showLoader(loader, "Loading . . . ", "Validating . . . ")
-            validateForm()
-            hideLoader(loader)
-            if (validateForm()){
-                showLoader(loader, "Loading . . . ", "Creating Reminder ${new_reminder.rem_msg} . . . ")
-                val remind_date = newDate
-                new_reminder.rem_date = remind_date.toString()
-                new_reminder.id = UUID.randomUUID().toString()
-                app.generateDateID("1")
+//            showLoader(loader, "Loading . . . ", "Validating . . . ")
+//            validateForm()
+//            hideLoader(loader)
+//            if (validateForm()){
+//                showLoader(loader, "Loading . . . ", "Creating Reminder ${new_reminder.rem_msg} . . . ")
+            val remind_date = newDate
+            new_reminder.rem_date = remind_date.toString()
+            new_reminder.id = UUID.randomUUID().toString()
+            app.generateDateID("1")
 
-                var date_day = remind_date.get(Calendar.DATE).toString()
-                var date_month = (remind_date.get(Calendar.MONTH) + 1).toString()
-                var date_year = remind_date.get(Calendar.YEAR).toString()
-                var date_hour = remind_date.get(Calendar.HOUR_OF_DAY).toString()
-                var date_minute = remind_date.get(Calendar.MINUTE).toString()
-                var date_seconds = remind_date.get(Calendar.SECOND).toString()
+            var date_day = remind_date.get(Calendar.DATE).toString()
+            var date_month = (remind_date.get(Calendar.MONTH) + 1).toString()
+            var date_year = remind_date.get(Calendar.YEAR).toString()
+            var date_hour = remind_date.get(Calendar.HOUR_OF_DAY).toString()
+            var date_minute = remind_date.get(Calendar.MINUTE).toString()
+            var date_seconds = remind_date.get(Calendar.SECOND).toString()
 
-                app.generate_date_reminder_id(date_day,date_month,date_year,date_hour,date_minute,date_seconds)
-                new_reminder.rem_date_id = app.reminder_due_date_id
-                new_reminder.rem_date_as_string = app.rem_dateAsString
-                new_reminder.rem_time_as_string = app.rem_timeAsString
+            app.generate_date_reminder_id(
+                date_day,
+                date_month,
+                date_year,
+                date_hour,
+                date_minute,
+                date_seconds
+            )
+            new_reminder.rem_date_id = app.reminder_due_date_id
+            new_reminder.rem_date_as_string = app.rem_dateAsString
+            new_reminder.rem_time_as_string = app.rem_timeAsString
 
-                val ddate = Calendar.getInstance()
-                ddate.set(date_year.toInt(),date_month.toInt(),date_day.toInt()-1,date_hour.toInt(),date_minute.toInt())
-                var d = ddate.get(Calendar.DATE).toString()
-                var m = ddate.get(Calendar.MONTH).toString()
-                var y = ddate.get(Calendar.YEAR).toString()
-                var h = ddate.get(Calendar.HOUR_OF_DAY).toString()
-                var mm = ddate.get(Calendar.MINUTE).toString()
-                var s = ddate.get(Calendar.SECOND).toString()
+            val ddate = Calendar.getInstance()
+            ddate.set(
+                date_year.toInt(),
+                date_month.toInt(),
+                date_day.toInt() - 1,
+                date_hour.toInt(),
+                date_minute.toInt()
+            )
+            var d = ddate.get(Calendar.DATE).toString()
+            var m = ddate.get(Calendar.MONTH).toString()
+            var y = ddate.get(Calendar.YEAR).toString()
+            var h = ddate.get(Calendar.HOUR_OF_DAY).toString()
+            var mm = ddate.get(Calendar.MINUTE).toString()
+            var s = ddate.get(Calendar.SECOND).toString()
 
-                app.generate_date_reminder_id(d,m,y,h,mm,s)
+            app.generate_date_reminder_id(d, m, y, h, mm, s)
 
-                new_reminder.rem_reminder_date_it = app.reminder_due_date_id
-                new_reminder.rem_msg = message.text.toString()
-                new_reminder.rem_status = ""
+            new_reminder.rem_reminder_date_it = app.reminder_due_date_id
+            new_reminder.rem_msg = message.text.toString()
+            new_reminder.rem_status = ""
 
-                createReminder()
-            }
-            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.show()
-            }
+            createReminder()
+//            }
+
+        }
+        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog!!.show()
+//        dialog!!.show()
     }
 
-    private fun validateForm(): Boolean{
+    private fun validateForm(): Boolean {
         var valid = true
 
         val msg = message.text.toString()
@@ -200,7 +215,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         return valid
     }
 
-    fun createReminder(){
+    fun createReminder() {
         app.database.child("channels").child(currentChannel!!.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -208,10 +223,11 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel!!.id}/reminders/${app.currentActiveMember.id}/${new_reminder.id}/"] = new_reminder
+                    childUpdates["/channels/${currentChannel!!.id}/reminders/${app.currentActiveMember.id}/${new_reminder.id}/"] =
+                        new_reminder
                     app.database.updateChildren(childUpdates)
 
-                    hideLoader(loader)
+//                    hideLoader(loader)
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
                     dialog!!.dismiss()
@@ -219,9 +235,10 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
             })
     }
 
-    fun getAllReminders(){
+    fun getAllReminders() {
         reminderList = ArrayList<Reminder>()
-        app.database.child("channels").child(currentChannel!!.id).child("reminders").child(app.currentActiveMember.id)
+        app.database.child("channels").child(currentChannel!!.id).child("reminders")
+            .child(app.currentActiveMember.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase nf error : ${error.message}")
@@ -258,6 +275,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
             }
         })
     }
+
     fun checkSwipeRefresh() {
         if (root.swiperefreshReminders.isRefreshing) root.swiperefreshReminders.isRefreshing = false
     }
