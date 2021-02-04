@@ -113,7 +113,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     )
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
-
+                    getAllPosts()
                     checkSwipeRefresh()
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
