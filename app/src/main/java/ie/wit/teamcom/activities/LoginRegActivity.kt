@@ -91,6 +91,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     createAccount(txtEmail.text.toString(),txtPassword.text.toString())
 
             }
+
         }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -118,7 +119,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                             val user = app.auth.currentUser
                             app.database = FirebaseDatabase.getInstance().reference
 //                            startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
-                            getUser()
+                            getUser(false)
                         } else {
                             Toast.makeText(baseContext, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
@@ -128,7 +129,15 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                 toast("Email and Password fields are required to login!")
             }
         }
+        check_auto_login()
     }
+
+    private fun check_auto_login(){
+        if(app.auth.currentUser !== null){
+            getUser(true)
+        }
+    }
+
 
     private fun validateForm(register: Boolean): Boolean {
         var valid = true
@@ -229,7 +238,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                         app.database.updateChildren(childUpdates)
                         hideLoader(loader)
                     }
-                    getUser()
+                    getUser(false)
                     app.database.child("users")
                         .removeEventListener(this)
                 }
@@ -237,7 +246,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     }
 
     var user = Account()
-    fun getUser(){
+    fun getUser(v : Boolean){
         showLoader(loader, "Loading . . .", "Loading User Data . . . ")
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val rootRef = FirebaseDatabase.getInstance().reference
@@ -250,10 +259,21 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                 user.id = dataSnapshot.child("id").value.toString()
                 user.image = dataSnapshot.child("image").value.toString().toInt()
                 user.login_used = dataSnapshot.child("login_used").value.toString()
+                user.auto_login = dataSnapshot.child("auto_login").value.toString().toBoolean()
 
                 uidRef.removeEventListener(this)
                 hideLoader(loader)
-                startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                if (!v){
+                    startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                } else if (v){
+                    if (user.auto_login){
+                        if (user.login_used == "google"){
+                            googleSignIn()
+                        } else if (user.login_used == "firebaseAuth"){
+                            startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                        }
+                    }
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

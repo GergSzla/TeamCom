@@ -288,12 +288,13 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                                     })
                             }
                         }
-                        hideLoader(loader)
                         app.database.child("users").child(userId).child("channels").orderByChild("orderDateId")
                             .removeEventListener(this)
+                        hideLoader(loader)
                     }
                 }
             })
+        hideLoader(loader)
     }
 
 
