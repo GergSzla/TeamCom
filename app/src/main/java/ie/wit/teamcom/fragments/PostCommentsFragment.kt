@@ -112,7 +112,6 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         } else {
             Toast.makeText(context, "Comment Can Only Be Deleted By Its Owner or Members With The Appropriate Permissions.", Toast.LENGTH_LONG)
         }
-
     }
 
     private fun validateForm(): Boolean {

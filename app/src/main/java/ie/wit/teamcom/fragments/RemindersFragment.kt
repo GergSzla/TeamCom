@@ -17,7 +17,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -26,12 +28,16 @@ import ie.wit.adventurio.helpers.createLoader
 import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.CommentsAdapter
 import ie.wit.teamcom.adapters.ReminderListener
 import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Reminder
+import ie.wit.utils.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.floating_popup.*
+import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import kotlinx.android.synthetic.main.popup_create_event.*
 import org.jetbrains.anko.AnkoLogger
@@ -45,7 +51,9 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     lateinit var app: MainApp
     var reminderList = ArrayList<Reminder>()
     var new_reminder = Reminder()
+    var edit_reminder = Reminder()
     private var dialog: Dialog? = null
+
 //    lateinit var loader : androidx.appcompat.app.AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,10 +78,36 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
 //        loader = createLoader(requireActivity())
 
         root.btnAddNewReminder.setOnClickListener {
-            addReminder()
+            addReminder(UUID.randomUUID().toString(),false)
         }
         setSwipeRefresh()
+
+        val swipeDeleteHandler = object : SwipeToDeleteCallback(requireActivity()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = root.remindersRecyclerView.adapter as RemindersAdapter
+                delete_reminder((viewHolder.itemView.tag as Reminder))
+                adapter.removeAt(viewHolder.adapterPosition)
+            }
+        }
+        val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
+        itemTouchDeleteHelper.attachToRecyclerView(root.remindersRecyclerView)
+
         return root
+    }
+
+    fun delete_reminder(reminder: Reminder) {
+        var i = reminderList.indexOf(reminder)
+        app.database.child("channels").child(currentChannel.id).child("reminders")
+            .child(app.auth.currentUser!!.uid).child(reminder.id)
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.ref.removeValue()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
     }
 
     override fun onResume() {
@@ -90,7 +124,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     val newDate = Calendar.getInstance()
     val newTime = Calendar.getInstance()
 
-    fun addReminder() {
+    fun addReminder(id:String , edit:Boolean) {
         dialog = Dialog(requireContext())
         dialog!!.setContentView(R.layout.floating_popup)
 
@@ -102,6 +136,9 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         val message: EditText = dialog!!.findViewById<EditText>(R.id.message)
         val newCalender = Calendar.getInstance()
 
+        if (edit){
+            message.setText(edit_reminder.rem_msg)
+        }
         select.setOnClickListener {
             val dialog = DatePickerDialog(
                 requireContext(),
@@ -141,7 +178,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
 //                showLoader(loader, "Loading . . . ", "Creating Reminder ${new_reminder.rem_msg} . . . ")
             val remind_date = newDate
             new_reminder.rem_date = remind_date.toString()
-            new_reminder.id = UUID.randomUUID().toString()
+            new_reminder.id = id
             app.generateDateID("1")
 
             var date_day = remind_date.get(Calendar.DATE).toString()
@@ -297,5 +334,10 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                     putParcelable("channel_key", channel)
                 }
             }
+    }
+
+    override fun onReminderClick(reminder: Reminder) {
+        edit_reminder = reminder
+        addReminder(reminder.id, true)
     }
 }

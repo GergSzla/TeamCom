@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
-import ie.wit.teamcom.models.Post
 import ie.wit.teamcom.models.Reminder
-import kotlinx.android.synthetic.main.card_post.view.*
 import kotlinx.android.synthetic.main.card_reminder.view.*
-import kotlinx.android.synthetic.main.card_role.view.*
 
 
 interface ReminderListener {
+    fun onReminderClick(reminder: Reminder)
 }
 
 class RemindersAdapter constructor(
@@ -52,6 +50,10 @@ class RemindersAdapter constructor(
 
             if (reminder.rem_status == "Overdue"){
                 itemView.txtRemStatus.setTextColor(Color.parseColor("#d00000"))
+            }
+
+            itemView.setOnClickListener {
+                listener.onReminderClick(reminder)
             }
         }
     }
