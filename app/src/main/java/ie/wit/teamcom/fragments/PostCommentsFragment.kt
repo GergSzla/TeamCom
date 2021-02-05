@@ -1,12 +1,19 @@
 package ie.wit.teamcom.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,18 +27,22 @@ import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Post
+import ie.wit.utils.SwipeToDeleteCallback
+import kotlinx.android.synthetic.main.card_comment.view.*
+import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
 import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.*
 
-class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
+class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
     lateinit var root: View
     lateinit var app: MainApp
     var commentsList = ArrayList<Comment>()
     var likesList = ArrayList<String>()
     var new_comment = Comment()
+    var edit_comment = Comment()
     var currentPost = Post()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,19 +65,48 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
         activity?.title = getString(R.string.title_news_feed)
         root.commentsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        root.txtPostUserView.text = currentPost.post_author.firstName + " " + currentPost.post_author.surname
-        root.txtPostTimeAndDateView.text = currentPost.post_date +" @ "+ currentPost.post_time
+        root.txtPostUserView.text =
+            currentPost.post_author.firstName + " " + currentPost.post_author.surname
+        root.txtPostTimeAndDateView.text = currentPost.post_date + " @ " + currentPost.post_time
         root.txtPostContentView.text = currentPost.post_content
 
 
         root.imgBtnPostComment.setOnClickListener {
             validateForm()
-            if (root.editComment.text.toString() !== ""){
+            if (root.editComment.text.toString() !== "") {
                 sendComment()
             }
         }
+
         setSwipeRefresh()
+
+        val swipeDeleteHandler = object : SwipeToDeleteCallback(requireActivity()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = root.commentsRecyclerView.adapter as CommentsAdapter
+                delete_comment((viewHolder.itemView.tag as Comment))
+                adapter.removeAt(viewHolder.adapterPosition)
+
+            }
+        }
+        val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
+        itemTouchDeleteHelper.attachToRecyclerView(root.commentsRecyclerView)
+
         return root
+    }
+
+    fun delete_comment( comment: Comment) {
+        var i = commentsList.indexOf(comment)
+        app.database.child("channels").child(currentChannel.id).child("posts")
+            .child(currentPost.id).child("post_comments").child("$i")
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.ref.removeValue()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
     }
 
     private fun validateForm(): Boolean {
@@ -85,13 +125,13 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllComments()
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
     fun setSwipeRefresh() {
@@ -108,7 +148,7 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
         if (root.swiperefreshComments.isRefreshing) root.swiperefreshComments.isRefreshing = false
     }
 
-    fun sendComment(){
+    fun sendComment() {
         app.generateDateID("1")
         new_comment.comment_content = root.editComment.text.toString()
         new_comment.id = UUID.randomUUID().toString()
@@ -120,8 +160,9 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
         root.editComment.setText("")
     }
 
-    fun createPost(){
-        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id)
+    fun createPost() {
+        app.database.child("channels").child(currentChannel!!.id).child("posts")
+            .child(currentPost.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -131,16 +172,25 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
                     val logUpdates = HashMap<String, Any>()
 
                     currentPost.post_comments.add(new_comment)
-                    childUpdates["/channels/${currentChannel.id}/posts/${currentPost.id}"] = currentPost
+                    childUpdates["/channels/${currentChannel.id}/posts/${currentPost.id}"] =
+                        currentPost
                     app.database.updateChildren(childUpdates)
 
-                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "New Comment on " +
-                            "${currentPost.post_author.firstName} ${currentPost.post_author.surname}'s post")
+                    var new_log = Log(
+                        log_id = app.valid_from_cal,
+                        log_triggerer = app.currentActiveMember,
+                        log_date = app.dateAsString,
+                        log_time = app.timeAsString,
+                        log_content = "New Comment on " +
+                                "${currentPost.post_author.firstName} ${currentPost.post_author.surname}'s post"
+                    )
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
+                    navigateTo(PostCommentsFragment.newInstance(currentChannel,currentPost))
 
-                    app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id)
+                    app.database.child("channels").child(currentChannel!!.id).child("posts")
+                        .child(currentPost.id)
                         .removeEventListener(this)
                     //startActivity(intentFor<ChannelsListActivity>().putExtra("user_key", user))
                 }
@@ -150,7 +200,8 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
 
     fun getAllComments() {
         commentsList = ArrayList<Comment>()
-        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id).child("post_comments")
+        app.database.child("channels").child(currentChannel!!.id).child("posts")
+            .child(currentPost.id).child("post_comments")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase comments error : ${error.message}")
@@ -162,10 +213,12 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
                     children.forEach {
                         val comment = it.getValue<Comment>(Comment::class.java)
                         commentsList.add(comment!!)
-                        root.commentsRecyclerView.adapter = CommentsAdapter(commentsList,this@PostCommentsFragment)
+                        root.commentsRecyclerView.adapter =
+                            CommentsAdapter(commentsList, this@PostCommentsFragment)
                         root.commentsRecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("posts").child("post_comments")
+                        app.database.child("channels").child(currentChannel!!.id).child("posts")
+                            .child(currentPost.id).child("post_comments")
                             .removeEventListener(this)
                     }
                 }
@@ -173,9 +226,10 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
     }
 
     var alreadyLiked = false
-    fun getAllCommentLikes(comment: Comment){
+    fun getAllCommentLikes(comment: Comment) {
         likesList = ArrayList<String>()
-        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id).child("post_comments").child(comment.id)
+        app.database.child("channels").child(currentChannel!!.id).child("posts")
+            .child(currentPost.id).child("post_comments").child(comment.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase comments error : ${error.message}")
@@ -189,7 +243,8 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
                         likesList.add(like!!)
 
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("posts").child(currentPost.id).child("post_comments").child(comment.id)
+                        app.database.child("channels").child(currentChannel!!.id).child("posts")
+                            .child(currentPost.id).child("post_comments").child(comment.id)
                             .removeEventListener(this)
                     }
                 }
@@ -207,7 +262,36 @@ class PostCommentsFragment : Fragment(),AnkoLogger,CommentListener {
             }
     }
 
+    private fun navigateTo(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
+        fragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     override fun onLikeCommentClicked(comment: Comment) {
         //getAllCommentLikes(comment)
+    }
+
+    override fun onCommentEditClicked(comment: Comment) {
+        var i = commentsList.indexOf(comment)
+        
+        app.database.child("channels").child(currentChannel.id).child("posts")
+            .child(currentPost.id).child("post_comments").child("$i")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val childUpdates = HashMap<String, Any>()
+                    childUpdates["/channels/${currentChannel.id}/posts/${currentPost.id}/post_comments/$i/comment_content/"] = comment.comment_content
+                    app.database.updateChildren(childUpdates)
+
+                    app.database.child("channels").child(currentChannel.id).child("posts")
+                        .child(currentPost.id).child("post_comments").child("$i")
+                        .removeEventListener(this)
+                }
+            })
     }
 }
