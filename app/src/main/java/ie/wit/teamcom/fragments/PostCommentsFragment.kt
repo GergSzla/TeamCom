@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -80,12 +81,12 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
 
         setSwipeRefresh()
 
+
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireActivity()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = root.commentsRecyclerView.adapter as CommentsAdapter
                 delete_comment((viewHolder.itemView.tag as Comment))
                 adapter.removeAt(viewHolder.adapterPosition)
-
             }
         }
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
@@ -95,18 +96,23 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
     }
 
     fun delete_comment( comment: Comment) {
-        var i = commentsList.indexOf(comment)
-        app.database.child("channels").child(currentChannel.id).child("posts")
-            .child(currentPost.id).child("post_comments").child("$i")
-            .addListenerForSingleValueEvent(
-                object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        snapshot.ref.removeValue()
-                    }
+        if ( comment.comment_author.id == app.auth.currentUser!!.uid){
+            var i = commentsList.indexOf(comment)
+            app.database.child("channels").child(currentChannel.id).child("posts")
+                .child(currentPost.id).child("post_comments").child("$i")
+                .addListenerForSingleValueEvent(
+                    object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.ref.removeValue()
+                        }
 
-                    override fun onCancelled(error: DatabaseError) {
-                    }
-                })
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
+        } else {
+            Toast.makeText(context, "Comment Can Only Be Deleted By Its Owner or Members With The Appropriate Permissions.", Toast.LENGTH_LONG)
+        }
+
     }
 
     private fun validateForm(): Boolean {

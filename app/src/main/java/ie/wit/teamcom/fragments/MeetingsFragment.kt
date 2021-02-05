@@ -17,6 +17,7 @@ import ie.wit.teamcom.adapters.MeetingsAdapter
 import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Meeting
 import ie.wit.teamcom.models.Reminder
 import kotlinx.android.synthetic.main.fragment_meetings.view.*
@@ -52,7 +53,7 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
         root.btnAddNewMeeting.setOnClickListener {
             navigateTo(CreateMeetingFragment.newInstance(currentChannel))
         }
-
+        setSwipeRefresh()
         return root
     }
 

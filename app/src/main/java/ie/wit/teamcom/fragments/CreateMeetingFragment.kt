@@ -88,10 +88,10 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         }
 
         yyyy = "${date.get(Calendar.YEAR)}"
-        h = if ((date.get(Calendar.HOUR_OF_DAY) + 1) < 10) {
-            "0" + "${(date.get(Calendar.HOUR_OF_DAY) + 1)}"
+        h = if ((date.get(Calendar.HOUR_OF_DAY) ) < 10) {
+            "0" + "${(date.get(Calendar.HOUR_OF_DAY) )}"
         } else {
-            "${(date.get(Calendar.HOUR_OF_DAY) + 1)}"
+            "${(date.get(Calendar.HOUR_OF_DAY))}"
         }
 
         m = if (date.get(Calendar.MINUTE) < 10) {
@@ -332,22 +332,24 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         new_meeting.meeting_date_id = app.reminder_due_date_id
         new_meeting.meeting_creator = app.currentActiveMember
 
+
+        var hrs = root.editTxtEnd.text.toString()
         var cal = LocalDateTime.of(yyyy.toInt(), mm.toInt(), dd.toInt(), h.toInt(), m.toInt())
-        cal.plusHours(root.editTxtEnd.text.toString().toLong())
+        var end_date = cal.plusHours(hrs.toLong())
 
         app.generate_date_reminder_id(
-            cal.dayOfMonth.toString(),
-            cal.monthValue.toString(),
-            cal.year.toString(),
-            (cal.hour - 1).toString(),
-            cal.minute.toString(),
+            end_date.dayOfMonth.toString(),
+            end_date.monthValue.toString(),
+            end_date.year.toString(),
+            (end_date.hour).toString(),
+            end_date.minute.toString(),
             "00"
         )
 
         new_meeting.meeting_date_end_id = app.reminder_due_date_id
 
-        new_meeting.meeting_date_as_string_end = "${cal.dayOfMonth}/${cal.monthValue}/${cal.year}"
-        new_meeting.meeting_time_as_string_end = "${cal.hour}:${cal.minute}"
+        new_meeting.meeting_date_as_string_end = app.rem_dateAsString //"${cal.dayOfMonth}/${cal.monthValue}/${cal.year}"
+        new_meeting.meeting_time_as_string_end = app.rem_timeAsString//"${cal.hour}:${cal.minute}"
 
         new_meeting.meeting_title = root.editTxtTitle.text.toString()
         new_meeting.meeting_desc = root.editTxtDesc.text.toString()
