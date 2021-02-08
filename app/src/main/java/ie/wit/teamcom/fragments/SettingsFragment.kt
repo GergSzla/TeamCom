@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
+import ie.wit.teamcom.models.Project
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 import org.jetbrains.anko.AnkoLogger
 
@@ -54,7 +55,7 @@ class SettingsFragment : Fragment(), AnkoLogger {
             navigateTo(DepartmentList.newInstance(currentChannel))
         }
         root.txtSettingsChannelTaskStages.setOnClickListener {
-            navigateTo(TaskStagesFragment.newInstance(currentChannel))
+            navigateTo(TaskStagesFragment.newInstance(currentChannel, project = Project(), false))
         }
 
         return root

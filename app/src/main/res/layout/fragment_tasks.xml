@@ -1,225 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.TasksFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swiperefreshTasks"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="697dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
-            <!--STAGE 1-->
+            android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swiperefreshTasks"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="697dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0">
+                <!--STAGE 1-->
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontal3ScrollView"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtStage3Title">
+                    android:layout_height="match_parent">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/tasks3RecyclerView"
+                    <HorizontalScrollView
+                        android:id="@+id/horizontal3ScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtStage3Title">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/tasks3RecyclerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_task" />
+                    </HorizontalScrollView>
+
+                    <TextView
+                        android:id="@+id/txtStage5Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_task" />
-                </HorizontalScrollView>
+                        android:layout_marginTop="48dp"
+                        android:text="[STAGE 5 TITLE]"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/horizontal4ScrollView" />
 
-                <TextView
-                    android:id="@+id/txtStage5Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:text="[STAGE 5 TITLE]"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/horizontal4ScrollView" />
+                    <HorizontalScrollView
+                        android:id="@+id/horizontal5ScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtStage5Title">
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontal5ScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtStage5Title">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/tasks5RecyclerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_task" />
+                    </HorizontalScrollView>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/tasks5RecyclerView"
+                    <HorizontalScrollView
+                        android:id="@+id/horizontal4ScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtStage4Title">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/tasks4RecyclerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_task" />
+                    </HorizontalScrollView>
+
+                    <HorizontalScrollView
+                        android:id="@+id/horizontal1ScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtStage1Title">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/tasks1RecyclerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_task" />
+
+                    </HorizontalScrollView>
+
+                    <TextView
+                        android:id="@+id/txtStage2Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_task" />
-                </HorizontalScrollView>
+                        android:layout_marginTop="48dp"
+                        android:text="[STAGE 2 TITLE]"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/horizontal1ScrollView" />
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontal4ScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtStage4Title">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/tasks4RecyclerView"
+                    <TextView
+                        android:id="@+id/txtStage6Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_task" />
-                </HorizontalScrollView>
+                        android:layout_marginTop="20dp"
+                        android:text="[STAGE 6 TITLE]"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/horizontal5ScrollView" />
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontal1ScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtStage1Title">
+                    <HorizontalScrollView
+                        android:id="@+id/horizontal2ScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtStage2Title">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/tasks1RecyclerView"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/tasks2RecyclerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_task" />
+                    </HorizontalScrollView>
+
+                    <HorizontalScrollView
+                        android:id="@+id/horizontal6ScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtStage6Title">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/tasks6RecyclerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_task" />
+                    </HorizontalScrollView>
+
+
+                    <TextView
+                        android:id="@+id/txtStage1Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_task" />
+                        android:layout_marginTop="16dp"
+                        android:text="[STAGE 1 TITLE]"
+                        android:textSize="18sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                </HorizontalScrollView>
-
-                <TextView
-                    android:id="@+id/txtStage2Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:text="[STAGE 2 TITLE]"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/horizontal1ScrollView" />
-
-                <TextView
-                    android:id="@+id/txtStage6Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="[STAGE 6 TITLE]"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/horizontal5ScrollView" />
-
-                <HorizontalScrollView
-                    android:id="@+id/horizontal2ScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtStage2Title">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/tasks2RecyclerView"
+                    <TextView
+                        android:id="@+id/txtStage4Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_task" />
-                </HorizontalScrollView>
+                        android:layout_marginTop="16dp"
+                        android:text="[STAGE 4 TITLE]"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/horizontal3ScrollView" />
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontal6ScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtStage6Title">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/tasks6RecyclerView"
+                    <TextView
+                        android:id="@+id/txtStage3Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_task" />
-                </HorizontalScrollView>
-
-                <Button
-                    android:id="@+id/btnCreateTask"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Create Task"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <TextView
-                    android:id="@+id/txtStage1Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="[STAGE 1 TITLE]"
-                    android:textSize="18sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/txtStage4Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="[STAGE 4 TITLE]"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/horizontal3ScrollView" />
-
-                <TextView
-                    android:id="@+id/txtStage3Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:text="[STAGE 3 TITLE]"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/horizontal2ScrollView" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- Table View-->
+                        android:layout_marginTop="48dp"
+                        android:text="[STAGE 3 TITLE]"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/horizontal2ScrollView" />
 
 
-            <!--STAGE 2-->
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!--STAGE 3-->
-
-            <!--STAGE 4-->
+                <!-- Table View-->
 
 
-            <!--STAGE 5-->
+                <!--STAGE 2-->
 
-            <!--STAGE 6-->
+                <!--STAGE 3-->
 
-            <!--TODO: Change to floating button-->
+                <!--STAGE 4-->
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                <!--STAGE 5-->
+
+                <!--STAGE 6-->
+
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/proj"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        app:fab_addButtonColorNormal="@color/floatBtn"
+        app:fab_addButtonColorPressed="@color/floatBtnPressed"
+        app:fab_labelStyle="@style/custom_fab">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnEditProject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/floatBtn"
+            app:fab_icon="@drawable/ic_baseline_edit_24"
+            app:fab_size="mini"
+            app:fab_title="Edit Project" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnCreateTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/floatBtn"
+            app:fab_icon="@drawable/ic_baseline_new_task"
+            app:fab_size="mini"
+            app:fab_title="Create Task" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!-- TODO: Update blank fragment layout -->
     <!--<LinearLayout

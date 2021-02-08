@@ -13,5 +13,11 @@
     <color name="color_6">#EE6700</color>
     <color name="color_7">#A30000</color>
     <color name="color_8">#CA00EE</color>
+    <color name="color_delete">#880202</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="trasnpBlack">#990C0C0C</color>
+
+    <color name="floatBtn">#FF9800</color>
+    <color name="floatBtnPressed">#B16A00</color>
 
 </resources>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
@@ -49,6 +50,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
     var h = ""
     var m = ""
     lateinit var loader : androidx.appcompat.app.AlertDialog
+    var edit = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +58,10 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         app = activity?.application as MainApp
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")!!
+            edit = it.getBoolean("bool")
+            if (edit){
+                project = it.getParcelable("project_key")!!
+            }
         }
         app.getAllMembers(currentChannel.id)
 
@@ -75,53 +81,84 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         create_def_stages()
         hideLoader(loader)
 
-        root.checkboxStage3.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-                root.txtChannelStage3.isEnabled = true
-                root.txtColorCodeStage3.isEnabled = true
-                root.btnColorPicker3.isEnabled = true
-            } else {
-                root.txtChannelStage3.isEnabled = false
-                root.txtColorCodeStage3.isEnabled = false
-                root.btnColorPicker3.isEnabled = false
+
+        if(edit){
+            root.txt_project_name.setText(project.proj_name)
+            root.txt_project_desc.setText(project.proj_description)
+            root.txtProjDateAndTime.setText(project.proj_due_date + " @ " + project.proj_due_time)
+            root.txtChannelStage1.setText(project.proj_task_stages[0].stage_name)
+            root.txtColorCodeStage1.setText(project.proj_task_stages[0].stage_color_code)
+
+            root.txtChannelStage2.setText(project.proj_task_stages[1].stage_name)
+            root.txtColorCodeStage2.setText(project.proj_task_stages[1].stage_color_code)
+
+            root.checkboxStage3.isVisible = project.proj_task_stages[2].stage_active
+            root.txtChannelStage3.setText(project.proj_task_stages[2].stage_name)
+            root.txtColorCodeStage3.setText(project.proj_task_stages[2].stage_color_code)
+
+            root.checkboxStage4.isVisible = project.proj_task_stages[3].stage_active
+            root.txtChannelStage4.setText(project.proj_task_stages[3].stage_name)
+            root.txtColorCodeStage4.setText(project.proj_task_stages[3].stage_color_code)
+
+            root.checkboxStage5.isVisible = project.proj_task_stages[4].stage_active
+            root.txtChannelStage5.setText(project.proj_task_stages[4].stage_name)
+            root.txtColorCodeStage5.setText(project.proj_task_stages[4].stage_color_code)
+
+            root.checkboxStage6.isVisible = project.proj_task_stages[5].stage_active
+            root.txtChannelStage6.setText(project.proj_task_stages[5].stage_name)
+            root.txtColorCodeStage6.setText(project.proj_task_stages[5].stage_color_code)
+
+
+        } else {
+            root.checkboxStage3.setOnCheckedChangeListener { compoundButton, b ->
+                if (b) {
+                    root.txtChannelStage3.isEnabled = true
+                    root.txtColorCodeStage3.isEnabled = true
+                    root.btnColorPicker3.isEnabled = true
+                } else {
+                    root.txtChannelStage3.isEnabled = false
+                    root.txtColorCodeStage3.isEnabled = false
+                    root.btnColorPicker3.isEnabled = false
+                }
+            }
+
+            root.checkboxStage4.setOnCheckedChangeListener { compoundButton, b ->
+                if (b) {
+                    root.txtChannelStage4.isEnabled = true
+                    root.txtColorCodeStage4.isEnabled = true
+                    root.btnColorPicker4.isEnabled = true
+                } else {
+                    root.txtChannelStage4.isEnabled = false
+                    root.txtColorCodeStage4.isEnabled = false
+                    root.btnColorPicker4.isEnabled = false
+                }
+            }
+
+            root.checkboxStage5.setOnCheckedChangeListener { compoundButton, b ->
+                if (b) {
+                    root.txtChannelStage5.isEnabled = true
+                    root.txtColorCodeStage5.isEnabled = true
+                    root.btnColorPicker5.isEnabled = true
+                } else {
+                    root.txtChannelStage5.isEnabled = false
+                    root.txtColorCodeStage5.isEnabled = false
+                    root.btnColorPicker5.isEnabled = false
+                }
+            }
+
+            root.checkboxStage6.setOnCheckedChangeListener { compoundButton, b ->
+                if (b) {
+                    root.txtChannelStage6.isEnabled = true
+                    root.txtColorCodeStage6.isEnabled = true
+                    root.btnColorPicker6.isEnabled = true
+                } else {
+                    root.txtChannelStage6.isEnabled = false
+                    root.txtColorCodeStage6.isEnabled = false
+                    root.btnColorPicker6.isEnabled = false
+                }
             }
         }
 
-        root.checkboxStage4.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-                root.txtChannelStage4.isEnabled = true
-                root.txtColorCodeStage4.isEnabled = true
-                root.btnColorPicker4.isEnabled = true
-            } else {
-                root.txtChannelStage4.isEnabled = false
-                root.txtColorCodeStage4.isEnabled = false
-                root.btnColorPicker4.isEnabled = false
-            }
-        }
-
-        root.checkboxStage5.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-                root.txtChannelStage5.isEnabled = true
-                root.txtColorCodeStage5.isEnabled = true
-                root.btnColorPicker5.isEnabled = true
-            } else {
-                root.txtChannelStage5.isEnabled = false
-                root.txtColorCodeStage5.isEnabled = false
-                root.btnColorPicker5.isEnabled = false
-            }
-        }
-
-        root.checkboxStage6.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-                root.txtChannelStage6.isEnabled = true
-                root.txtColorCodeStage6.isEnabled = true
-                root.btnColorPicker6.isEnabled = true
-            } else {
-                root.txtChannelStage6.isEnabled = false
-                root.txtColorCodeStage6.isEnabled = false
-                root.btnColorPicker6.isEnabled = false
-            }
-        }
 
         root.btnColorPicker1.setOnClickListener {
             ColorPickerDialogBuilder
@@ -527,7 +564,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
     fun save_stages_changes() {
         showLoader(loader, "Loading . . . ", "Saving Task Stages . . . ")
         //stage 1
-        task_stage_1.id = UUID.randomUUID().toString()
+        if(!edit){
+            task_stage_1.id = UUID.randomUUID().toString()
+        }
         task_stage_1.stage_no = 1
         task_stage_1.stage_name = root.txtChannelStage1.text.toString()
         task_stage_1.stage_active = true
@@ -539,7 +578,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 2
-        task_stage_2.id = UUID.randomUUID().toString()
+        if(!edit) {
+            task_stage_2.id = UUID.randomUUID().toString()
+        }
         task_stage_2.stage_no = 2
 
         task_stage_2.stage_name = root.txtChannelStage2.text.toString()
@@ -551,8 +592,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 3
-        task_stage_3.id = UUID.randomUUID().toString()
-        task_stage_3.stage_no = 3
+        if(!edit) {
+            task_stage_3.id = UUID.randomUUID().toString()
+        }
         task_stage_3.stage_name = root.txtChannelStage3.text.toString()
         task_stage_3.stage_active = root.checkboxStage3.isChecked
         if (root.txtColorCodeStage3.text.toString().take(1) != "#") {
@@ -562,7 +604,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 4
-        task_stage_4.id = UUID.randomUUID().toString()
+        if(!edit) {
+            task_stage_4.id = UUID.randomUUID().toString()
+        }
         task_stage_4.stage_no = 4
         task_stage_4.stage_name = root.txtChannelStage4.text.toString()
         task_stage_4.stage_active = root.checkboxStage4.isChecked
@@ -573,7 +617,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 5
-        task_stage_5.id = UUID.randomUUID().toString()
+        if(!edit) {
+            task_stage_5.id = UUID.randomUUID().toString()
+        }
         task_stage_5.stage_no = 5
         task_stage_5.stage_name = root.txtChannelStage5.text.toString()
         task_stage_5.stage_active = root.checkboxStage5.isChecked
@@ -584,7 +630,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 6
-        task_stage_6.id = UUID.randomUUID().toString()
+        if(!edit) {
+            task_stage_6.id = UUID.randomUUID().toString()
+        }
         task_stage_6.stage_no = 6
         task_stage_6.stage_name = root.txtChannelStage6.text.toString()
         task_stage_6.stage_active = root.checkboxStage6.isChecked
@@ -605,7 +653,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
 
         project.proj_name = root.txt_project_name.text.toString()
         project.proj_description = root.txt_project_desc.text.toString()
-        project.proj_id = UUID.randomUUID().toString()
+        if(!edit){
+            project.proj_id = UUID.randomUUID().toString()
+        }
 
         app.generate_date_reminder_id(dd, mm, yyyy, h, mm, "00")
         project.proj_due_date_id = app.reminder_due_date_id
@@ -687,10 +737,12 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
 
     companion object {
         @JvmStatic
-        fun newInstance(channel: Channel) =
+        fun newInstance(channel: Channel, project: Project , edit : Boolean) =
             TaskStagesFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("channel_key", channel)
+                    putParcelable("project_key", project)
+                    putBoolean("bool", edit)
                 }
             }
     }

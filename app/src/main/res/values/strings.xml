@@ -179,5 +179,7 @@
     <string name="str_color_def">00a500</string>
     <string name="str_color_def_2">d08800 </string>
     <string name="str_color_def_3">d00000 </string>
+    <string name="conf">Are you sure you want to delete this? </string>
+
 
 </resources>

@@ -84,6 +84,11 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         root.btnCreateTask.setOnClickListener {
             navigateTo(CreateTaskFragment.newInstance(currentChannel, selected_project))
         }
+
+        root.btnEditProject.setOnClickListener {
+            navigateTo(TaskStagesFragment.newInstance(currentChannel, selected_project, true))
+        }
+
         setSwipeRefresh()
 
         return root

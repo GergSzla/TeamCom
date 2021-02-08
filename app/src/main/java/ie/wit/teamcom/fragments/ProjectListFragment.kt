@@ -1,12 +1,19 @@
 package ie.wit.teamcom.fragments
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -14,10 +21,14 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.ProjectListener
 import ie.wit.teamcom.adapters.ProjectsAdapter
+import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Project
+import ie.wit.teamcom.models.Reminder
+import ie.wit.utils.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.fragment_projects_list.view.*
+import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import kotlinx.android.synthetic.main.fragment_role_list.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -29,6 +40,8 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
     lateinit var root: View
     var currentChannel = Channel()
     var projectList = ArrayList<Project>()
+    private var dialog: Dialog? = null
+    var delete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +51,7 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,12 +60,24 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
         activity?.title = getString(R.string.title_project_settings)
 
         root.btn_add_project.setOnClickListener {
-            navigateTo(TaskStagesFragment.newInstance(currentChannel))
+            navigateTo(TaskStagesFragment.newInstance(currentChannel,project = Project(),false))
         }
 
         root.projectsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         setSwipeRefresh()
+
+        val swipeDeleteHandler = object : SwipeToDeleteCallback(requireActivity()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = root.projectsRecyclerView.adapter as ProjectsAdapter
+                delete_project_confirmation((viewHolder.itemView.tag as Project))
+                if (delete){
+                    adapter.removeAt(viewHolder.adapterPosition)
+                }
+            }
+        }
+        val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
+        itemTouchDeleteHelper.attachToRecyclerView(root.projectsRecyclerView)
 
         return root
     }
@@ -69,6 +95,42 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
 
     override fun onProjClick(project: Project) {
         navigateTo(TasksFragment.newInstance(currentChannel,project))
+    }
+
+    fun delete_project_confirmation(project: Project){
+        dialog = Dialog(requireContext())
+        dialog!!.setContentView(R.layout.confirmation_dialog)
+
+        val btn_conf: Button = dialog!!.findViewById<Button>(R.id.btn_proceed)
+        val btn_cancel: Button = dialog!!.findViewById<Button>(R.id.btn_cancel)
+
+        btn_conf.setOnClickListener{
+            delete_project(project)
+            delete = true
+            dialog!!.cancel()
+        }
+
+        btn_cancel.setOnClickListener{
+            dialog!!.cancel()
+            getAllProjects()
+        }
+
+        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog!!.show()
+    }
+
+    fun delete_project(project : Project){
+        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("projects")
+            .child(project.proj_id)
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.ref.removeValue()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
     }
 
     fun getAllProjects() {
