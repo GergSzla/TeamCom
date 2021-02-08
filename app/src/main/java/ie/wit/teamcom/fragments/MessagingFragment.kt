@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +29,7 @@ import java.util.*
 class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
 
     lateinit var app: MainApp
-    lateinit var eventListener : ValueEventListener
+    lateinit var eventListener: ValueEventListener
     lateinit var root: View
     var current_conversation = Conversation()
     var new_message = Message()
@@ -76,15 +77,15 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
-    fun sendMsg(){
+    fun sendMsg() {
         app.database.child("channels").child(currentChannel!!.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -93,12 +94,13 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
 
-                    childUpdates["/channels/${currentChannel.id}/conversations/${current_conversation.id}"] = current_conversation
+                    childUpdates["/channels/${currentChannel.id}/conversations/${current_conversation.id}"] =
+                        current_conversation
                     app.database.updateChildren(childUpdates)
 
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
-                    getAllConvoMessages()
+                    navigateTo(MessagingFragment.newInstance(current_conversation))
                     root.txtMessage.setText(" ")
                 }
             })
@@ -107,7 +109,8 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
 
     fun getAllConvoMessages() {
         messageList = ArrayList<Message>()
-        app.database.child("channels").child(currentChannel!!.id).child("conversations").child(current_conversation.id).child("messages")
+        app.database.child("channels").child(currentChannel!!.id).child("conversations")
+            .child(current_conversation.id).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase Msg error : ${error.message}")
@@ -123,7 +126,8 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
                             this@MessagingFragment
                         )
                         root.messagesRecyclerView.adapter?.notifyDataSetChanged()
-                        app.database.child("channels").child(currentChannel!!.id).child("conversations").child(current_conversation.id).child("messages")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("conversations").child(current_conversation.id).child("messages")
                             .removeEventListener(this)
                     }
                     var size = messageList.size
@@ -131,8 +135,6 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
                 }
             })
     }
-
-
 
     companion object {
         @JvmStatic
@@ -142,5 +144,13 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
                     putParcelable("channel_key", conversation)
                 }
             }
+    }
+
+    private fun navigateTo(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
+        fragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
