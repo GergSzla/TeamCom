@@ -74,30 +74,30 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         return root
     }
 
-    private fun validateForm(): Boolean{
-        var valid = true
-
-        val exp = root.txtExpires.text.toString()
-        if (TextUtils.isEmpty(exp)) {
-            root.txtExpires.error = "Expires In (Hrs) Required."
-            valid = false
-        } else {
-            root.txtExpires.error = null
-        }
-
-        if (root.txtUses.text.toString().toInt() >= 1){
-            val uses = root.txtUses.text.toString()
-            if (TextUtils.isEmpty(uses)) {
-                root.txtUses.error = "Uses (Minimum 1) Required."
-                valid = false
-            } else {
-                root.txtUses.error = null
-            }
-        }
-
-
-        return valid
-    }
+//    private fun validateForm(): Boolean{
+//        var valid = true
+//
+//        val exp = root.txtExpires.text.toString()
+//        if (TextUtils.isEmpty(exp)) {
+//            root.txtExpires.error = "Expires In (Hrs) Required."
+//            valid = false
+//        } else {
+//            root.txtExpires.error = null
+//        }
+//
+//        if (root.txtUses.text.toString().toInt() >= 1){
+//            val uses = root.txtUses.text.toString()
+//            if (TextUtils.isEmpty(uses)) {
+//                root.txtUses.error = "Uses (Minimum 1) Required."
+//                valid = false
+//            } else {
+//                root.txtUses.error = null
+//            }
+//        }
+//
+//
+//        return valid
+//    }
 
     override fun onInviteClicked(invite: Invite) {
         app.copy_invitation(invite.invite_code)
@@ -180,11 +180,11 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         val hrs_active = dialog.findViewById(R.id.txtExpires) as EditText
         val uses = dialog.findViewById(R.id.txtUses) as EditText
         create.setOnClickListener {
-            validateForm()
-            if (validateForm()){
+//            validateForm()
+//            if (validateForm()){
                 createInvite(hrs_active.text.toString(), uses.text.toString())
                 dialog.dismiss()
-            }
+//            }
         }
         cancel.setOnClickListener {
             dialog.dismiss()
