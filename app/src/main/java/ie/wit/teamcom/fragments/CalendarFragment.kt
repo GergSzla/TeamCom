@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
@@ -104,11 +105,9 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         if (new_event){
             add_new_event(selected_date)
             getCurDateEvents(yyyy.toString(),month,day)
-            setSwipeRefresh(yyyy.toString(),month,day)
         } else {
             getEventsForDate(selected_date)
             getCurDateEvents(yyyy.toString(),month,day)
-            setSwipeRefresh(yyyy.toString(),month,day)
         }
     }
 
@@ -192,12 +191,12 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         }
 
         create_event.setOnClickListener{
-            showLoader(loader, "Loading . . .", "Validating . . .")
-            validateForm()
-            hideLoader(loader)
+//            showLoader(loader, "Loading . . .", "Validating . . .")
+//            //validateForm()
+//            hideLoader(loader)
 
 
-            if (validateForm()){
+            //if (validateForm()){
                 showLoader(loader, "Loading . . .", "Creating Event ${event.event_name} . . .")
                 event.event_name = txt_event_name.text.toString()
                 event.event_desc = txt_event_desc.text.toString()
@@ -221,9 +220,10 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
                             hideLoader(loader)
                             app.database.child("channels").child(currentChannel.id)
                                 .removeEventListener(this)
+                            navigateTo(CalendarFragment.newInstance(currentChannel))
                         }
                     })
-            }
+            //}
         }
         cancel.setOnClickListener {
             dialog.dismiss()
@@ -232,22 +232,30 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
     }
 
 
-    private fun validateForm(): Boolean{
-        var valid = true
+//    private fun validateForm(): Boolean{
+//        var valid = true
+//
+//        val name = txt_event_name.text.toString()
+//        if (TextUtils.isEmpty(name)) {
+//            txt_event_name.error = "Event Name Required."
+//            valid = false
+//        } else {
+//            txt_event_name.error = null
+//        }
+//
+//        if (txt_event_desc.text.toString() == ""){
+//            event.event_desc = " "
+//        }
+//
+//        return valid
+//    }
 
-        val name = txt_event_name.text.toString()
-        if (TextUtils.isEmpty(name)) {
-            txt_event_name.error = "Event Name Required."
-            valid = false
-        } else {
-            txt_event_name.error = null
-        }
-
-        if (txt_event_desc.text.toString() == ""){
-            event.event_desc = " "
-        }
-
-        return valid
+    private fun navigateTo(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
+        fragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     fun setSwipeRefresh(yyyy: String, mm: String, dd: String) {
@@ -266,7 +274,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
 
     fun getCurDateEvents(yyyy: String, mm: String, dd: String) {
         eventsList = ArrayList<Event>()
-        app.database.child("channels").child(currentChannel!!.id).child("events").child(yyyy).child(mm).child(dd)
+        app.database.child("channels").child(currentChannel.id).child("events").child(yyyy).child(mm).child(dd)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase events error : ${error.message}")
