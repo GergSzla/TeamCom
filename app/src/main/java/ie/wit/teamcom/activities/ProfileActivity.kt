@@ -1,6 +1,10 @@
 package ie.wit.teamcom.activities
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -17,9 +21,11 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Account
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.activity_channel_create.*
 import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.jetbrains.anko.AnkoLogger
+import java.io.IOException
 
 class ProfileActivity : AppCompatActivity(), AnkoLogger {
 
@@ -134,6 +140,24 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
                             .removeEventListener(this)
                     }
                 })
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (!(requestCode !== IMAGE_REQUEST || resultCode !== Activity.RESULT_OK || data == null || data.data == null)) {
+            val uri: Uri = data.data!!
+            try {
+                val bitmap =
+                    MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+                Picasso.get().load(uri)
+                    .resize(300, 300)
+                    .transform(CropCircleTransformation())
+                    .into(profImage_edit_view)
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 

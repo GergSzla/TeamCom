@@ -54,8 +54,8 @@ class SettingsFragment : Fragment(), AnkoLogger {
         root.txtSettingsDepts.setOnClickListener {
             navigateTo(DepartmentList.newInstance(currentChannel))
         }
-        root.txtSettingsChannelTaskStages.setOnClickListener {
-            navigateTo(TaskStagesFragment.newInstance(currentChannel, project = Project(), false))
+        root.txtSettingsChannelDetails.setOnClickListener {
+            navigateTo(EditChannelDetails.newInstance(currentChannel))
         }
 
         return root
