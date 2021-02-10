@@ -36,6 +36,7 @@
     <string name="group_organizational">Organizational</string>
     <string name="menu_calendar">Calendar</string>
     <string name="menu_tasks">Projects</string>
+    <string name="proj_tasks">Project Tasks</string>
     <string name="menu_reminders">Reminders</string>
 
     <string name="group_channel">Channel</string>

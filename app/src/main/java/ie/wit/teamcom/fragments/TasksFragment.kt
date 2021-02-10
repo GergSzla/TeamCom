@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -71,7 +72,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_tasks, container, false)
-        activity?.title = getString(R.string.menu_tasks)
+        activity?.title = getString(R.string.proj_tasks)
         root.tasks1RecyclerView.layoutManager = LinearLayoutManager(activity)
         root.tasks2RecyclerView.layoutManager = LinearLayoutManager(activity)
         root.tasks3RecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -226,10 +227,17 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             TasksAdapter(task_list_1, this@TasksFragment)
                         root.tasks1RecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
+
                         app.database.child("channels").child(currentChannel!!.id).child("projects")
                             .child(selected_project.proj_id).child("proj_task_stages").child("0")
                             .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
+                    }
+                    if (task_list_1.size <= 0) {
+                        root.txtStage1Title.isVisible = false
+                        root.rec_1_titles.isVisible = false
+                    } else {
+                        root.txtStage1Title.text = task_list_1[0].task_current_stage
                     }
                 }
             })
@@ -254,13 +262,21 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks2RecyclerView.adapter =
                             TasksAdapter(task_list_2, this@TasksFragment)
                         root.tasks2RecyclerView.adapter?.notifyDataSetChanged()
-                        //checkSwipeRefresh()
+                        checkSwipeRefresh()
+
                         app.database.child("channels").child(currentChannel!!.id).child("projects")
                             .child(selected_project.proj_id).child("proj_task_stages").child("1")
                             .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
                     }
+                    if (task_list_2.size <= 0) {
+                        root.txtStage2Title.isVisible = false
+                        root.rec_2_titles.isVisible = false
+                    } else {
+                        root.txtStage2Title.text = task_list_2[0].task_current_stage
+                    }
                 }
+
             })
 
 
@@ -283,11 +299,18 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks3RecyclerView.adapter =
                             TasksAdapter(task_list_3, this@TasksFragment)
                         root.tasks3RecyclerView.adapter?.notifyDataSetChanged()
-                        //checkSwipeRefresh()
+                        checkSwipeRefresh()
+
                         app.database.child("channels").child(currentChannel!!.id).child("projects")
                             .child(selected_project.proj_id).child("proj_task_stages").child("2")
                             .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
+                    }
+                    if (task_list_3.size <= 0) {
+                        root.txtStage3Title.isVisible = false
+                        root.rec_3_titles.isVisible = false
+                    } else {
+                        root.txtStage3Title.text = task_list_3[0].task_current_stage
                     }
                 }
             })
@@ -312,11 +335,18 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks4RecyclerView.adapter =
                             TasksAdapter(task_list_4, this@TasksFragment)
                         root.tasks4RecyclerView.adapter?.notifyDataSetChanged()
-                        //checkSwipeRefresh()
+                        checkSwipeRefresh()
+
                         app.database.child("channels").child(currentChannel!!.id).child("projects")
                             .child(selected_project.proj_id).child("proj_task_stages").child("3")
                             .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
+                    }
+                    if (task_list_4.size <= 0) {
+                        root.txtStage4Title.isVisible = false
+                        root.rec_4_titles.isVisible = false
+                    } else {
+                        root.txtStage4Title.text = task_list_4[0].task_current_stage
                     }
                 }
             })
@@ -340,11 +370,18 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks5RecyclerView.adapter =
                             TasksAdapter(task_list_5, this@TasksFragment)
                         root.tasks5RecyclerView.adapter?.notifyDataSetChanged()
-                        //checkSwipeRefresh()
+                        checkSwipeRefresh()
+
                         app.database.child("channels").child(currentChannel!!.id).child("projects")
                             .child(selected_project.proj_id).child("proj_task_stages").child("4")
                             .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
+                    }
+                    if (task_list_5.size <= 0) {
+                        root.txtStage5Title.isVisible = false
+                        root.rec_5_titles.isVisible = false
+                    } else {
+                        root.txtStage5Title.text = task_list_5[0].task_current_stage
                     }
                 }
             })
@@ -368,11 +405,18 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks6RecyclerView.adapter =
                             TasksAdapter(task_list_6, this@TasksFragment)
                         root.tasks6RecyclerView.adapter?.notifyDataSetChanged()
-                        //checkSwipeRefresh()
+                        checkSwipeRefresh()
+
                         app.database.child("channels").child(currentChannel!!.id).child("projects")
                             .child(selected_project.proj_id).child("proj_task_stages").child("5")
                             .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
+                    }
+                    if (task_list_6.size <= 0) {
+                        root.txtStage6Title.isVisible = false
+                        root.rec_6_titles.isVisible = false
+                    } else {
+                        root.txtStage6Title.text = task_list_6[0].task_current_stage
                     }
                 }
             })
@@ -553,7 +597,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
-                    getAllTasks()
+//                    getAllTasks()
+                    navigateTo(TasksFragment.newInstance(currentChannel, selected_project))
+
                 }
             })
 

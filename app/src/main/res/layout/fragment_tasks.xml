@@ -4,11 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".fragments.TasksFragment">
 
     <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:background="@drawable/content_layout_backg"
+
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -35,16 +39,119 @@
                         android:id="@+id/horizontal3ScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
+
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtStage3Title">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/tasks3RecyclerView"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:listitem="@layout/item_task" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/rec_3_titles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sqrStage3"
+                                    android:layout_width="56dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskName3"
+                                    android:layout_width="300dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Task Name"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskAssignee3"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Assignee"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskImportance3"
+                                    android:layout_width="70dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="⚠"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskStage3"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Stage"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskCreator3"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Creator"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskDueDate3"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Due Date"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/tasks3RecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+
+                                tools:itemCount="1"
+                                tools:listitem="@layout/item_task" />
+
+                        </LinearLayout>
                     </HorizontalScrollView>
 
                     <TextView
@@ -53,7 +160,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="48dp"
                         android:text="[STAGE 5 TITLE]"
+                        android:textColor="@color/color_white"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/horizontal4ScrollView" />
@@ -62,48 +171,355 @@
                         android:id="@+id/horizontal5ScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
+
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtStage5Title">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/tasks5RecyclerView"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:listitem="@layout/item_task" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/rec_5_titles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sqrStage5"
+                                    android:layout_width="56dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskName5"
+                                    android:layout_width="300dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Task Name"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskAssignee5"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Assignee"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskImportance5"
+                                    android:layout_width="70dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="⚠"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskStage5"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Stage"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskCreator5"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Creator"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskDueDate5"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Due Date"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/tasks5RecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+
+                                tools:itemCount="1"
+                                tools:listitem="@layout/item_task" />
+
+                        </LinearLayout>
                     </HorizontalScrollView>
 
                     <HorizontalScrollView
                         android:id="@+id/horizontal4ScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+
                         app:layout_constraintTop_toBottomOf="@+id/txtStage4Title">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/tasks4RecyclerView"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:listitem="@layout/item_task" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/rec_4_titles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sqrStage4"
+                                    android:layout_width="56dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskName4"
+                                    android:layout_width="300dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Task Name"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskAssignee4"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Assignee"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskImportance4"
+                                    android:layout_width="70dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="⚠"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskStage4"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Stage"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskCreator4"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Creator"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskDueDate4"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Due Date"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/tasks4RecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+
+                                tools:itemCount="1"
+                                tools:listitem="@layout/item_task" />
+                        </LinearLayout>
                     </HorizontalScrollView>
 
                     <HorizontalScrollView
                         android:id="@+id/horizontal1ScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtStage1Title">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/tasks1RecyclerView"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:listitem="@layout/item_task" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/rec_1_titles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sqrStage1"
+                                    android:layout_width="56dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskName1"
+                                    android:layout_width="300dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Task Name"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskAssignee1"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Assignee"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskImportance1"
+                                    android:layout_width="70dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="⚠"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskStage1"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Stage"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskCreator1"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Creator"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskDueDate1"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Due Date"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/tasks1RecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+                                app:layout_constraintTop_toBottomOf="@+id/rec_1_titles"
+                                tools:itemCount="1"
+                                tools:listitem="@layout/item_task" />
+
+                        </LinearLayout>
+
 
                     </HorizontalScrollView>
 
@@ -113,7 +529,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="48dp"
                         android:text="[STAGE 2 TITLE]"
+                        android:textColor="@color/color_white"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/horizontal1ScrollView" />
@@ -124,7 +542,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="[STAGE 6 TITLE]"
+                        android:textColor="@color/color_white"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/horizontal5ScrollView" />
@@ -133,32 +553,234 @@
                         android:id="@+id/horizontal2ScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
+
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtStage2Title">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/tasks2RecyclerView"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:listitem="@layout/item_task" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/rec_2_titles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sqrStage2"
+                                    android:layout_width="56dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskName2"
+                                    android:layout_width="300dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Task Name"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskAssignee2"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Assignee"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskImportance2"
+                                    android:layout_width="70dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="⚠"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskStage2"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Stage"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskCreator2"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Creator"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskDueDate2"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Due Date"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/tasks2RecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+                                tools:itemCount="1"
+
+                                tools:listitem="@layout/item_task" />
+                        </LinearLayout>
                     </HorizontalScrollView>
 
                     <HorizontalScrollView
                         android:id="@+id/horizontal6ScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
+
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtStage6Title">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/tasks6RecyclerView"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:listitem="@layout/item_task" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/rec_6_titles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sqrStage6"
+                                    android:layout_width="56dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskName6"
+                                    android:layout_width="300dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Task Name"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskAssignee6"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Assignee"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskImportance6"
+                                    android:layout_width="70dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="⚠"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskStage6"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Stage"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskCreator6"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Creator"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtTaskDueDate6"
+                                    android:layout_width="200dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:gravity="center"
+                                    android:text="Due Date"
+                                    android:textColor="@color/color_white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/tasks6RecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+
+                                tools:itemCount="1"
+                                tools:listitem="@layout/item_task" />
+
+                        </LinearLayout>
                     </HorizontalScrollView>
 
 
@@ -167,8 +789,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
                         android:text="[STAGE 1 TITLE]"
+                        android:textColor="@color/color_white"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -179,7 +804,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="[STAGE 4 TITLE]"
+                        android:textColor="@color/color_white"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/horizontal3ScrollView" />
@@ -190,7 +817,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="48dp"
                         android:text="[STAGE 3 TITLE]"
+                        android:textColor="@color/color_white"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/horizontal2ScrollView" />
@@ -252,18 +881,3 @@
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <!-- TODO: Update blank fragment layout -->
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnCreateTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Task" />
-    </LinearLayout>-->

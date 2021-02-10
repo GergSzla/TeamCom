@@ -20,7 +20,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="@drawable/table_content_cell_bg"
+            android:background="@drawable/table_header_cell_bg"
             android:gravity="center"
             android:padding="10dp"
             android:text="[TASK NAME]"
