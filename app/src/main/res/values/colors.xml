@@ -16,6 +16,12 @@
     <color name="color_delete">#880202</color>
     <color name="color_white">#FFFFFF</color>
     <color name="trasnpBlack">#990C0C0C</color>
+    <color name="prof_channel">#2C2C2C</color>
+    <color name="card_channel">#252525</color>
+    <color name="transp_backg">#8F0C0C0C</color>
+    <color name="google_blue">#4285F4</color>
+    <color name="google_red">#DB4437</color>
+
 
     <color name="floatBtn">#FF9800</color>
     <color name="floatBtnPressed">#B16A00</color>

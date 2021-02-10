@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".fragments.ConversationFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshConversations"
         android:layout_width="match_parent"
         android:layout_height="697dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toTopOf="@+id/btnAddNewConvo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,22 +22,38 @@
             android:id="@+id/conversationsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:scrollbars="vertical">
+            android:background="@drawable/content_layout_backg"
+            android:scrollbars="vertical"
+            tools:itemCount="2"
+            tools:listitem="@layout/card_conversation">
 
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <Button
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddNewConvo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
-        android:padding="10dp"
-        android:text="@string/btnAddNewConvo"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/color_1"
+        android:tint="@color/color_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:srcCompat="@drawable/ic_float_plus_45"/>
+
+    <TextView
+        android:id="@+id/txtEmpty_convo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="You do not appear to have any conversations yet! Start Chatting :)"
+        android:textAlignment="center"
+        android:textColor="@color/color_white"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/swiperefreshConversations"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

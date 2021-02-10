@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,8 @@ import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Post
 import kotlinx.android.synthetic.main.activity_channel_join.*
+import kotlinx.android.synthetic.main.fragment_conversation.view.*
+import kotlinx.android.synthetic.main.fragment_messaging.view.*
 import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -153,6 +156,9 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                             this@NewsFeedFragment
                         )
                         root.postsRecyclerView.adapter?.notifyDataSetChanged()
+                        if (postList.size > 0 ) {
+                            root.txtEmpty_posts.isVisible = false
+                        }
                         checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel.id).child("posts")
                             .orderByChild(

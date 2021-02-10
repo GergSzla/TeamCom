@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     tools:context=".fragments.CreateMeetingFragment">
@@ -18,45 +19,67 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/content_layout_backg"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/txtMeeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/meetingDeets"
+                android:textColor="@color/color_white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textViewTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/title" />
+                android:text="@string/title"
+                android:textColor="@color/color_white" />
 
             <EditText
                 android:id="@+id/editTxtTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
                 android:hint="@string/title"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:padding="10dp" />
 
             <TextView
                 android:id="@+id/textViewDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/description" />
+                android:text="@string/description"
+                android:textColor="@color/color_white" />
 
             <EditText
                 android:id="@+id/editTxtDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/description"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:padding="10dp" />
 
             <TextView
                 android:id="@+id/textViewDateAndTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/select_date" />
+                android:text="@string/select_date"
+                android:textColor="@color/color_white" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,16 +90,21 @@
                     android:id="@+id/txtDandT"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="200"
-                    android:textSize="18sp"
-                    android:text="[DATE AND TIME SELECTED]" />
+                    android:text="[DATE AND TIME SELECTED]"
+                    android:textColor="@color/color_white"
+                    android:textSize="18sp" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnSelectDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/btnDateSelect" />
+                    android:backgroundTint="@color/color_1"
+                    android:src="@drawable/ic_baseline_calendar_today_24"
+                    android:text="@string/btnDateSelect"
+                    android:tint="@color/color_white" />
             </LinearLayout>
 
             <TextView
@@ -84,16 +112,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/end" />
+                android:text="@string/end"
+                android:textColor="@color/color_white" />
 
             <EditText
                 android:id="@+id/editTxtEnd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/end_"
-                android:inputType="number" />
+                android:inputType="number"
+                android:padding="10dp" />
 
 
             <TextView
@@ -101,7 +132,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/deptSelect" />
+                android:text="@string/deptSelect"
+                android:textColor="@color/color_white" />
 
             <Spinner
                 android:id="@+id/spinnerDept"
@@ -120,7 +152,8 @@
                     android:layout_width="365dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="100"
-                    android:text="Is this an online meeting?" />
+                    android:text="Is this an online meeting?"
+                    android:textColor="@color/color_white" />
 
                 <CheckBox
                     android:id="@+id/checkBoxCheckOnline"
@@ -135,23 +168,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/location" />
+                android:text="@string/location"
+                android:textColor="@color/color_white" />
 
             <EditText
                 android:id="@+id/editTxtLoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
-                android:hint="Location"
                 android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                android:hint="Location"
+                android:inputType="textMultiLine"
+                android:padding="10dp" />
 
             <TextView
                 android:id="@+id/textViewPlatform"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/platform" />
+                android:text="@string/platform"
+                android:textColor="@color/color_white" />
 
             <Spinner
                 android:id="@+id/spinnerPlatform"
@@ -164,46 +201,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/specify" />
+                android:text="@string/specify"
+                android:textColor="@color/color_white" />
 
             <EditText
                 android:id="@+id/editTxtOtherPlatform"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
                 android:hint="@string/specify"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:padding="10dp" />
 
             <TextView
                 android:id="@+id/textViewID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/meeting" />
+                android:text="@string/meeting"
+                android:textColor="@color/color_white" />
 
             <EditText
                 android:id="@+id/editTxtID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
                 android:hint="@string/meeting"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:padding="10dp" />
 
             <TextView
                 android:id="@+id/textViewPasscode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/passcode" />
+                android:text="@string/passcode"
+                android:textColor="@color/color_white" />
 
 
             <EditText
                 android:id="@+id/editTxtPasscode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
                 android:hint="@string/passcode"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:padding="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -214,9 +260,11 @@
 
                 <Button
                     android:id="@+id/btnCreateNewMeeting"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Create Meeting" />
+                    android:backgroundTint="@color/color_1"
+                    android:text="Create Meeting"
+                    android:textColor="@color/color_white" />
             </LinearLayout>
 
         </LinearLayout>

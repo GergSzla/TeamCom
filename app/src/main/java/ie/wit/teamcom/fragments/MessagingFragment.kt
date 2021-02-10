@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -126,6 +127,10 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
                             this@MessagingFragment
                         )
                         root.messagesRecyclerView.adapter?.notifyDataSetChanged()
+
+                        if (messageList.size > 0 ) {
+                            root.txtEmpty_msgs.isVisible = false
+                        }
                         app.database.child("channels").child(currentChannel!!.id)
                             .child("conversations").child(current_conversation.id).child("messages")
                             .removeEventListener(this)

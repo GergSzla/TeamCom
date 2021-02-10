@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".fragments.LogFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -13,6 +14,8 @@
         app:layout_constraintBottom_toTopOf="@+id/btnAddNewRole"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
@@ -20,6 +23,9 @@
             android:id="@+id/logsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            tools:itemCount="2"
+            android:background="@drawable/content_layout_backg"
+            tools:listitem="@layout/card_log"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:scrollbars="vertical">

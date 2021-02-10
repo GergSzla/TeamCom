@@ -2,8 +2,8 @@
     <string name="app_name">TeamCom</string>
 
     <!--activity_login_reg-->
-    <string name="btnLogin">Login</string>
-    <string name="btnRegister">Register</string>
+    <string name="btnLogin">Login With Email</string>
+    <string name="btnRegister">Register With Email</string>
     <string name="btnShowReg">Create An Account</string>
     <string name="btnShowLogin">Login To Your Account</string>
     <string name="hintLgnEmail">Email</string>
@@ -119,6 +119,7 @@
     <string name="bugs">Report Bugs</string>
     <string name="taskStages">Project Setup</string>
     <string name="projectDeets">Project Details</string>
+    <string name="meetingDeets">Meeting Details</string>
     <string name="newTask">New Task</string>
 
     <string name="editRoleName">Role Name</string>

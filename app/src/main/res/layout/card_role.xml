@@ -8,12 +8,13 @@
     android:layout_marginBottom="8dp"
     android:elevation="24dp"
     android:padding="10dp"
+    android:layout_margin="10dp"
     app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#D6D6D6"
+        android:background="@color/card_channel"
         android:padding="10dp">
 
         <TextView

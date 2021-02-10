@@ -4,54 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".activities.ChannelCreate">
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="108dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddNew"
+        android:layout_margin="30dp"
+        android:padding="10dp"
+        android:background="@drawable/content_layout_backg"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/txtChannelCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="16dp"
             android:ems="10"
+            android:background="@drawable/edit_text_backg"
+            android:padding="10dp"
             android:fontFamily="sans-serif"
             android:gravity="start|top"
             android:hint="@string/hintChannelCode"
             android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/btnJoinNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/color_1"
+            android:textColor="@color/color_white"
+            android:layout_marginBottom="20dp"
+            android:text="@string/btnJoinChannel" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnJoinNew"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
-        android:text="@string/btnJoinChannel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

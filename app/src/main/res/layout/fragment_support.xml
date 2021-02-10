@@ -4,17 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".fragments.SupportFragment">
 
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_margin="30dp"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/content_layout_backg"
+        >
+
+        <ImageView
+            android:src="@drawable/logo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
     <TextView
         android:id="@+id/txtMemberName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif"
         android:text="@string/bugs"
         android:textSize="30sp"
+        android:textColor="@color/color_white"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,18 +37,21 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="What Page Does The Error Occur?"
+        android:layout_marginTop="48dp"
+        android:text="On What Page Does The Error Occur?"
+        android:textColor="@color/color_white"
+
         app:layout_constraintBottom_toTopOf="@+id/spinnerPages"
         android:layout_marginBottom="8dp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/spinnerPages"
-        android:layout_width="414dp"
+        android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginTop="120dp"
+        android:padding="10dp"
         android:background="@drawable/spinner_des"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -43,54 +61,64 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
+        android:textColor="@color/color_white"
         android:text="Issue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerPages" />
 
     <EditText
         android:id="@+id/editTxtIssue"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Issue"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_backg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
+        android:textColor="@color/color_white"
         android:text="Issue Description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTxtIssue" />
 
     <EditText
         android:id="@+id/editTxtIssueDesc"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Issue Description"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edit_text_backg"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
         android:id="@+id/btnSubmitBug"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="84dp"
         android:text="@string/btnSubmitBug"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
+        android:backgroundTint="@color/color_1"
+        android:textColor="@color/color_white"
         app:layout_constraintStart_toStartOf="parent" />
 
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,6 +21,7 @@ import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Conversation
 import ie.wit.teamcom.models.Department
 import ie.wit.teamcom.models.Member
+import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.fragment_conversation.view.*
 import kotlinx.android.synthetic.main.fragment_department_list.view.*
 import kotlinx.android.synthetic.main.fragment_members.view.*
@@ -108,7 +110,9 @@ class ConversationFragment : Fragment(), AnkoLogger, ConversationListener {
                                 root.conversationsRecyclerView.adapter?.notifyDataSetChanged()
                             }
                         }
-
+                        if (conversationList.size > 0 ) {
+                            root.txtEmpty_convo.isVisible = false
+                        }
                         checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("conversations").orderByChild("conv_date_order")
                             .removeEventListener(this)

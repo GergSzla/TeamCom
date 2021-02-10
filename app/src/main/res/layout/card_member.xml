@@ -7,12 +7,13 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:elevation="24dp"
+    android:layout_margin="10dp"
     app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#D6D6D6"
+        android:background="@color/card_channel"
         android:padding="10dp">
 
 
@@ -42,6 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/color_white"
+            android:textSize="20sp"
             android:text="FNAME + SNAME"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="parent" />
@@ -52,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/color_white"
             android:text="DEPARTMENT"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/txtMemberName_card" />
@@ -60,6 +64,7 @@
             android:id="@+id/txtMemberRole_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="ROLE"

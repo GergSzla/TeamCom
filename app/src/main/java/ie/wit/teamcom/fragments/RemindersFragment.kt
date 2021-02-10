@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -37,6 +38,7 @@ import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Reminder
 import ie.wit.utils.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.floating_popup.*
+import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import kotlinx.android.synthetic.main.popup_create_event.*
@@ -292,6 +294,9 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                             this@RemindersFragment
                         )
                         root.remindersRecyclerView.adapter?.notifyDataSetChanged()
+                        if (reminderList.size > 0 ) {
+                            root.txtEmpty_posts.isVisible = false
+                        }
                         checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("reminders")
                             .child(

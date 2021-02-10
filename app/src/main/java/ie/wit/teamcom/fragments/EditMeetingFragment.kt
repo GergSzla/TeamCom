@@ -233,7 +233,7 @@ class EditMeetingFragment : Fragment(), AnkoLogger {
 
         }
         root.btnCreateNewMeeting.text = "Update Meeting"
-        root.btnSelectDate.text = "Reschedule"
+//        root.btnSelectDate.text = "Reschedule"
         root.btnCreateNewMeeting.setOnClickListener {
             editMeeting()
         }

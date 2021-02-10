@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -76,6 +77,9 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
                             this@MeetingsFragment
                         )
                         root.meetingsRecyclerView.adapter?.notifyDataSetChanged()
+                        if (meetingList.size > 0 ) {
+                            root.txtEmpty_meetings.isVisible = false
+                        }
                         checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("meetings").removeEventListener(this)
                     }

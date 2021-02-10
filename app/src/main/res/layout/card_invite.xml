@@ -7,18 +7,21 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:elevation="24dp"
+    android:layout_margin="10dp"
+
     app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#D6D6D6"
+        android:background="@color/card_channel"
         android:padding="10dp">
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
             android:layout_marginTop="24dp"
             android:fontFamily="sans-serif"
             android:text="@string/invite_code"
@@ -34,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
+            android:textColor="@color/color_white"
             android:fontFamily="sans-serif"
             android:text="TEST"
             android:textSize="30sp"
@@ -46,6 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/color_5"
+
             android:text="@string/valid_from_as_string"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -58,6 +64,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="TEST"
+            android:textColor="@color/color_5"
+
             app:layout_constraintStart_toEndOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/txtCode" />
 
@@ -66,6 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
+            android:textColor="@color/color_6"
+
             android:layout_marginTop="12dp"
             android:text="@string/valid_to_as_string"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +85,8 @@
             android:id="@+id/txtValidTo_Card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/color_6"
+
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:text="TEST"
@@ -87,6 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="44dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/color_white"
             android:text="@string/invite_uses"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -96,6 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:textColor="@color/color_white"
             android:layout_marginTop="8dp"
             android:text="TEST"
             app:layout_constraintStart_toEndOf="@+id/textView2"

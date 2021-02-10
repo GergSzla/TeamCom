@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#CCCCFF"
+    android:background="@color/transp_backg"
     android:layout_gravity="center"
     android:padding="25dp">
 
@@ -13,6 +13,7 @@
         android:id="@+id/textView18"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
         android:textSize="25dp"
         android:text="@string/conf" />
 

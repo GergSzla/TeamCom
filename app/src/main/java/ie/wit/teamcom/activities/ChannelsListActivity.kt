@@ -7,9 +7,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -42,7 +43,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
 
     lateinit var app: MainApp
     var channelsList = ArrayList<Channel>()
-    val layoutManager = LinearLayoutManager(this)
+    val layoutManager = GridLayoutManager(this,2)
     var user = Account()
     var is_edited = false
     val IMAGE_REQUEST = 1
@@ -104,7 +105,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
             }
         }
 
-        showLoader(loader,"Loading . . .", "Loading User Data . . .")
+        showLoader(loader, "Loading . . .", "Loading User Data . . .")
         app.getUser()
         hideLoader(loader)
 
@@ -116,7 +117,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         //TODO: txtDisplayWhatIDo.text = user.what_i_do
 
         btn_edit_prof.setOnClickListener {
-            startActivity(intentFor<ProfileActivity>().putExtra("user_key",user))
+            startActivity(intentFor<ProfileActivity>().putExtra("user_key", user))
 //            editTxtDisplayFullName.isVisible = true
 //            editTxtDisplayEmail.isVisible = true
 //            txtSaveProfile.isVisible = true
@@ -263,7 +264,9 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                         checkSwipeRefresh()
                         if (is_edited) {
                             channelsList.forEach {
-                                app.database.child("channels").child(it.id).child("members").child(userId)
+                                app.database.child("channels").child(it.id).child("members").child(
+                                    userId
+                                )
                                     .addValueEventListener(object : ValueEventListener {
                                         override fun onCancelled(error: DatabaseError) {
                                         }
@@ -281,14 +284,21 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                                             app.database.updateChildren(childUpdates_)
 
                                             change_user_details_in_channels()
-                                            app.database.child("channels").child(it.id).child("members").child(userId)
+                                            app.database.child("channels").child(it.id)
+                                                .child("members").child(
+                                                    userId
+                                                )
                                                 .child(currentChannel!!.id)
                                                 .removeEventListener(this)
                                         }
                                     })
                             }
                         }
-                        app.database.child("users").child(userId).child("channels").orderByChild("orderDateId")
+                        if (channelsList.size > 0 ) {
+                            txtEmpty.isVisible = false
+                        }
+                        app.database.child("users").child(userId).child("channels")
+                            .orderByChild("orderDateId")
                             .removeEventListener(this)
                         hideLoader(loader)
                     }

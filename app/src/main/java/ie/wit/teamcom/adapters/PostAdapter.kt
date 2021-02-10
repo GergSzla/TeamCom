@@ -5,8 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Post
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.card_member.view.*
 import kotlinx.android.synthetic.main.card_post.view.*
 
 
@@ -75,6 +79,14 @@ class PostAdapter constructor(
                     }
                 }
             })
+
+            var ref = FirebaseStorage.getInstance().getReference("photos/${post.post_author.id}.jpg")
+            ref.downloadUrl.addOnSuccessListener {
+                Picasso.get().load(it)
+                    .resize(260, 260)
+                    .transform(CropCircleTransformation())
+                    .into(itemView.post_img)
+            }
         }
     }
 }

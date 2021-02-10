@@ -4,15 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".fragments.TaskStagesFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/content_layout_backg"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -20,6 +25,7 @@
                 android:id="@+id/txtTitleProj"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/color_white"
                 android:layout_marginBottom="20dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/projectDeets"
@@ -28,58 +34,66 @@
 
             <TextView
                 android:id="@+id/txt1"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/color_white"
+                android:layout_marginTop="10dp"
                 android:text="Project Name" />
 
             <EditText
                 android:id="@+id/txt_project_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
+                android:hint="Project Name"
                 android:inputType="textPersonName"
                 android:padding="10dp"
-                android:hint="Project Name"
                 android:textSize="20dp" />
+
             <TextView
                 android:id="@+id/txt2"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/color_white"
+                android:layout_marginTop="10dp"
                 android:text="Project Description" />
 
             <EditText
                 android:id="@+id/txt_project_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
-                android:padding="10dp"
                 android:hint="Description"
-                android:textSize="20dp"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:padding="10dp"
+                android:textSize="20dp" />
 
             <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/txtProjDateAndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="200"
-                    android:textSize="20dp"
+                    android:textColor="@color/color_white"
                     android:layout_gravity="center"
-                    android:text="No Due Date Selected" />
+                    android:layout_weight="200"
+                    android:text="No Due Date Selected"
+                    android:textSize="20dp" />
 
                 <ImageButton
                     android:id="@+id/btnProjectDateSelect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:backgroundTint="@color/color_1"
+                    android:tint="@color/color_white"
                     android:src="@drawable/ic_baseline_calendar_today_24"
                     android:text="@string/btnDateSelect" />
             </LinearLayout>
@@ -88,6 +102,7 @@
                 android:id="@+id/txtTitleStage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/color_white"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:fontFamily="sans-serif"
@@ -97,15 +112,16 @@
 
             <LinearLayout
                 android:id="@+id/group1"
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/color_white"
                     android:text="Task Stage 1" />
 
                 <EditText
@@ -113,10 +129,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+                    android:hint="@string/stage1"
                     android:inputType="textPersonName"
                     android:padding="10dp"
-                    android:hint="@string/stage1"
                     android:textSize="20dp" />
 
                 <RelativeLayout
@@ -126,14 +143,14 @@
 
                     <EditText
                         android:id="@+id/txtColorCodeStage1"
-                        android:layout_width="299dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="32dp"
-                        android:layout_toStartOf="@+id/btnColorPicker"
+                        android:background="@drawable/edit_text_backg"
                         android:ems="10"
                         android:hint="@string/txtColorCode"
                         android:inputType="textPersonName"
@@ -146,8 +163,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="23dp"
                         android:layout_marginBottom="1dp"
+
+                        android:backgroundTint="@color/color_1"
+                        android:tint="@color/color_white"
                         android:layout_weight="1"
                         android:src="@drawable/ic_baseline_palette_24" />
                 </RelativeLayout>
@@ -155,15 +174,17 @@
 
             <LinearLayout
                 android:id="@+id/group2"
-                android:layout_marginTop="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
+                android:layout_marginTop="48dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView9"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/color_white"
                     android:text="Task Stage 2" />
 
                 <EditText
@@ -171,10 +192,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+                    android:hint="@string/stage2"
                     android:inputType="textPersonName"
                     android:padding="10dp"
-                    android:hint="@string/stage2"
                     android:textSize="20dp" />
 
                 <RelativeLayout
@@ -184,14 +206,14 @@
 
                     <EditText
                         android:id="@+id/txtColorCodeStage2"
-                        android:layout_width="299dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="32dp"
                         android:layout_toStartOf="@+id/btnColorPicker"
+                        android:background="@drawable/edit_text_backg"
                         android:ems="10"
                         android:hint="@string/txtColorCode"
                         android:inputType="textPersonName"
@@ -204,7 +226,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="23dp"
+                        android:backgroundTint="@color/color_1"
+                        android:tint="@color/color_white"
                         android:layout_marginBottom="1dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_baseline_palette_24" />
@@ -213,25 +236,28 @@
 
             <LinearLayout
                 android:id="@+id/group3"
-                android:layout_marginTop="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="48dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/textView10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/color_white"
                         android:layout_weight="100"
                         android:text="Task Stage 3" />
 
                     <CheckBox
                         android:id="@+id/checkboxStage3"
                         android:layout_width="wrap_content"
+                        android:buttonTint="@color/color_white"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true" />
@@ -242,10 +268,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+                    android:hint="@string/stage3"
                     android:inputType="textPersonName"
                     android:padding="10dp"
-                    android:hint="@string/stage3"
                     android:textSize="20dp" />
 
                 <RelativeLayout
@@ -255,14 +282,14 @@
 
                     <EditText
                         android:id="@+id/txtColorCodeStage3"
-                        android:layout_width="299dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="32dp"
                         android:layout_toStartOf="@+id/btnColorPicker"
+                        android:background="@drawable/edit_text_backg"
                         android:ems="10"
                         android:hint="@string/txtColorCode"
                         android:inputType="textPersonName"
@@ -275,7 +302,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="23dp"
+                        android:backgroundTint="@color/color_1"
+                        android:tint="@color/color_white"
                         android:layout_marginBottom="1dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_baseline_palette_24" />
@@ -284,19 +312,21 @@
 
             <LinearLayout
                 android:id="@+id/group4"
-                android:layout_marginTop="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="48dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/textView11"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/color_white"
                         android:layout_weight="100"
                         android:text="Task Stage 4" />
 
@@ -304,6 +334,8 @@
                         android:id="@+id/checkboxStage4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_white"
+
                         android:layout_weight="1"
                         android:checked="false" />
                 </LinearLayout>
@@ -313,10 +345,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+                    android:hint="@string/stage4"
                     android:inputType="textPersonName"
                     android:padding="10dp"
-                    android:hint="@string/stage4"
                     android:textSize="20dp" />
 
                 <RelativeLayout
@@ -326,14 +359,14 @@
 
                     <EditText
                         android:id="@+id/txtColorCodeStage4"
-                        android:layout_width="299dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="32dp"
                         android:layout_toStartOf="@+id/btnColorPicker"
+                        android:background="@drawable/edit_text_backg"
                         android:ems="10"
                         android:hint="@string/txtColorCode"
                         android:inputType="textPersonName"
@@ -346,7 +379,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="23dp"
+                        android:backgroundTint="@color/color_1"
+                        android:tint="@color/color_white"
                         android:layout_marginBottom="1dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_baseline_palette_24" />
@@ -356,19 +390,21 @@
 
             <LinearLayout
                 android:id="@+id/group5"
-                android:layout_marginTop="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="48dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/textView12"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/color_white"
                         android:layout_weight="100"
                         android:text="Task Stage 5" />
 
@@ -376,6 +412,7 @@
                         android:id="@+id/checkboxStage5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_white"
                         android:layout_weight="1"
                         android:checked="false" />
                 </LinearLayout>
@@ -385,10 +422,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+                    android:hint="@string/stage5"
                     android:inputType="textPersonName"
                     android:padding="10dp"
-                    android:hint="@string/stage5"
                     android:textSize="20dp" />
 
                 <RelativeLayout
@@ -398,14 +436,14 @@
 
                     <EditText
                         android:id="@+id/txtColorCodeStage5"
-                        android:layout_width="299dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="32dp"
                         android:layout_toStartOf="@+id/btnColorPicker"
+                        android:background="@drawable/edit_text_backg"
                         android:ems="10"
                         android:hint="@string/txtColorCode"
                         android:inputType="textPersonName"
@@ -417,8 +455,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:backgroundTint="@color/color_1"
+                        android:tint="@color/color_white"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="23dp"
                         android:layout_marginBottom="1dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_baseline_palette_24" />
@@ -427,19 +466,21 @@
 
             <LinearLayout
                 android:id="@+id/group6"
-                android:layout_marginTop="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="48dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/textView13"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/color_white"
                         android:layout_weight="100"
                         android:text="Task Stage 6" />
 
@@ -447,6 +488,7 @@
                         android:id="@+id/checkboxStage6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_white"
                         android:layout_weight="1"
                         android:checked="false" />
                 </LinearLayout>
@@ -456,10 +498,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+                    android:hint="@string/stage6"
                     android:inputType="textPersonName"
                     android:padding="10dp"
-                    android:hint="@string/stage6"
                     android:textSize="20dp" />
 
                 <RelativeLayout
@@ -469,14 +512,14 @@
 
                     <EditText
                         android:id="@+id/txtColorCodeStage6"
-                        android:layout_width="299dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="32dp"
                         android:layout_toStartOf="@+id/btnColorPicker"
+                        android:background="@drawable/edit_text_backg"
                         android:ems="10"
                         android:hint="@string/txtColorCode"
                         android:inputType="textPersonName"
@@ -488,29 +531,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:backgroundTint="@color/color_1"
+                        android:tint="@color/color_white"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="23dp"
                         android:layout_marginBottom="1dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_baseline_palette_24" />
                 </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="14dp"
-                android:gravity="center"
-                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btnSaveStages"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/color_1"
+                    android:textColor="@color/color_white"
                     android:text="Done" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </FrameLayout>

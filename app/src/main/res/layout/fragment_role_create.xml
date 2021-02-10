@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".fragments.SettingsFragment">
 
     <ScrollView
@@ -13,6 +14,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/content_layout_backg"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -23,6 +27,7 @@
                 android:layout_marginBottom="20dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/permissions"
+                android:textColor="@color/color_white"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
@@ -31,10 +36,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edit_text_backg"
                 android:ems="10"
+                android:hint="@string/editRoleName"
                 android:inputType="textPersonName"
                 android:padding="10dp"
-                android:hint="@string/editRoleName"
                 android:textSize="20dp" />
 
             <RelativeLayout
@@ -44,14 +50,14 @@
 
                 <EditText
                     android:id="@+id/txtColorCode"
-                    android:layout_width="299dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="0dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="-1dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_toStartOf="@+id/btnColorPicker"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
                     android:hint="@string/txtColorCode"
                     android:inputType="textPersonName"
@@ -64,10 +70,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="23dp"
                     android:layout_marginBottom="1dp"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_baseline_palette_24" />
+                    android:backgroundTint="@color/color_1"
+                    android:src="@drawable/ic_baseline_palette_24"
+                    android:tint="@color/color_white" />
             </RelativeLayout>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -76,130 +83,199 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
                 android:text="@string/permAdmin"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permViewLogs"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+
                 android:text="@string/viewalllogs"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permManageRoles"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/manageRoles"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permViewTasks"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/viewTasks"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permCreateTasks"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/createTasks"
-                android:textSize="20dp" />
+                android:background="@drawable/content_layout_backg"
+
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permCreateInvite"
-                android:layout_marginTop="10dp"
+                android:background="@drawable/content_layout_backg"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/createInvite"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permCreateGroupChats"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/createGC"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permKickUser"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+
                 android:text="@string/permKickUser"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permPostOnFeed"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/permPostOnFeed"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permCreateGCInvite"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/content_layout_backg"
+
                 android:padding="10dp"
                 android:text="@string/permCreateGCInvite"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permAssignTasksToMembers"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/permAssignTasksToMembers"
-                android:textSize="20dp" />
+                android:background="@drawable/content_layout_backg"
+
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permCreateMeetings"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/permCreateMeetings"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:background="@drawable/content_layout_backg"
+
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permRequestMeetings"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+
                 android:text="@string/permRequestMeetings"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permViewDeptLog"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/permViewDeptLog"
-                android:textSize="20dp" />
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:background="@drawable/content_layout_backg"
+
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <RelativeLayout
+                android:id="@+id/editPressed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editPressed"
                 android:orientation="horizontal">
 
                 <Button
@@ -210,6 +286,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/google_blue"
+                    android:textColor="@color/color_white"
                     android:text="@string/editRole" />
 
                 <Button
@@ -217,20 +295,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginTop="0dp"
+                    android:layout_alignParentTop="true"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="0dp"
+                    android:backgroundTint="@color/google_red"
+                    android:textColor="@color/color_white"
                     android:text="@string/deleteRole" />
             </RelativeLayout>
 
             <Button
                 android:id="@+id/btnCreateNewRole"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
+                android:backgroundTint="@color/color_1"
                 android:padding="10dp"
-                android:text="@string/addnewrole" />
+                android:text="@string/addnewrole"
+                android:textColor="@color/color_white" />
 
 
         </LinearLayout>

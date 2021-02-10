@@ -7,12 +7,13 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:elevation="24dp"
+    android:layout_margin="10dp"
     app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#D6D6D6"
+        android:background="@color/card_channel"
         android:padding="10dp">
 
 
@@ -21,6 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textColor="@color/color_white"
+            android:textSize="24dp"
             android:text="[TITLE]"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,6 +34,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
             android:text="[DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] [DESCRIPTION] "
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textColor="@color/color_5"
             android:text="[DATE AND TIME]"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtMDesc" />
@@ -50,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-
+            android:textColor="@color/color_white"
             android:text="Until"
             app:layout_constraintEnd_toEndOf="@+id/txtMDateAndTime"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="@color/color_6"
             android:text="[DATE AND TIME]"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt" />
@@ -69,6 +76,7 @@
             android:id="@+id/txtMLocationElsePlatform"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
             android:gravity="right"

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -27,6 +28,7 @@ import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Project
 import ie.wit.teamcom.models.Reminder
 import ie.wit.utils.SwipeToDeleteCallback
+import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import kotlinx.android.synthetic.main.fragment_projects_list.view.*
 import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import kotlinx.android.synthetic.main.fragment_role_list.view.*
@@ -150,6 +152,9 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
                         root.projectsRecyclerView.adapter =
                             ProjectsAdapter(projectList, this@ProjectListFragment)
                         root.projectsRecyclerView.adapter?.notifyDataSetChanged()
+                        if (projectList.size > 0 ) {
+                            root.txtEmpty_projects.isVisible = false
+                        }
                         checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("projects")
                             .removeEventListener(this)

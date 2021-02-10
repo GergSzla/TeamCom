@@ -4,7 +4,7 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#CCCCFF"
+    android:background="@color/transp_backg"
     android:layout_gravity="center"
     android:padding="25dp">
 
@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
+        android:textColor="@color/color_white"
         android:textStyle="bold"
         android:text="Are You Sure You Want To Proceed?" />
 

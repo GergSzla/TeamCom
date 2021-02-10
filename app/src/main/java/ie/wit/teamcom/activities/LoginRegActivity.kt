@@ -105,11 +105,6 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
             googleSignIn()
         }
 
-        btnSignOut.setOnClickListener {
-            app.auth.signOut()
-            app.googleSignInClient.signOut()
-            finish()
-        }
         btnLogin.setOnClickListener {
             validateForm(false)
             if(!(txtEmail.text.toString() == "" || txtPassword.text.toString() == "")){

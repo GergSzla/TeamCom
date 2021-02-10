@@ -1,6 +1,7 @@
 package ie.wit.teamcom.fragments
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
@@ -19,6 +20,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.CommentListener
 import ie.wit.teamcom.adapters.CommentsAdapter
@@ -29,6 +32,7 @@ import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Post
 import ie.wit.utils.SwipeToDeleteCallback
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.card_comment.view.*
 import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
 import kotlinx.android.synthetic.main.fragment_news_feed.view.*
@@ -71,7 +75,6 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         root.txtPostTimeAndDateView.text = currentPost.post_date + " @ " + currentPost.post_time
         root.txtPostContentView.text = currentPost.post_content
 
-
         root.imgBtnPostComment.setOnClickListener {
             validateForm()
             if (root.editComment.text.toString() !== "") {
@@ -80,7 +83,6 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         }
 
         setSwipeRefresh()
-
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireActivity()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -91,6 +93,20 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         }
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchDeleteHelper.attachToRecyclerView(root.commentsRecyclerView)
+
+        var ref = FirebaseStorage.getInstance().getReference("photos/${currentPost.post_author.id}.jpg")
+        ref.downloadUrl.addOnSuccessListener {
+            Picasso.get().load(it)
+                .resize(260, 260)
+                .transform(CropCircleTransformation())
+                .into(root.card_post_pic)
+        }
+
+        if(currentPost.post_author.role.color_code.take(1) != "#"){
+            root.txtPostUserView.setTextColor(Color.parseColor("#" + currentPost.post_author.role.color_code))
+        } else {
+            root.txtPostUserView.setTextColor(Color.parseColor(currentPost.post_author.role.color_code))
+        }
 
         return root
     }

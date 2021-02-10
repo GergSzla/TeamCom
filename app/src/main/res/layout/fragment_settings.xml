@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
     tools:context=".fragments.SettingsFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:background="@drawable/content_layout_backg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,7 +25,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:fontFamily="sans-serif"
-                android:text="TextView"
+                android:textColor="@color/color_white"
+                android:text=""
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
@@ -29,65 +34,75 @@
                 android:id="@+id/txtSettingsRoles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/content_layout_backg"
                 android:clickable="true"
                 android:fontFamily="sans-serif-thin"
                 android:padding="10dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/txtRoles"
-                android:textColor="#000000"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_arrow_right" />
 
             <TextView
                 android:id="@+id/txtSettingsMembers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/content_layout_backg"
                 android:clickable="true"
+                android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif-thin"
                 android:padding="10dp"
                 android:text="@string/txtMembers"
-                android:textColor="#000000"
-                android:textSize="30sp"
+                android:textColor="@color/color_white"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtSettingsInvites"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/content_layout_backg"
                 android:clickable="true"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
+                android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif-thin"
                 android:padding="10dp"
                 android:text="@string/txtInvites"
-                android:textColor="#000000"
-                android:textSize="30sp"
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtSettingsDepts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/content_layout_backg"
                 android:clickable="true"
+                android:layout_marginTop="5dp"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
                 android:fontFamily="sans-serif-thin"
                 android:padding="10dp"
                 android:text="@string/txtDepartments"
-                android:textColor="#000000"
-                android:textSize="30sp"
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtSettingsChannelDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/content_layout_backg"
                 android:clickable="true"
                 android:fontFamily="sans-serif-thin"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
                 android:padding="10dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/txtDetails"
-                android:textColor="#000000"
-                android:textSize="30sp"
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

@@ -12,9 +12,12 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Comment
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.card_comment.view.*
 import kotlinx.android.synthetic.main.card_post.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -88,41 +91,22 @@ class CommentsAdapter constructor(
 //                listener.onCommentEditClicked(comment)
             }
 
-            itemView.btn_save_comment.setOnClickListener {
+            var ref = FirebaseStorage.getInstance().getReference("photos/${comment.comment_author.id}.jpg")
+            ref.downloadUrl.addOnSuccessListener {
+                Picasso.get().load(it)
+                    .resize(260, 260)
+                    .transform(CropCircleTransformation())
+                    .into(itemView.card_comment_image)
+            }
 
-//                database.child("users").child(user.id)
-//                    .addValueEventListener(object : ValueEventListener {
-//                        override fun onCancelled(error: DatabaseError) {
-//                        }
-//
-//                        override fun onDataChange(snapshot: DataSnapshot) {
-//                            val childUpdates = HashMap<String, Any>()
-//                            childUpdates["/users/${user.id}/firstName"] = user.firstName
-//                            database.updateChildren(childUpdates)
-//
-//                            database.child("users").child(user.id)
-//                                .removeEventListener(this)
-//                        }
-//                    })
+            itemView.btn_save_comment.setOnClickListener {
                 comment.comment_content = itemView.editTxtCommentContent.text.toString()
                 listener.onCommentEditClicked(comment)
 
                 itemView.editTxtCommentContent.isVisible = false
                 itemView.btn_save_comment.isVisible = false
                 itemView.txtCommentContent.isVisible = true
-
-
             }
-            //itemView.btnLikeComment.text = "Like (${comment.comment_likes})"
-
-            /*itemView.btnLikeComment.setOnClickListener(View.OnClickListener {
-                if (listener != null) {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        listener.onLikeCommentClicked(comment)
-                    }
-                }
-            })*/
         }
     }
 }

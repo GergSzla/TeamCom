@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     tools:context=".fragments.CreateTaskFragment">
 
     <ScrollView
@@ -13,6 +16,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/content_layout_backg"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -23,57 +30,68 @@
                 android:layout_marginBottom="20dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/newTask"
+                android:textColor="@color/color_white"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/group1"
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Task Name " />
+
+                    android:text="Task Name "
+                    android:textColor="@color/color_white" />
 
                 <EditText
                     android:id="@+id/txtTaskName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+
+                    android:hint="Task Name"
                     android:inputType="textPersonName"
                     android:padding="10dp"
-                    android:hint="Task Name"
                     android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/textView9"
-                    android:layout_marginTop="24dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Task Description " />
+                    android:layout_marginTop="24dp"
+
+                    android:text="Task Description "
+                    android:textColor="@color/color_white" />
 
                 <EditText
                     android:id="@+id/txtTaskDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_backg"
                     android:ems="10"
+
+                    android:hint="Task Description"
                     android:inputType="textMultiLine"
                     android:padding="10dp"
-                    android:hint="Task Description"
                     android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/textView10"
-                    android:layout_marginTop="24dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add Task To Stage:" />
+                    android:layout_marginTop="24dp"
+
+                    android:text="Add Task To Stage:"
+                    android:textColor="@color/color_white" />
 
                 <Spinner
                     android:id="@+id/spinnerStage"
@@ -84,10 +102,12 @@
 
                 <TextView
                     android:id="@+id/textView11"
-                    android:layout_marginTop="24dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Assignee" />
+
+                    android:layout_marginTop="24dp"
+                    android:text="Assignee"
+                    android:textColor="@color/color_white" />
 
                 <Spinner
                     android:id="@+id/spinnerAssignee"
@@ -98,22 +118,30 @@
 
                 <TextView
                     android:id="@+id/textView13"
-                    android:layout_marginTop="24dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Importance" />
+
+                    android:layout_marginTop="24dp"
+                    android:text="Importance"
+                    android:textColor="@color/color_white" />
 
                 <SeekBar
                     android:id="@+id/seekBarImportance"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:min="1"
-                    android:max="5" />
+                    android:progressDrawable="@drawable/seekbar"
+                    android:splitTrack="false"
+                    android:thumbOffset="0dp"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:max="5"
+                    android:min="1" />
+
                 <TextView
                     android:id="@+id/txtImportanceStatus"
-                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/color_white"
                     android:text="" />
 
                 <TextView
@@ -121,7 +149,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Due Date" />
+                    android:text="Due Date"
+                    android:textColor="@color/color_white" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -132,17 +161,22 @@
                         android:id="@+id/txtDandT"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_weight="200"
-                        android:textSize="18sp"
-                        android:text="[DATE AND TIME SELECTED]" />
+                        android:text="[DATE AND TIME SELECTED]"
+                        android:textColor="@color/color_white"
+                        android:textSize="18sp" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/btnSelectDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:backgroundTint="@color/color_1"
+                        android:src="@drawable/ic_baseline_calendar_today_24"
                         android:text="@string/btnDateSelect" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -152,9 +186,11 @@
 
                     <Button
                         android:id="@+id/btnAddTask"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Add Task" />
+                        android:backgroundTint="@color/color_1"
+                        android:text="Add Task"
+                        android:textColor="@color/color_white" />
                 </LinearLayout>
             </LinearLayout>
 
