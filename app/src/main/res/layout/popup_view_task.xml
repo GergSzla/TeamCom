@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="400dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#CDCDCD"
     android:layout_gravity="center"
+    android:background="@color/card_channel"
+    android:orientation="vertical"
     android:padding="25dp">
 
 
@@ -15,6 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
+        android:backgroundTint="@color/card_channel"
+        android:tint="@color/color_white"
         app:srcCompat="@drawable/ic_cancel" />
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="[TASK NAME]"
+        android:textColor="@color/color_white"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -29,59 +31,73 @@
         android:id="@+id/txtTaskDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
         android:layout_marginTop="8dp"
-        android:text="[CONTENT CONTENT CONTENTCONTENTCONTENTCONTENTCONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT  ]"/>
+        android:text="[CONTENT CONTENT CONTENTCONTENTCONTENTCONTENTCONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT CONTENT  ]"
+        android:textColor="@color/color_white" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        android:text="Assignee" />
+        android:layout_marginTop="12dp"
+        android:text="Assignee"
+        android:textColor="@color/color_white"
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/txtTaskAssignee"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="[Assignee]"/>
+        android:text="[Assignee]"
+        android:textColor="@color/color_white"
+
+        android:textSize="18sp" />
 
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        android:text="Creator" />
+        android:layout_marginTop="12dp"
+        android:text="Creator"
+
+        android:textColor="@color/color_white"
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/txtTaskCreator"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="[Creator]"/>
+        android:text="[Creator]"
+
+        android:textColor="@color/color_white"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        android:text="Due Date" />
+
+        android:layout_marginTop="12dp"
+        android:text="Due Date"
+        android:textColor="@color/color_white"
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/txtTaskDueDate"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="[DUE DATE]"/>
+
+        android:text="[DUE DATE]"
+        android:textColor="@color/color_white"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
-        android:weightSum="5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="5">
 
         <TextView
             android:id="@+id/txtTaskStage"
@@ -90,8 +106,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@drawable/table_header_cell_bg"
-            android:gravity="center"
             android:clickable="true"
+            android:gravity="center"
             android:text="[STAGE]"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
@@ -99,22 +115,22 @@
         <ProgressBar
             android:id="@+id/progressImportance"
             style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="88dp"
+            android:layout_weight="4"
             android:indeterminate="false"
             android:max="5"
             android:paddingLeft="30dp"
             android:progress="3"
-            android:progressDrawable="@drawable/loading_circle"
-            android:layout_width="wrap_content"
-            android:layout_height="88dp"
-            android:layout_weight="4" />
+            android:progressDrawable="@drawable/loading_circle" />
 
         <TextView
             android:id="@+id/txtTaskProgress"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:padding="10dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
+            android:padding="10dp"
             android:text="3/5" />
     </LinearLayout>
 

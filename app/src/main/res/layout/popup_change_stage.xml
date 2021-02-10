@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="#CDCDCD"
+    android:background="@color/card_channel"
     android:layout_gravity="center"
     android:padding="25dp">
 
@@ -13,6 +13,9 @@
         android:id="@+id/btn_cancel_stage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:tint="@color/color_white"
+        android:backgroundTint="@color/card_channel"
         android:layout_gravity="right"
         app:srcCompat="@drawable/ic_cancel" />
 
@@ -20,6 +23,7 @@
         android:id="@+id/stage_rec"
         android:layout_gravity="center"
         tools:listitem="@layout/card_stages"
+        tools:itemCount="6"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

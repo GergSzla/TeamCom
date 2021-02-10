@@ -857,15 +857,15 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        app:fab_addButtonColorNormal="@color/floatBtn"
-        app:fab_addButtonColorPressed="@color/floatBtnPressed"
+        app:fab_addButtonColorNormal="@color/color_1"
+        app:fab_addButtonColorPressed="@color/color_1"
         app:fab_labelStyle="@style/custom_fab">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnEditProject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/floatBtn"
+            app:fab_colorNormal="@color/color_1"
             app:fab_icon="@drawable/ic_baseline_edit_24"
             app:fab_size="mini"
             app:fab_title="Edit Project" />
@@ -874,7 +874,7 @@
             android:id="@+id/btnCreateTask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/floatBtn"
+            app:fab_colorNormal="@color/color_1"
             app:fab_icon="@drawable/ic_baseline_new_task"
             app:fab_size="mini"
             app:fab_title="Create Task" />
