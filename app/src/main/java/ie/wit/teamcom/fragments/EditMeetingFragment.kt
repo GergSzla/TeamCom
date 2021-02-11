@@ -291,23 +291,23 @@ class EditMeetingFragment : Fragment(), AnkoLogger {
 
         new_meeting.online = root.checkBoxCheckOnline.isChecked
 
-        if (root.spinnerDept.selectedItem !== "All") {
-            var j = 0
-            deptsList.forEach {
-                if (root.spinnerDept.selectedItem == deptsList[j].dept_name) {
-                    member_dept = deptsList[j]
-                    new_meeting.participants = member_dept.dept_members
-                } else {
-                    j++
-                }
-            }
-        } else {
-            deptsList.forEach {
-                it.dept_members.forEach{ member_it ->
-                    new_meeting.participants.add(member_it)
-                }
-            }
-        }
+//        if (root.spinnerDept.selectedItem !== "All") {
+//            var j = 0
+//            deptsList.forEach {
+//                if (root.spinnerDept.selectedItem == deptsList[j].dept_name) {
+//                    member_dept = deptsList[j]
+//                    new_meeting.participants = member_dept.dept_members
+//                } else {
+//                    j++
+//                }
+//            }
+//        } else {
+//            deptsList.forEach {
+//                it.dept_members.forEach{ member_it ->
+//                    new_meeting.participants.add(member_it)
+//                }
+//            }
+//        }
 
 
         editMeeting(new_meeting)
@@ -377,7 +377,7 @@ class EditMeetingFragment : Fragment(), AnkoLogger {
                         depts
                     )
                     adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-                    root.spinnerDept.adapter = adapter2
+//                    root.spinnerDept.adapter = adapter2
                 }
             })
     }

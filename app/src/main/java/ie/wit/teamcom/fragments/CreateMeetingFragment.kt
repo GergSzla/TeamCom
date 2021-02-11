@@ -16,6 +16,10 @@ import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -23,18 +27,25 @@ import ie.wit.adventurio.helpers.createLoader
 import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
+import ie.wit.teamcom.adapters.CommentsAdapter
+import ie.wit.teamcom.adapters.MeetingMembersAdapter
+import ie.wit.teamcom.adapters.MeetingMembersListener
+import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Department
-import ie.wit.teamcom.models.Meeting
+import ie.wit.teamcom.models.*
+import ie.wit.utils.SwipeToDeleteCallback
+import ie.wit.utils.SwipeToRemoveSelectedMemberCallback
+import ie.wit.utils.SwipeToSelectMemberCallback
 import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
+import kotlinx.android.synthetic.main.fragment_members.view.*
 import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 
-class CreateMeetingFragment : Fragment(), AnkoLogger {
+class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
     lateinit var app: MainApp
     lateinit var root: View
@@ -46,7 +57,10 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
     var new_meeting = Meeting()
     var depts = ArrayList<String>()
     var deptsList = ArrayList<Department>()
-    var member_dept = Department()
+
+    //    var member_dept = Department()
+    var channel_members = ArrayList<Member>()
+    var selected_members = ArrayList<Member>()
     lateinit var loader: androidx.appcompat.app.AlertDialog
 
 
@@ -66,6 +80,9 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
     ): View? {
         root = inflater.inflate(R.layout.fragment_create_meeting, container, false)
         activity?.title = getString(R.string.title_create_meetings)
+
+        root.selectMemsRecyclerView.layoutManager = LinearLayoutManager(activity)
+        root.selectedMemsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         loader = createLoader(requireActivity())
 
@@ -88,8 +105,8 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         }
 
         yyyy = "${date.get(Calendar.YEAR)}"
-        h = if ((date.get(Calendar.HOUR_OF_DAY) ) < 10) {
-            "0" + "${(date.get(Calendar.HOUR_OF_DAY) )}"
+        h = if ((date.get(Calendar.HOUR_OF_DAY)) < 10) {
+            "0" + "${(date.get(Calendar.HOUR_OF_DAY))}"
         } else {
             "${(date.get(Calendar.HOUR_OF_DAY))}"
         }
@@ -251,7 +268,112 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
             }
         }
 
+        root.btnRefr.setOnClickListener {
+            root.swiperefreshCreateMeeting_1.isRefreshing = true
+            root.swiperefreshCreateMeeting_2.isRefreshing = true
+            channelMembersToRecycler()
+        }
+
+        getAllChannelMembers()
+
+        val swipeMoveToSelectedHandler = object : SwipeToSelectMemberCallback(requireActivity()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter1 = root.selectMemsRecyclerView.adapter as MeetingMembersAdapter
+                adapter1.removeAt(viewHolder.adapterPosition)
+                move_to_selected((viewHolder.itemView.tag as Member))
+            }
+        }
+        val itemTouchMoveHelper = ItemTouchHelper(swipeMoveToSelectedHandler)
+        itemTouchMoveHelper.attachToRecyclerView(root.selectMemsRecyclerView)
+
+        val swipeRemoveFromSelectedHandler = object : SwipeToRemoveSelectedMemberCallback(requireActivity()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter2 = root.selectedMemsRecyclerView.adapter as MeetingMembersAdapter
+                adapter2.removeAt(viewHolder.adapterPosition)
+                remove_from_selected((viewHolder.itemView.tag as Member))
+            }
+        }
+        val itemTouchMoveBackHelper = ItemTouchHelper(swipeRemoveFromSelectedHandler)
+        itemTouchMoveBackHelper.attachToRecyclerView(root.selectedMemsRecyclerView)
+
         return root
+    }
+
+    fun move_to_selected(member: Member){
+        channel_members.remove(member)
+        selected_members.add(member)
+
+        channelMembersToRecycler()
+    }
+
+    fun remove_from_selected(member: Member){
+        selected_members.remove(member)
+        channel_members.add(member)
+
+        channelMembersToRecycler()
+    }
+
+    fun setSwipeRefresh() {
+        root.swiperefreshCreateMeeting_1.setOnRefreshListener(object :
+            SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                root.swiperefreshCreateMeeting_1.isRefreshing = true
+                root.swiperefreshCreateMeeting_2.isRefreshing = true
+                channelMembersToRecycler()
+            }
+        })
+    }
+
+    fun checkSwipeRefresh() {
+        if (root.swiperefreshCreateMeeting_1.isRefreshing) root.swiperefreshCreateMeeting_1.isRefreshing =
+            false
+        if (root.swiperefreshCreateMeeting_2.isRefreshing) root.swiperefreshCreateMeeting_2.isRefreshing =
+            false
+    }
+
+    fun getAllChannelMembers() {
+        channel_members = ArrayList<Member>()
+        app.database.child("channels").child(currentChannel.id).child("members")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase members error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val children = snapshot.children
+                    children.forEach {
+                        val member = it.getValue<Member>(Member::class.java)
+                        channel_members.add(member!!)
+//                        root.selectMemsRecyclerView.adapter = MeetingMembersAdapter(
+//                            channel_members,
+//                            this@CreateMeetingFragment
+//                        )
+//                        root.selectMemsRecyclerView.adapter?.notifyDataSetChanged()
+//                        checkSwipeRefresh()
+                        channelMembersToRecycler()
+                        app.database.child("channels").child(currentChannel!!.id).child("members")
+                            .removeEventListener(this)
+                    }
+                }
+            })
+    }
+
+    fun channelMembersToRecycler() {
+        channel_members.forEach {
+            root.selectMemsRecyclerView.adapter = MeetingMembersAdapter(
+                channel_members,
+                this@CreateMeetingFragment
+            )
+            root.selectMemsRecyclerView.adapter?.notifyDataSetChanged()
+        }
+        selected_members.forEach {
+            root.selectedMemsRecyclerView.adapter = MeetingMembersAdapter(
+                selected_members,
+                this@CreateMeetingFragment
+            )
+            root.selectedMemsRecyclerView.adapter?.notifyDataSetChanged()
+        }
+        checkSwipeRefresh()
     }
 
     private fun validateForm(): Boolean {
@@ -327,6 +449,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
         showLoader(loader, "Loading . . . ", "Creating Meeting ${new_meeting.meeting_title} . . .")
         new_meeting.meeting_date_as_string = "$dd/$mm/$yyyy"
         new_meeting.meeting_time_as_string = "$h:$m"
+        new_meeting.participants = selected_members
 
         app.generate_date_reminder_id(dd, mm, yyyy, (h.toInt() - 1).toString(), mm, "00")
         new_meeting.meeting_date_id = app.reminder_due_date_id
@@ -348,7 +471,8 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
         new_meeting.meeting_date_end_id = app.reminder_due_date_id
 
-        new_meeting.meeting_date_as_string_end = app.rem_dateAsString //"${cal.dayOfMonth}/${cal.monthValue}/${cal.year}"
+        new_meeting.meeting_date_as_string_end =
+            app.rem_dateAsString //"${cal.dayOfMonth}/${cal.monthValue}/${cal.year}"
         new_meeting.meeting_time_as_string_end = app.rem_timeAsString//"${cal.hour}:${cal.minute}"
 
         new_meeting.meeting_title = root.editTxtTitle.text.toString()
@@ -367,23 +491,23 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
 
         new_meeting.online = root.checkBoxCheckOnline.isChecked
 
-        if (root.spinnerDept.selectedItem !== "All") {
-            var j = 0
-            deptsList.forEach {
-                if (root.spinnerDept.selectedItem == deptsList[j].dept_name) {
-                    member_dept = deptsList[j]
-                    new_meeting.participants = member_dept.dept_members
-                } else {
-                    j++
-                }
-            }
-        } else {
-            deptsList.forEach {
-                it.dept_members.forEach { member_it ->
-                    new_meeting.participants.add(member_it)
-                }
-            }
-        }
+//        if (root.spinnerDept.selectedItem !== "All") {
+//            var j = 0
+//            deptsList.forEach {
+//                if (root.spinnerDept.selectedItem == deptsList[j].dept_name) {
+//                    member_dept = deptsList[j]
+//                    new_meeting.participants = member_dept.dept_members
+//                } else {
+//                    j++
+//                }
+//            }
+//        } else {
+//            deptsList.forEach {
+//                it.dept_members.forEach { member_it ->
+//                    new_meeting.participants.add(member_it)
+//                }
+//            }
+//        }
 
         writeNewMeeting(new_meeting)
     }
@@ -448,13 +572,13 @@ class CreateMeetingFragment : Fragment(), AnkoLogger {
                             .child("departments")
                             .removeEventListener(this)
                     }
-                    val adapter2 = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item, // Layout
-                        depts
-                    )
-                    adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-                    root.spinnerDept.adapter = adapter2
+//                    val adapter2 = ArrayAdapter(
+//                        requireContext(),
+//                        android.R.layout.simple_spinner_item, // Layout
+//                        depts
+//                    )
+//                    adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+////                    root.spinnerDept.adapter = adapter2
                 }
             })
     }

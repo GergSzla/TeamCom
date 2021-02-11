@@ -326,8 +326,8 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                     children.forEach {
                         val task = it.getValue<TaskStage>(TaskStage::class.java)
 
-                        if (task!!.stage_name != "") {
-                            tasks_stages.add(task!!.stage_name)
+                        if (task!!.stage_name != "" && task.stage_active) {
+                            tasks_stages.add(task.stage_name)
                             tasks_stages_list.add(task)
                         }
 
