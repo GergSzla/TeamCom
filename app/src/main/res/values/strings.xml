@@ -123,6 +123,8 @@
     <string name="taskStages">Project Setup</string>
     <string name="projectDeets">Project Details</string>
     <string name="meetingDeets">Meeting Details</string>
+    <string name="editMeeting">Edit Meeting</string>
+
     <string name="newTask">New Task</string>
 
     <string name="editRoleName">Role Name</string>
