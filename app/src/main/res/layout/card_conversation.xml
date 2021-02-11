@@ -21,6 +21,8 @@
             android:id="@+id/txtParticipants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            android:textSize="25sp"
             android:text=""
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

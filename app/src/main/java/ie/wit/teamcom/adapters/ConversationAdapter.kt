@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Conversation
@@ -15,8 +16,10 @@ interface ConversationListener {
     fun onConversationClick(convo: Conversation)
 }
 
-class ConversationAdapter constructor(var conversations: ArrayList<Conversation>,
-                                  private val listener: ConversationListener): RecyclerView.Adapter<ConversationAdapter.MainHolder>(){
+class ConversationAdapter constructor(
+    var conversations: ArrayList<Conversation>,
+    private val listener: ConversationListener
+) : RecyclerView.Adapter<ConversationAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         return MainHolder(
@@ -43,17 +46,26 @@ class ConversationAdapter constructor(var conversations: ArrayList<Conversation>
         fun bind(conversation: Conversation, listener: ConversationListener) {
             itemView.tag = conversation
 
-            conversation.participants.forEach {
+            var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-                itemView.txtParticipants.append(it.firstName +" "+ it.surname)
+
+            if (conversation.gc_name != "") {
+                itemView.txtParticipants.text = conversation.gc_name
+            } else {
+                conversation.participants.forEach{
+                    if(it.id !== auth.currentUser!!.uid){
+                        itemView.txtParticipants.text = it.firstName + " " + it.surname
+                    }
+                }
             }
 
+
             //var last_message: String =""
-            if (conversation.messages.isEmpty()){
+            if (conversation.messages.isEmpty()) {
                 itemView.txtLastMessage.text = "Start Chatting!"
-            }else{
+            } else {
                 var size = conversation.messages.size
-                itemView.txtLastMessage.text = conversation.messages[size-1].content
+                itemView.txtLastMessage.text = conversation.messages[size - 1].content
             }
 
             itemView.setOnClickListener {
