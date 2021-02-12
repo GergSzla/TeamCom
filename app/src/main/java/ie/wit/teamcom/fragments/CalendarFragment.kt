@@ -85,6 +85,11 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
             date_convert(yyyy, mm, dd, false)
 
         }
+
+        root.btn_scroll_to_events.setOnClickListener {
+            root.calendar_scroll.smoothScrollTo(1000,0)
+        }
+
         return root
     }
 
@@ -122,7 +127,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
     }
 
     fun getEventsForDate(date: String) {
-        root.txtDatePicked.text = "Showing Events for: ${date}"
+        root.txtDatePicked.text = "Showing Events for: \n${date}"
     }
 
     fun add_new_event(date: String) {
@@ -299,6 +304,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
                         app.database.child("channels").child(currentChannel.id).child("events").child(yyyy).child(mm).child(dd)
                             .removeEventListener(this)
                     }
+                    root.btn_scroll_to_events.setText("Show Events (${eventsList.size})")
                 }
             })
 
