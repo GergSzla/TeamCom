@@ -12,13 +12,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.StageAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Bug
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.TaskStage
-import kotlinx.android.synthetic.main.dialog_create_dept.view.*
-import kotlinx.android.synthetic.main.fragment_assign_roles.view.*
 import kotlinx.android.synthetic.main.fragment_support.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info

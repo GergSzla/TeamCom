@@ -2,35 +2,35 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/initScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="center"
-    android:id="@+id/initScreen"
     android:background="@drawable/splash_background"
+    android:orientation="vertical"
     tools:context=".activities.LoginRegActivity">
 
 
-
     <LinearLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="30dp"
-        android:padding="10dp"
-        android:orientation="vertical"
         android:background="@drawable/content_layout_backg"
-        >
+        android:orientation="vertical"
+        android:padding="10dp">
+
         <ImageView
-            android:src="@drawable/logo"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="300dp"
+            android:src="@drawable/logo" />
+
         <EditText
             android:id="@+id/txtFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_backg"
             android:autofillHints="textEmailAddress"
+            android:background="@drawable/edit_text_backg"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@."
             android:ems="10"
             android:hint="@string/hintFirstname"
@@ -42,8 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_backg"
             android:autofillHints="textEmailAddress"
+            android:background="@drawable/edit_text_backg"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@."
             android:ems="10"
             android:hint="@string/hintSurname"
@@ -55,8 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_backg"
             android:autofillHints="textEmailAddress"
+            android:background="@drawable/edit_text_backg"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@."
             android:ems="10"
             android:hint="@string/hintLgnEmail"
@@ -67,45 +67,45 @@
             android:id="@+id/txtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_backg"
             android:layout_marginBottom="10dp"
             android:autofillHints="textPassword"
+            android:background="@drawable/edit_text_backg"
             android:ems="10"
-            android:padding="10dp"
             android:hint="@string/hintPassword"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:padding="10dp" />
 
 
-            <Button
-                android:id="@+id/btnGoogleLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textColor="@color/color_white"
-                android:backgroundTint="@color/google_blue"
-                android:text="Login With Google"
-                android:drawableLeft="@drawable/googleg_standard_color_18"
-                android:drawableTint="@color/color_white"/>
+        <Button
+            android:id="@+id/btnGoogleLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/google_blue"
+            android:drawableLeft="@drawable/googleg_standard_color_18"
+            android:drawableTint="@color/color_white"
+            android:padding="16dp"
+            android:text="Login With Google"
+            android:textColor="@color/color_white" />
 
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textColor="@color/color_white"
-                android:text="@string/btnLogin"
-                android:backgroundTint="@color/google_red"
-                android:drawableLeft="@drawable/ic_baseline_email_24"/>
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/google_red"
+            android:drawableLeft="@drawable/ic_baseline_email_24"
+            android:padding="16dp"
+            android:text="@string/btnLogin"
+            android:textColor="@color/color_white" />
 
 
         <Button
             android:id="@+id/btnShowReg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_white"
-            android:padding="16dp"
             android:backgroundTint="@color/google_red"
-            android:text="@string/btnShowReg" />
+            android:padding="16dp"
+            android:text="@string/btnShowReg"
+            android:textColor="@color/color_white" />
 
 
         <LinearLayout

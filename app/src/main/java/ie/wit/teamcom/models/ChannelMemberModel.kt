@@ -15,7 +15,6 @@ data class Member (
     var email: String = "",
     var image: Int = 0,
     var login_used: String ="",
-    var department: Department = Department(),
     var online:Boolean = false,
     var role: Role = Role()) : Parcelable
 
@@ -31,7 +30,6 @@ data class Member (
             "email" to email,
             "image" to image,
             "login_used" to login_used,
-            "department" to department,
             "online" to online,
             "role" to role
         )

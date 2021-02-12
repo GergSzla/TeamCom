@@ -304,7 +304,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
                         app.database.child("channels").child(currentChannel.id).child("events").child(yyyy).child(mm).child(dd)
                             .removeEventListener(this)
                     }
-                    root.btn_scroll_to_events.setText("Show Events (${eventsList.size})")
+                    root.btn_scroll_to_events.text = "Show Events (${eventsList.size})"
                 }
             })
 

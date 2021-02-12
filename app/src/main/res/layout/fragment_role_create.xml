@@ -258,19 +258,6 @@
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/permViewDeptLog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:text="@string/permViewDeptLog"
-                android:textColor="@color/color_white"
-                android:textSize="20dp"
-                android:background="@drawable/content_layout_backg"
-
-                android:thumb="@drawable/thumb_switch"
-                app:track="@drawable/new_switch" />
 
             <RelativeLayout
                 android:id="@+id/editPressed"

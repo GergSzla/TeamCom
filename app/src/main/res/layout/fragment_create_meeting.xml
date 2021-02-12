@@ -126,20 +126,6 @@
                 android:inputType="number"
                 android:padding="10dp" />
 
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/textViewDept"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:text="@string/deptSelect"-->
-            <!--                android:textColor="@color/color_white" />-->
-
-            <!--            <Spinner-->
-            <!--                android:id="@+id/spinnerDept"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="56dp"-->
-            <!--                android:background="@drawable/spinner_des" />-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

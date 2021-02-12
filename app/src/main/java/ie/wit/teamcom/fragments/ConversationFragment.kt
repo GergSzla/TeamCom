@@ -15,15 +15,11 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.ConversationAdapter
 import ie.wit.teamcom.adapters.ConversationListener
-import ie.wit.teamcom.adapters.DepartmentAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Conversation
-import ie.wit.teamcom.models.Department
-import ie.wit.teamcom.models.Member
 import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.fragment_conversation.view.*
-import kotlinx.android.synthetic.main.fragment_department_list.view.*
 import kotlinx.android.synthetic.main.fragment_members.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info

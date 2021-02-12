@@ -72,8 +72,6 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
             root.permAssignTasksToMembers.isChecked = role.permission_code.elementAt(10).toString() == "1"
             root.permCreateMeetings.isChecked = role.permission_code.elementAt(11).toString() == "1"
             root.permRequestMeetings.isChecked = role.permission_code.elementAt(12).toString() == "1"
-            root.permViewDeptLog.isChecked = role.permission_code.elementAt(13).toString() == "1"
-
         }
 
         root.btnEditRole.setOnClickListener {
@@ -92,7 +90,6 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                 permissionCode += if(root.permAssignTasksToMembers.isChecked) "1" else "0"
                 permissionCode += if(root.permCreateMeetings.isChecked) "1" else "0"
                 permissionCode += if(root.permRequestMeetings.isChecked) "1" else "0"
-                permissionCode += if(root.permViewDeptLog.isChecked) "1" else "0"
 
                 role.role_name = editRoleName.text.toString()
                 role.permission_code = permissionCode
@@ -146,7 +143,6 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                 permissionCode += if(root.permAssignTasksToMembers.isChecked) "1" else "0"
                 permissionCode += if(root.permCreateMeetings.isChecked) "1" else "0"
                 permissionCode += if(root.permRequestMeetings.isChecked) "1" else "0"
-                permissionCode += if(root.permViewDeptLog.isChecked) "1" else "0"
 
                 role.role_name = editRoleName.text.toString()
                 role.permission_code = permissionCode

@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Log
-import kotlinx.android.synthetic.main.card_dept.view.*
 import kotlinx.android.synthetic.main.card_log.view.*
-import kotlinx.android.synthetic.main.card_role.view.*
 
 
 interface LogListener {

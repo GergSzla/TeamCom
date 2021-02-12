@@ -75,20 +75,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtSettingsDepts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/content_layout_backg"
-                android:clickable="true"
-                android:layout_marginTop="5dp"
-                app:drawableEndCompat="@drawable/ic_arrow_right"
-                android:fontFamily="sans-serif-thin"
-                android:padding="10dp"
-                android:text="@string/txtDepartments"
-                android:textColor="@color/color_white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtSettingsChannelDetails"

@@ -27,7 +27,6 @@ import ie.wit.teamcom.adapters.MeetingMembersAdapter
 import ie.wit.teamcom.adapters.MeetingMembersListener
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Department
 import ie.wit.teamcom.models.Meeting
 import ie.wit.teamcom.models.Member
 import ie.wit.utils.SwipeToRemoveSelectedMemberCallback
@@ -47,9 +46,6 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
     var h = ""
     var m = ""
     var new_meeting = Meeting()
-    var depts = ArrayList<String>()
-    var deptsList = ArrayList<Department>()
-    var member_dept = Department()
     var selected_meeting = Meeting()
     var channel_members = ArrayList<Member>()
     var selected_members = ArrayList<Member>()
@@ -75,8 +71,6 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
         root.selectMemsRecyclerView.layoutManager = LinearLayoutManager(activity)
         root.selectedMemsRecyclerView.layoutManager = LinearLayoutManager(activity)
-
-        getAllDepartments()
 
         val date = Calendar.getInstance()
 
@@ -425,25 +419,6 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
         new_meeting.online = root.checkBoxCheckOnline.isChecked
 
-//        if (root.spinnerDept.selectedItem !== "All") {
-//            var j = 0
-//            deptsList.forEach {
-//                if (root.spinnerDept.selectedItem == deptsList[j].dept_name) {
-//                    member_dept = deptsList[j]
-//                    new_meeting.participants = member_dept.dept_members
-//                } else {
-//                    j++
-//                }
-//            }
-//        } else {
-//            deptsList.forEach {
-//                it.dept_members.forEach{ member_it ->
-//                    new_meeting.participants.add(member_it)
-//                }
-//            }
-//        }
-
-
         editMeeting(new_meeting)
     }
 
@@ -485,36 +460,6 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
             .replace(R.id.homeFrame, fragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    fun getAllDepartments() {
-        app.database.child("channels").child(currentChannel!!.id).child("departments")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val children = snapshot.children
-                    depts.add("All")
-                    children.forEach {
-                        val dept = it.getValue<Department>(Department::class.java)
-
-                        depts.add(dept!!.dept_name)
-                        deptsList.add(dept)
-
-                        app.database.child("channel").child(currentChannel!!.id)
-                            .child("departments")
-                            .removeEventListener(this)
-                    }
-                    val adapter2 = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item, // Layout
-                        depts
-                    )
-                    adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-//                    root.spinnerDept.adapter = adapter2
-                }
-            })
     }
 
     companion object {

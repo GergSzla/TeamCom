@@ -61,7 +61,6 @@
     <string name="txtRoles">Roles</string>
     <string name="txtMembers">Members</string>
     <string name="txtInvites">Invites</string>
-    <string name="txtDepartments">Departments</string>
     <string name="txtDetails">Channel Details</string>
     <string name="txtTaskStages">Task Stages</string>
 
@@ -75,7 +74,6 @@
     <string name="hint_uses">Uses</string>
 
     <!--fragment invites-->
-    <string name="hint_dept_name">Department Name</string>
 
     <!--title Stuff-->
     <string name="title_settings">Channel Settings</string>
@@ -84,7 +82,6 @@
     <string name="title_logs">Logs</string>
 
     <string name="title_invites_settings">Invites</string>
-    <string name="title_department_settings">Departments</string>
     <string name="title_members_settings">Members</string>
     <string name="title_conversations">Conversations</string>
     <string name="title_meetings">Meetings</string>
@@ -93,7 +90,6 @@
 
     <string name="title_calendar">Team Calendar</string>
     <string name="title_create_conversations">Start a Conversation</string>
-    <string name="title_members_assignments">Assign Role And Department</string>
     <string name="title_news_feed">News Feed</string>
     <string name="title_reminders">Reminders</string>
 
@@ -104,7 +100,6 @@
     <string name="select_date">Date</string>
     <string name="btnDateSelect">Select Date</string>
     <string name="btnDateRes">Reschedule</string>
-    <string name="deptSelect">Select Department</string>
     <string name="participant_select">Select Participants</string>
     <string name="participant_selected">Selected Participants</string>
     <string name="location">Meeting Location</string>
@@ -143,9 +138,6 @@
     <string name="createTasks">Create Tasks</string>
     <string name="createInvite">Create Channel Invites</string>
 
-    <string name="createDepartment">Create Channel Department</string>
-    <string name="editDepartment">Edit Channel Department</string>
-
     <string name="createInvite1">Create New Invite</string>
     <string name="createGC">Create Groupchats</string>
     <string name="permKickUser">Kick Users</string>
@@ -154,10 +146,11 @@
     <string name="permAssignTasksToMembers">Assign Tasks To Members</string>
     <string name="permCreateMeetings">Create Meetings</string>
     <string name="permRequestMeetings">Request Meetings</string>
-    <string name="permViewDeptLog">View Dept. Logs</string>
     <string name="addnewrole">Add Role</string>
     <string name="editRole">Save Changes</string>
     <string name="deleteRole">Delete Role</string>
+
+    <string name="title_members_assignments">Role Assignment</string>
 
 
     <!--card invite-->

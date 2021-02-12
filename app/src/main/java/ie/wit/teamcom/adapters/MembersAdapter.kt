@@ -51,12 +51,6 @@ class MembersAdapter constructor(var members: ArrayList<Member>,
             //itemView.imageView3 TODO: ADD SHOW USER_IMAGE
             itemView.txtMemberName_card.text = member.firstName + " " + member.surname
 
-            if (member.department.dept_name == ""){
-                itemView.txtMemberDept_card.text = "[Department Not Assigned]"
-            } else {
-                itemView.txtMemberDept_card.text = member.department.dept_name
-            }
-
             if (member.role.role_name == ""){
                 itemView.txtMemberRole_card.text = "[Role Not Assigned]"
             } else {

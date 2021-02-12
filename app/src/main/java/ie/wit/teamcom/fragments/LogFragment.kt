@@ -56,7 +56,8 @@ class LogFragment : Fragment(), AnkoLogger, LogListener {
 
     fun getAllChannelLogs() {
         logList = ArrayList<Log>()
-        app.database.child("channels").child(currentChannel!!.id).child("logs").orderByChild("log_id")
+        app.database.child("channels").child(currentChannel!!.id).child("logs")
+            .orderByChild("log_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase roles error : ${error.message}")
@@ -66,23 +67,17 @@ class LogFragment : Fragment(), AnkoLogger, LogListener {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val log = it.
-                        getValue<Log>(Log::class.java)
-                        if (app.currentActiveMember.role.permission_code.toCharArray()[1] == "1".toCharArray()[0] //if view all tasks is true
-                            || app.currentActiveMember.role.permission_code.toCharArray()[0] == "1".toCharArray()[0]  //if admin is true
-                            || (app.currentActiveMember.role.permission_code.toCharArray()[1] == "1".toCharArray()[0] && app.currentActiveMember.role.permission_code.toCharArray()[13] == "1".toCharArray()[0])){ //if admin and dept are true
-                            logList.add(log!!)
-                            root.logsRecyclerView.adapter = LogAdapter(logList, this@LogFragment)
-                            root.logsRecyclerView.adapter?.notifyDataSetChanged()
-                        } else if (app.currentActiveMember.role.permission_code.toCharArray()[13] == "1".toCharArray()[0] && app.currentActiveMember.role.permission_code.toCharArray()[0] == "0".toCharArray()[0]) {
-                            logList.add(log!!)
-                            root.logsRecyclerView.adapter = LogAdapter(logList, this@LogFragment)
-                            root.logsRecyclerView.adapter?.notifyDataSetChanged()
-                        }
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("logs").orderByChild("log_id")
-                            .removeEventListener(this)
+                        val log = it.getValue<Log>(Log::class.java)
+
+                        logList.add(log!!)
+                        root.logsRecyclerView.adapter = LogAdapter(logList, this@LogFragment)
+                        root.logsRecyclerView.adapter?.notifyDataSetChanged()
                     }
+                    checkSwipeRefresh()
+                    app.database.child("channels").child(currentChannel!!.id).child("logs")
+                        .orderByChild("log_id")
+                        .removeEventListener(this)
+
                 }
             })
     }
@@ -95,15 +90,16 @@ class LogFragment : Fragment(), AnkoLogger, LogListener {
             }
         })
     }
+
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllChannelLogs()
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
     fun checkSwipeRefresh() {
