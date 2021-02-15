@@ -101,6 +101,7 @@
     <string name="btnDateSelect">Select Date</string>
     <string name="btnDateRes">Reschedule</string>
     <string name="participant_select">Select Participants</string>
+    <string name="create_ext">Create Meeting Externally</string>
     <string name="participant_selected">Selected Participants</string>
     <string name="location">Meeting Location</string>
     <string name="platform">Select Platform</string>

@@ -1,9 +1,6 @@
 package ie.wit.teamcom.main
 
-import android.app.Application
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -11,6 +8,7 @@ import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -20,6 +18,7 @@ import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Member
 import ie.wit.teamcom.models.Reminder
+import us.zoom.sdk.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*

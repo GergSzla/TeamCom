@@ -1,5 +1,6 @@
 package ie.wit.teamcom.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
+import ie.wit.teamcom.activities.ChannelsListActivity
+import ie.wit.teamcom.activities.CreateZoomMeetingActivity
 import ie.wit.teamcom.adapters.MeetingListener
 import ie.wit.teamcom.adapters.MeetingsAdapter
 import ie.wit.teamcom.adapters.RemindersAdapter
@@ -54,9 +57,11 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
         root.btnAddNewMeeting.setOnClickListener {
             navigateTo(CreateMeetingFragment.newInstance(currentChannel))
         }
+
         setSwipeRefresh()
         return root
     }
+
 
     fun getAllMeetings(){
         meetingList = ArrayList<Meeting>()

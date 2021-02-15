@@ -2,19 +2,21 @@ package ie.wit.teamcom.fragments
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.CompoundButton
-import android.widget.Toast
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,13 +29,10 @@ import ie.wit.adventurio.helpers.createLoader
 import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.CommentsAdapter
 import ie.wit.teamcom.adapters.MeetingMembersAdapter
 import ie.wit.teamcom.adapters.MeetingMembersListener
-import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
-import ie.wit.utils.SwipeToDeleteCallback
 import ie.wit.utils.SwipeToRemoveSelectedMemberCallback
 import ie.wit.utils.SwipeToSelectMemberCallback
 import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
@@ -41,9 +40,9 @@ import kotlinx.android.synthetic.main.fragment_members.view.*
 import kotlinx.android.synthetic.main.fragment_post_comments.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
+
 
 class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
@@ -130,6 +129,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
                 root.textViewPlatform.isVisible = false
                 root.spinnerPlatform.isVisible = false
+                root.lin_external.isVisible = false
                 root.textViewID.isVisible = false
                 root.editTxtID.isVisible = false
                 root.textViewPasscode.isVisible = false
@@ -141,6 +141,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
                 root.textViewPlatform.isVisible = true
                 root.spinnerPlatform.isVisible = true
                 root.textViewID.isVisible = true
+                root.lin_external.isVisible = true
                 root.editTxtID.isVisible = true
                 root.textViewPasscode.isVisible = true
                 root.editTxtPasscode.isVisible = true
@@ -165,6 +166,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
                 if (root.spinnerPlatform.selectedItem == "Other") {
                     root.textViewOtherPlatform.isVisible = true
                     root.editTxtOtherPlatform.isVisible = true
+                    root.lin_external.isVisible = false
                 }
             }
 
@@ -255,18 +257,49 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         }
 
         root.btnCreateNewMeeting.setOnClickListener {
-            showLoader(loader, "Loading . . . ", "Validating . . .")
-            validateForm()
-            hideLoader(loader)
-            if (validateForm()) {
-                createMeeting()
-            }
+            createWarningDialog()
         }
 
         root.btnRefr.setOnClickListener {
             root.swiperefreshCreateMeeting_1.isRefreshing = true
             root.swiperefreshCreateMeeting_2.isRefreshing = true
             channelMembersToRecycler()
+        }
+
+        root.btnCreateExt.setOnClickListener {
+            if (root.spinnerPlatform.selectedItem == "Zoom") {
+                val callIntent: Intent = Uri.parse("https://zoom.us/signin").let { uri ->
+                    Intent(Intent.ACTION_VIEW, uri)
+                }
+                startActivity(callIntent)
+            } else if (root.spinnerPlatform.selectedItem == "GoToMeeting") {
+                val callIntent: Intent = Uri.parse("https://global.gotomeeting.com/").let { uri ->
+                    Intent(Intent.ACTION_VIEW, uri)
+                }
+                startActivity(callIntent)
+            } else if (root.spinnerPlatform.selectedItem == "Google Hangouts") {
+                val callIntent: Intent = Uri.parse("https://hangouts.google.com/").let { uri ->
+                    Intent(Intent.ACTION_VIEW, uri)
+                }
+                startActivity(callIntent)
+            } else if (root.spinnerPlatform.selectedItem == "Skype") {
+                val callIntent: Intent = Uri.parse("https://www.skype.com/en/").let { uri ->
+                    Intent(Intent.ACTION_VIEW, uri)
+                }
+                startActivity(callIntent)
+            } else if (root.spinnerPlatform.selectedItem == "Microsoft Teams") {
+                val callIntent: Intent =
+                    Uri.parse("https://www.microsoft.com/en-ie/microsoft-teams/group-chat-software")
+                        .let { uri ->
+                            Intent(Intent.ACTION_VIEW, uri)
+                        }
+                startActivity(callIntent)
+            } else if (root.spinnerPlatform.selectedItem == "Join.me") {
+                val callIntent: Intent = Uri.parse("https://www.join.me/").let { uri ->
+                    Intent(Intent.ACTION_VIEW, uri)
+                }
+                startActivity(callIntent)
+            }
         }
 
         getAllChannelMembers()
@@ -281,7 +314,9 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         val itemTouchMoveHelper = ItemTouchHelper(swipeMoveToSelectedHandler)
         itemTouchMoveHelper.attachToRecyclerView(root.selectMemsRecyclerView)
 
-        val swipeRemoveFromSelectedHandler = object : SwipeToRemoveSelectedMemberCallback(requireActivity()) {
+        val swipeRemoveFromSelectedHandler = object : SwipeToRemoveSelectedMemberCallback(
+            requireActivity()
+        ) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter2 = root.selectedMemsRecyclerView.adapter as MeetingMembersAdapter
                 adapter2.removeAt(viewHolder.adapterPosition)
@@ -294,14 +329,15 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         return root
     }
 
-    fun move_to_selected(member: Member){
+
+    fun move_to_selected(member: Member) {
         channel_members.remove(member)
         selected_members.add(member)
 
         channelMembersToRecycler()
     }
 
-    fun remove_from_selected(member: Member){
+    fun remove_from_selected(member: Member) {
         selected_members.remove(member)
         channel_members.add(member)
 
@@ -351,6 +387,23 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
                     }
                 }
             })
+    }
+
+    private fun createWarningDialog() {
+        AlertDialog.Builder(requireContext())
+            .setView(R.layout.warning_dialog)
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Proceed") { dialog, _ ->
+                dialog.dismiss()
+                showLoader(loader, "Loading . . . ", "Validating . . .")
+                validateForm()
+                hideLoader(loader)
+                if (validateForm()) {
+                    createMeeting()
+                }
+            }.show()
     }
 
     fun channelMembersToRecycler() {
@@ -529,7 +582,6 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
             .addToBackStack(null)
             .commit()
     }
-
 
 
     companion object {

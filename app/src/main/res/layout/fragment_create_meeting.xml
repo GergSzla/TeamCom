@@ -301,6 +301,32 @@
                 android:inputType="textPersonName"
                 android:padding="10dp" />
 
+            <LinearLayout
+                android:id="@+id/lin_external"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/txt_ext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="8"
+                    android:text="@string/create_ext"
+                    android:textColor="@color/color_white" />
+
+                <ImageButton
+                    android:id="@+id/btnCreateExt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/color_1"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/textViewID"
                 android:layout_width="match_parent"

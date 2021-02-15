@@ -230,7 +230,16 @@
                 android:textColor="@color/color_white"
                 android:layout_weight="1"
                 android:text="Edit Meeting" />
+
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnJoinMeeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/color_1"
+            android:textColor="@color/color_white"
+            android:text="Join Meeting" />
     </LinearLayout>
 
 </ScrollView>
