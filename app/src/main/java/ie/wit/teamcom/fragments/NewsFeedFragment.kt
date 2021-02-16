@@ -55,7 +55,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         root = inflater.inflate(R.layout.fragment_news_feed, container, false)
         activity?.title = getString(R.string.title_news_feed)
         root.postsRecyclerView.layoutManager = LinearLayoutManager(activity)
-        //getAllPosts()
+//        getAllPosts()
 
         root.imgBtnSend.setOnClickListener {
             validateForm()
@@ -120,6 +120,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                     checkSwipeRefresh()
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
+                    navigateTo(NewsFeedFragment.newInstance(currentChannel))
                 }
             })
     }

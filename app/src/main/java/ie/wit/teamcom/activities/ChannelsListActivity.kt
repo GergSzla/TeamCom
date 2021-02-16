@@ -253,6 +253,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //hideLoader(loader)
                     val children = snapshot.children
+                    channelsList = ArrayList<Channel>()
 
                     children.forEach { it ->
                         val channel = it.getValue<Channel>(Channel::class.java)
@@ -261,7 +262,6 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                         channelsRecyclerView.adapter =
                             ChannelsAdapter(channelsList, this@ChannelsListActivity)
                         channelsRecyclerView.adapter?.notifyDataSetChanged()
-                        checkSwipeRefresh()
                         if (is_edited) {
                             channelsList.forEach {
                                 app.database.child("channels").child(it.id).child("members").child(
@@ -305,6 +305,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                 }
             })
         hideLoader(loader)
+        checkSwipeRefresh()
     }
 
 

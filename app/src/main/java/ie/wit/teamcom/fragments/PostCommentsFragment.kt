@@ -77,7 +77,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
 
         root.imgBtnPostComment.setOnClickListener {
             validateForm()
-            if (root.editComment.text.toString() !== "") {
+            if (validateForm()) {
                 sendComment()
             }
         }
@@ -237,13 +237,13 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
                         root.commentsRecyclerView.adapter =
                             CommentsAdapter(commentsList, this@PostCommentsFragment)
                         root.commentsRecyclerView.adapter?.notifyDataSetChanged()
-                        checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("posts")
                             .child(currentPost.id).child("post_comments")
                             .removeEventListener(this)
                     }
                 }
             })
+        checkSwipeRefresh()
     }
 
     var alreadyLiked = false
