@@ -16,6 +16,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,10 +29,12 @@ import ie.wit.teamcom.adapters.InviteAdapter
 import ie.wit.teamcom.adapters.InviteListener
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
+import kotlinx.android.synthetic.main.dialog_create_invite.*
 import kotlinx.android.synthetic.main.dialog_create_invite.view.*
 import kotlinx.android.synthetic.main.floating_popup.*
 import kotlinx.android.synthetic.main.fragment_invites_list.view.*
 import kotlinx.android.synthetic.main.fragment_members.view.*
+import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.*
@@ -43,7 +46,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
     var currentChannel = Channel()
     var invitesList = ArrayList<Invite>()
     var invite = Invite()
-    var key_set : String = ""
+    var key_set: String = ""
     var myClipboard: ClipboardManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,7 +104,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
 
     override fun onInviteClicked(invite: Invite) {
         app.copy_invitation(invite.invite_code)
-        Toast.makeText(context,"Invite Code Copied to Clipboard!",Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Invite Code Copied to Clipboard!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
@@ -117,7 +120,8 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
 
     fun getAllChannelInvites() {
         invitesList = ArrayList<Invite>()
-        app.database.child("channels").child(currentChannel!!.id).child("invites").orderByChild("valid_from")
+        app.database.child("channels").child(currentChannel!!.id).child("invites")
+            .orderByChild("valid_from")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase invites error : ${error.message}")
@@ -133,6 +137,9 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
                             this@InvitesListFragment
                         )
                         root.invitesRecyclerView.adapter?.notifyDataSetChanged()
+                        if (invitesList.size > 0) {
+                            root.txtEmpty_invs.isVisible = false
+                        }
                         checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("invites")
                             .orderByChild(
@@ -153,7 +160,6 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
             }
         })
     }
-
 
 
     fun checkSwipeRefresh() {
@@ -182,8 +188,31 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         create.setOnClickListener {
 //            validateForm()
 //            if (validateForm()){
+            var valid = true
+
+            val exp = txtExpires.text.toString()
+            if (TextUtils.isEmpty(exp)) {
+                txtExpires.error = "Expires In (Hrs) Required."
+                valid = false
+            } else {
+                txtExpires.error = null
+            }
+
+            if (txtUses.text.toString().toInt() >= 1) {
+                val uses = txtUses.text.toString()
+                if (TextUtils.isEmpty(uses)) {
+                    txtUses.error = "Uses (Minimum 1) Required."
+                    valid = false
+                } else {
+                    txtUses.error = null
+                }
+            }
+
+            if (valid) {
                 createInvite(hrs_active.text.toString(), uses.text.toString())
                 dialog.dismiss()
+            }
+
 //            }
         }
         cancel.setOnClickListener {
@@ -193,7 +222,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
 
     }
 
-    private fun createInvite(hrs_active: String, uses: String){
+    private fun createInvite(hrs_active: String, uses: String) {
         app.generateDateID(hrs_active)
         invite.valid_to_as_string = app.valid_to_String
         invite.valid_from_as_string = app.valid_from_String
@@ -204,13 +233,14 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         invite.invite_uses = 0
         invite.invite_use_limit = uses.toInt()
         keyGen()
-        invite.invite_code = "tc-" + currentChannel.channelName.take(3).toLowerCase() + "@" + key_set
+        invite.invite_code =
+            "tc-" + currentChannel.channelName.take(3).toLowerCase() + "@" + key_set
         writeNewInvite()
 
     }
 
 
-    fun keyGen(){
+    fun keyGen() {
         var res: Resources = resources
         var key_1 = res.getStringArray(R.array.randomLetters).random()
         var key_2 = res.getStringArray(R.array.randomLetters).random()
@@ -223,7 +253,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         key_set = key_1 + key_2 + "-" + key_3 + key_4 + key_5 + key_6 + "_" + key_7
     }
 
-    fun writeNewInvite(){
+    fun writeNewInvite() {
         app.database.child("channels").child(currentChannel!!.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {

@@ -178,52 +178,65 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
 //            hideLoader(loader)
 //            if (validateForm()){
 //                showLoader(loader, "Loading . . . ", "Creating Reminder ${new_reminder.rem_msg} . . . ")
-            val remind_date = newDate
-            new_reminder.rem_date = remind_date.toString()
-            new_reminder.id = id
-            app.generateDateID("1")
+            var valid = true
 
-            var date_day = remind_date.get(Calendar.DATE).toString()
-            var date_month = (remind_date.get(Calendar.MONTH) + 1).toString()
-            var date_year = remind_date.get(Calendar.YEAR).toString()
-            var date_hour = remind_date.get(Calendar.HOUR_OF_DAY).toString()
-            var date_minute = remind_date.get(Calendar.MINUTE).toString()
-            var date_seconds = remind_date.get(Calendar.SECOND).toString()
+            val msg = message.text.toString()
+            if (TextUtils.isEmpty(msg)) {
+                message.error = "Message Required."
+                valid = false
+            } else {
+                message.error = null
+            }
 
-            app.generate_date_reminder_id(
-                date_day,
-                date_month,
-                date_year,
-                date_hour,
-                date_minute,
-                date_seconds
-            )
-            new_reminder.rem_date_id = app.reminder_due_date_id
-            new_reminder.rem_date_as_string = app.rem_dateAsString
-            new_reminder.rem_time_as_string = app.rem_timeAsString
+            if (valid){
+                val remind_date = newDate
+                new_reminder.rem_date = remind_date.toString()
+                new_reminder.id = id
+                app.generateDateID("1")
 
-            val ddate = Calendar.getInstance()
-            ddate.set(
-                date_year.toInt(),
-                date_month.toInt(),
-                date_day.toInt() - 1,
-                date_hour.toInt(),
-                date_minute.toInt()
-            )
-            var d = ddate.get(Calendar.DATE).toString()
-            var m = ddate.get(Calendar.MONTH).toString()
-            var y = ddate.get(Calendar.YEAR).toString()
-            var h = ddate.get(Calendar.HOUR_OF_DAY).toString()
-            var mm = ddate.get(Calendar.MINUTE).toString()
-            var s = ddate.get(Calendar.SECOND).toString()
+                var date_day = remind_date.get(Calendar.DATE).toString()
+                var date_month = (remind_date.get(Calendar.MONTH) + 1).toString()
+                var date_year = remind_date.get(Calendar.YEAR).toString()
+                var date_hour = remind_date.get(Calendar.HOUR_OF_DAY).toString()
+                var date_minute = remind_date.get(Calendar.MINUTE).toString()
+                var date_seconds = remind_date.get(Calendar.SECOND).toString()
 
-            app.generate_date_reminder_id(d, m, y, h, mm, s)
+                app.generate_date_reminder_id(
+                    date_day,
+                    date_month,
+                    date_year,
+                    date_hour,
+                    date_minute,
+                    date_seconds
+                )
+                new_reminder.rem_date_id = app.reminder_due_date_id
+                new_reminder.rem_date_as_string = app.rem_dateAsString
+                new_reminder.rem_time_as_string = app.rem_timeAsString
 
-            new_reminder.rem_reminder_date_it = app.reminder_due_date_id
-            new_reminder.rem_msg = message.text.toString()
-            new_reminder.rem_status = ""
+                val ddate = Calendar.getInstance()
+                ddate.set(
+                    date_year.toInt(),
+                    date_month.toInt(),
+                    date_day.toInt() - 1,
+                    date_hour.toInt(),
+                    date_minute.toInt()
+                )
+                var d = ddate.get(Calendar.DATE).toString()
+                var m = ddate.get(Calendar.MONTH).toString()
+                var y = ddate.get(Calendar.YEAR).toString()
+                var h = ddate.get(Calendar.HOUR_OF_DAY).toString()
+                var mm = ddate.get(Calendar.MINUTE).toString()
+                var s = ddate.get(Calendar.SECOND).toString()
 
-            createReminder()
+                app.generate_date_reminder_id(d, m, y, h, mm, s)
+
+                new_reminder.rem_reminder_date_it = app.reminder_due_date_id
+                new_reminder.rem_msg = message.text.toString()
+                new_reminder.rem_status = ""
+
+                createReminder()
+            }
+
 //            }
 
         }
@@ -295,7 +308,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                         )
                         root.remindersRecyclerView.adapter?.notifyDataSetChanged()
                         if (reminderList.size > 0 ) {
-                            root.txtEmpty_posts.isVisible = false
+                            root.txtEmpty_reminders.isVisible = false
                         }
                         checkSwipeRefresh()
                         app.database.child("channels").child(currentChannel!!.id).child("reminders")

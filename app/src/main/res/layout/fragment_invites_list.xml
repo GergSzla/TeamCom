@@ -34,6 +34,20 @@
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <TextView
+        android:id="@+id/txtEmpty_invs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="There do not seem to be any invitations active currently. Create Invitations and Send The Invite Code to allow others to join! :)"
+        android:textAlignment="center"
+        android:textColor="@color/color_white"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/swiperefreshInvites"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swiperefreshInvites" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddNewInvite"
         android:layout_width="wrap_content"

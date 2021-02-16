@@ -197,11 +197,24 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
 
         create_event.setOnClickListener{
 //            showLoader(loader, "Loading . . .", "Validating . . .")
-//            //validateForm()
+            var valid = true
+
+            val name = txt_event_name.text.toString()
+            if (TextUtils.isEmpty(name)) {
+                txt_event_name.error = "Event Name Required."
+                valid = false
+            } else {
+                txt_event_name.error = null
+            }
+
+            if (txt_event_desc.text.toString() == ""){
+                event.event_desc = " "
+            }
+
 //            hideLoader(loader)
 
 
-            //if (validateForm()){
+            if (valid){
                 showLoader(loader, "Loading . . .", "Creating Event ${event.event_name} . . .")
                 event.event_name = txt_event_name.text.toString()
                 event.event_desc = txt_event_desc.text.toString()
@@ -228,7 +241,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
                             navigateTo(CalendarFragment.newInstance(currentChannel))
                         }
                     })
-            //}
+            }
         }
         cancel.setOnClickListener {
             dialog.dismiss()
@@ -236,24 +249,6 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         dialog.show()
     }
 
-
-//    private fun validateForm(): Boolean{
-//        var valid = true
-//
-//        val name = txt_event_name.text.toString()
-//        if (TextUtils.isEmpty(name)) {
-//            txt_event_name.error = "Event Name Required."
-//            valid = false
-//        } else {
-//            txt_event_name.error = null
-//        }
-//
-//        if (txt_event_desc.text.toString() == ""){
-//            event.event_desc = " "
-//        }
-//
-//        return valid
-//    }
 
     private fun navigateTo(fragment: Fragment) {
         val fragmentManager: FragmentManager = activity?.supportFragmentManager!!

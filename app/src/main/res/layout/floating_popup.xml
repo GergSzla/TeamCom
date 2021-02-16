@@ -20,8 +20,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="Date And Time"
-            android:textColor="#ffffff" />
+            android:text="Date And Time"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/selectDate"
