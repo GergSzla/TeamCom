@@ -129,6 +129,6 @@ class MembersFragment : Fragment() , AnkoLogger, MembersListener {
     }
 
     override fun onMemberClick(member: Member) {
-        navigateTo(AssignRolesFragment.newInstance(member, currentChannel))
+        navigateTo(ViewMemberFragment.newInstance(member, currentChannel))
     }
 }

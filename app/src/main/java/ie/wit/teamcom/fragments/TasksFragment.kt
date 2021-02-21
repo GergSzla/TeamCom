@@ -206,6 +206,178 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
+    fun check_completed() {
+
+        app.generateDateID("1")
+        task_list_1.forEach {
+            if (app.valid_from_cal > it.task_due_date_id) {
+                var check_comp_task = it
+                check_comp_task.passed_due_date = true
+
+                var task_index = task_list_1.indexOf(it)
+                val task_update = HashMap<String, Any>()
+
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/passed_due_date"] =
+                    true
+
+                app.database.updateChildren(task_update)
+            }
+            //check if completed before due
+            var task_index = task_list_1.indexOf(it)
+            if (it.task_completed_date_id < it.task_due_date_id){
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/task_status"] =
+                    "Completed"
+                app.database.updateChildren(task_update)
+            }
+            //check if overdue but completed
+            if (it.task_completed_date_id >= it.task_due_date_id){
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/task_status"] =
+                    "Completed Overdue"
+                app.database.updateChildren(task_update)
+
+            }
+        }
+        task_list_2.forEach {
+            if (app.valid_from_cal > it.task_due_date_id) {
+                var check_comp_task = it
+                check_comp_task.passed_due_date = true
+
+                var task_index = task_list_2.indexOf(it)
+                val task_update = HashMap<String, Any>()
+
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/1/stage_tasks/$task_index/passed_due_date"] =
+                    true
+
+
+                app.database.updateChildren(task_update)
+
+            }
+            var task_index = task_list_2.indexOf(it)
+            if (app.valid_from_cal > it.task_due_date_id){
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/1/stage_tasks/$task_index/task_status"] =
+                    "Overdue"
+                app.database.updateChildren(task_update)
+            } else {
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/1/stage_tasks/$task_index/task_status"] =
+                    "Ongoing"
+                app.database.updateChildren(task_update)
+            }
+        }
+        task_list_3.forEach {
+            if (app.valid_from_cal > it.task_due_date_id) {
+                var check_comp_task = it
+                check_comp_task.passed_due_date = true
+
+                var task_index = task_list_3.indexOf(it)
+                val task_update = HashMap<String, Any>()
+
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/2/stage_tasks/$task_index/passed_due_date"] =
+                    true
+
+                app.database.updateChildren(task_update)
+            }
+
+            var task_index = task_list_3.indexOf(it)
+            if (app.valid_from_cal > it.task_due_date_id){
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/2/stage_tasks/$task_index/task_status"] =
+                    "Overdue"
+                app.database.updateChildren(task_update)
+            } else {
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/2/stage_tasks/$task_index/task_status"] =
+                    "Ongoing"
+                app.database.updateChildren(task_update)
+            }
+
+        }
+        task_list_4.forEach {
+            if (app.valid_from_cal > it.task_due_date_id) {
+                var check_comp_task = it
+                check_comp_task.passed_due_date = true
+
+                var task_index = task_list_2.indexOf(it)
+                val task_update = HashMap<String, Any>()
+
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/3/stage_tasks/$task_index/passed_due_date"] =
+                    true
+
+                app.database.updateChildren(task_update)
+            }
+
+            var task_index = task_list_4.indexOf(it)
+            if (app.valid_from_cal > it.task_due_date_id){
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/3/stage_tasks/$task_index/task_status"] =
+                    "Overdue"
+                app.database.updateChildren(task_update)
+            } else {
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/3/stage_tasks/$task_index/task_status"] =
+                    "Ongoing"
+                app.database.updateChildren(task_update)
+            }
+        }
+        task_list_5.forEach {
+            if (app.valid_from_cal > it.task_due_date_id) {
+                var check_comp_task = it
+                check_comp_task.passed_due_date = true
+
+                var task_index = task_list_2.indexOf(it)
+                val task_update = HashMap<String, Any>()
+
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/4/stage_tasks/$task_index/passed_due_date"] =
+                    true
+
+                app.database.updateChildren(task_update)
+            }
+
+            var task_index = task_list_5.indexOf(it)
+            if (app.valid_from_cal > it.task_due_date_id){
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/4/stage_tasks/$task_index/task_status"] =
+                    "Overdue"
+                app.database.updateChildren(task_update)
+            } else {
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/4/stage_tasks/$task_index/task_status"] =
+                    "Ongoing"
+                app.database.updateChildren(task_update)
+            }
+        }
+        task_list_6.forEach {
+            if (app.valid_from_cal > it.task_due_date_id) {
+                var check_comp_task = it
+                check_comp_task.passed_due_date = true
+
+                var task_index = task_list_2.indexOf(it)
+                val task_update = HashMap<String, Any>()
+
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/5/stage_tasks/$task_index/passed_due_date"] =
+                    true
+
+                app.database.updateChildren(task_update)
+            }
+
+            var task_index = task_list_6.indexOf(it)
+            if (app.valid_from_cal > it.task_due_date_id){
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/5/stage_tasks/$task_index/task_status"] =
+                    "Overdue"
+                app.database.updateChildren(task_update)
+            } else {
+                val task_update = HashMap<String, Any>()
+                task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/5/stage_tasks/$task_index/task_status"] =
+                    "Ongoing"
+                app.database.updateChildren(task_update)
+            }
+        }
+    }
+
     fun getAllTasks() {
         task_list_1 = ArrayList<Task>()
         root.tasks1RecyclerView.adapter = TasksAdapter(task_list_1, this@TasksFragment)
@@ -418,6 +590,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                     } else {
                         root.txtStage6Title.text = task_list_6[0].task_current_stage
                     }
+                    check_completed()
                 }
             })
     }
