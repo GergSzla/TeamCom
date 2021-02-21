@@ -140,6 +140,15 @@
                 android:tint="@color/color_white" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btn_kick_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/google_red"
+            android:padding="16dp"
+            android:text="@string/btn_kick"
+            android:textColor="@color/color_white"/>
+
         <LinearLayout
             android:id="@+id/mem_stats"
             android:layout_width="match_parent"

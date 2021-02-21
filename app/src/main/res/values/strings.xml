@@ -182,4 +182,8 @@
     <string name="conf">Are you sure you want to delete this? </string>
 
 
+    <string name="btn_kick">Kick User</string>
+
+
+
 </resources>

@@ -5,17 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.github.aachartmodel.aainfographics.aachartcreator.AAChartModel
 import com.github.aachartmodel.aainfographics.aachartcreator.AAChartType
 import com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
 import com.github.aachartmodel.aainfographics.aachartcreator.AASeriesElement
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.TasksAdapter
 import ie.wit.teamcom.main.MainApp
@@ -24,6 +30,8 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.card_member.view.*
 import kotlinx.android.synthetic.main.fragment_tasks.view.*
 import kotlinx.android.synthetic.main.fragment_view_member.view.*
+import kotlinx.android.synthetic.main.warning_dialog.*
+import kotlinx.android.synthetic.main.warning_dialog.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.ArrayList
@@ -33,7 +41,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
     lateinit var app: MainApp
 
-    //    lateinit var eventListener: ValueEventListener
+    lateinit var eventListener: ValueEventListener
     lateinit var root: View
 
     var completed = ArrayList<Task>()
@@ -66,8 +74,6 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         root = inflater.inflate(R.layout.fragment_view_member, container, false)
         activity?.title = selected_member.firstName + " " + selected_member.surname
 
-
-
         root.txt_mem_name.text = selected_member.firstName + " " + selected_member.surname
         root.txtViewEmail.text = selected_member.email
         //TODO root.txtViewWhatIDo.text = selected_member.whatIDo
@@ -84,15 +90,87 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         }
 
         root.btn_change_role.isVisible = app.currentActiveMember.role.role_name == "Admin"
+        root.btn_kick_user.isVisible = app.currentActiveMember.role.role_name == "Admin"
 
 
         root.btn_change_role.setOnClickListener {
             navigateTo(AssignRolesFragment.newInstance(selected_member, currentChannel))
         }
 
+        root.btn_kick_user.setOnClickListener {
+            show_warning_dialog()
+        }
+
         get_all_projects()
 
         return root
+    }
+
+    fun show_warning_dialog() {
+        AlertDialog.Builder(requireContext())
+            .setView(R.layout.warning_dialog_kick)
+            .setTitle("Warning!")
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Proceed") { dialog, _ ->
+                kick_selected_user()
+                dialog.dismiss()
+            }.show()
+
+//        root.textView20.text = "Are You Sure You Wish To Proceed and Kick This User?"
+    }
+
+    fun kick_selected_user() {
+
+        //TODO: CHECK IF ADMIN
+//        var channel_admin = ""
+//
+//        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+//        val rootRef = FirebaseDatabase.getInstance().reference
+//        val uidRef = rootRef.child("channels").child(currentChannel.id).child("admin")
+//        eventListener = object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                var channel_admin = dataSnapshot.value.toString()
+//
+//                channel_admin
+//                uidRef.removeEventListener(this)
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//            }
+//        }
+        if (selected_member.id !== app.auth.currentUser!!.uid) {
+
+            delete_user_from_channel()
+
+        } else {
+            Toast.makeText(context, "You Cannot Kick Yourself", Toast.LENGTH_LONG)
+        }
+    }
+
+    fun delete_user_from_channel() {
+        app.database.child("channels").child(currentChannel.id).child("members")
+            .child(selected_member.id)
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.ref.removeValue()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+        app.database.child("users").child(selected_member.id).child("channels")
+            .child(currentChannel.id)
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.ref.removeValue()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
     }
 
     fun display_details() {
@@ -255,7 +333,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     }
 
     fun get_all_projects() {
-        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel!!.id)
+        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
             .child("projects")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -269,7 +347,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         projects.add(proj!!)
 
                         app.database.child("channels")
-                            .child(ie.wit.teamcom.fragments.currentChannel!!.id).child("projects")
+                            .child(ie.wit.teamcom.fragments.currentChannel.id).child("projects")
                             .removeEventListener(this)
                     }
                     get_all_tasks()
@@ -280,7 +358,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     fun get_all_tasks() {
         projects.forEach {
             project = it
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel!!.id)
+            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("0")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -308,7 +386,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel!!.id)
+                                .child(ie.wit.teamcom.fragments.currentChannel.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("0")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -317,7 +395,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel!!.id)
+            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("1")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -345,7 +423,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel!!.id)
+                                .child(ie.wit.teamcom.fragments.currentChannel.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("1")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -356,7 +434,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel!!.id)
+            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("2")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -382,7 +460,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel!!.id)
+                                .child(ie.wit.teamcom.fragments.currentChannel.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("2")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -392,7 +470,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel!!.id)
+            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("3")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -420,7 +498,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel!!.id)
+                                .child(ie.wit.teamcom.fragments.currentChannel.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("3")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -429,7 +507,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel!!.id)
+            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("4")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -456,7 +534,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel!!.id)
+                                .child(ie.wit.teamcom.fragments.currentChannel.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("4")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -465,7 +543,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel!!.id)
+            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("5")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -492,7 +570,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel!!.id)
+                                .child(ie.wit.teamcom.fragments.currentChannel.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("5")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
