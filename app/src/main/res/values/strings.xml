@@ -62,6 +62,7 @@
     <string name="txtMembers">Members</string>
     <string name="txtInvites">Invites</string>
     <string name="txtDetails">Channel Details</string>
+    <string name="txtQueRem">Survey Settings</string>
     <string name="txtTaskStages">Task Stages</string>
 
     <!--fragment roles-->
@@ -77,6 +78,7 @@
 
     <!--title Stuff-->
     <string name="title_settings">Channel Settings</string>
+    <string name="title_survey">Survey Settings</string>
     <string name="title_roles_settings">Roles</string>
     <string name="title_project_settings">Projects</string>
     <string name="title_logs">Logs</string>
@@ -183,7 +185,7 @@
 
 
     <string name="btn_kick">Kick User</string>
-
+    <string name="survey_active">Enable Recurring Survey</string>
 
 
 </resources>

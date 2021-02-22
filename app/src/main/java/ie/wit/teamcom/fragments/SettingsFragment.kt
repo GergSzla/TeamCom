@@ -55,6 +55,10 @@ class SettingsFragment : Fragment(), AnkoLogger {
             navigateTo(EditChannelDetails.newInstance(currentChannel))
         }
 
+        root.txtSettingsQuestionnaireRem.setOnClickListener {
+            navigateTo(EditSurveySettings.newInstance(currentChannel))
+        }
+
         return root
     }
 
