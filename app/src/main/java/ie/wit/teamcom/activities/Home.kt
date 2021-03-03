@@ -10,7 +10,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -27,10 +29,7 @@ import ie.wit.adventurio.helpers.uploadProfileImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.Account
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Meeting
-import ie.wit.teamcom.models.Reminder
+import ie.wit.teamcom.models.*
 import ie.wit.teamcom.services.RecurringServices
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_channels_list.*
@@ -57,6 +56,7 @@ class Home : AppCompatActivity(),
     var num_reminders = 0
     lateinit var notificationManager: NotificationManager
     var reminders_list = ArrayList<Reminder>()
+    var user_survey_pref = SurveyPref()
     var meetings_list = ArrayList<Meeting>()
 
 
@@ -129,12 +129,58 @@ class Home : AppCompatActivity(),
                         app.database.child("channels").child(currentChannel!!.id).child("reminders")
                             .child(app.currentActiveMember.id).removeEventListener(this)
                     }
-//                    checkActiveReminders()
+                    checkActiveReminders()
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
                 }
             })
+    }
+
+    /**
+     * Gets users survey pref
+     */
+    fun getSurvey(channel_id: String) {
+        app.database.child("channels").child(channel_id).child("surveys")
+            .child(app.currentActiveMember.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val children = dataSnapshot.children
+                    children.forEach {
+                        user_survey_pref = it.getValue<SurveyPref>(SurveyPref::class.java)!!
+                        app.database.child("channels").child(channel_id).child("surveys")
+                            .child(app.currentActiveMember.id).removeEventListener(this)
+                    }
+                    checkSurvey()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+            })
+    }
+
+    /**
+     * checks if survey needs to prompt
+     */
+    fun checkSurvey() {
+        if (user_survey_pref.enabled) {
+            if (app.valid_from_cal <= user_survey_pref.next_date_id) {
+                create_mh_survey_dialog()
+            }
+        }
+    }
+
+    fun create_mh_survey_dialog() {
+        AlertDialog.Builder(this)
+            .setView(R.layout.survey_prompt_dialog)
+            .setTitle("Mental Well-being Assessment!")
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Proceed") { dialog, _ ->
+                navigateTo(SurveyFormFragment.newInstance(channel))
+                dialog.dismiss()
+            }.show()
     }
 
     fun checkActiveReminders() {
@@ -296,66 +342,67 @@ class Home : AppCompatActivity(),
         notificationManager?.notify(notificationID, notification)
     }
 
-//    fun recurring_methods() {
-//        getActiveReminders(channel.id)
-//    }
+    fun recurring_methods() {
+        getActiveReminders(channel.id)
+        getSurvey(channel.id)
+    }
 
-//    override fun onResume(){
-//        super.onResume()
-//        recurring_methods()
-//    }
+    override fun onResume() {
+        super.onResume()
+        recurring_methods()
+    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             ///social
             R.id.nav_news_feed -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(NewsFeedFragment.newInstance(channel))
             }
             R.id.nav_conversations -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(ConversationFragment.newInstance(channel))
             }
             R.id.nav_meetings -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(MeetingsFragment.newInstance(channel))
             }
 
 
             ///Organizational
             R.id.nav_calendar -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(CalendarFragment.newInstance(channel))
             }
 
             R.id.nav_tasks -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(ProjectListFragment.newInstance(channel))
             }
 
             R.id.nav_reminders -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(RemindersFragment.newInstance(channel))
             }
 
 
             ///Channel
             R.id.nav_channel_settings -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(SettingsFragment.newInstance(channel))
             }
 
             R.id.nav_log -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(LogFragment.newInstance(channel))
             }
 
             R.id.nav_members -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(MembersFragment.newInstance(channel))
             }
             R.id.nav_support -> {
-//                recurring_methods()
+                recurring_methods()
                 navigateTo(SupportFragment.newInstance(channel))
             }
             /////////////////////////

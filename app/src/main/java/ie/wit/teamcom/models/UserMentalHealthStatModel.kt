@@ -8,20 +8,18 @@ import kotlinx.android.parcel.Parcelize
 
 @IgnoreExtraProperties
 @Parcelize
-data class SurveyPref(
+data class UserMHModel(
     var user_id: String = "",
-    var enabled: Boolean = true,
-    var frequency: String = "",
-    var next_date_id: Long = 0
+    var set_of_ans_1_per: Double = 0.0,
+    var set_of_ans_2_per: Double = 0.0,
 
 ) : Parcelable {
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "user_id" to user_id,
-            "enabled" to enabled,
-            "frequency" to frequency,
-            "next_date_id" to next_date_id
+            "set_of_ans_1_per" to set_of_ans_1_per,
+            "set_of_ans_2_per" to set_of_ans_2_per
         )
     }
 }
