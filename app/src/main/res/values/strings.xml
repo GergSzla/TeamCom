@@ -186,6 +186,7 @@
 
     <string name="btn_kick">Kick User</string>
     <string name="survey_active">Enable Recurring Survey</string>
+    <string name="survey_public">Enable Visibility for Admin</string>
 
 
 </resources>

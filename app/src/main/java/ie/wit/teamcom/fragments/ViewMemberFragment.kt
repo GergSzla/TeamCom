@@ -1,29 +1,28 @@
 package ie.wit.teamcom.fragments
 
+import android.graphics.Color
+import android.graphics.Color.RED
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.github.aachartmodel.aainfographics.aachartcreator.AAChartModel
-import com.github.aachartmodel.aainfographics.aachartcreator.AAChartType
-import com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
-import com.github.aachartmodel.aainfographics.aachartcreator.AASeriesElement
-import com.google.firebase.auth.FirebaseAuth
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import ie.wit.adventurio.helpers.hideLoader
-import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.TasksAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
@@ -34,7 +33,7 @@ import kotlinx.android.synthetic.main.warning_dialog.*
 import kotlinx.android.synthetic.main.warning_dialog.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.util.ArrayList
+import java.util.*
 
 
 class ViewMemberFragment : Fragment(), AnkoLogger {
@@ -52,9 +51,12 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     var projects = ArrayList<Project>()
     var project = Project()
     var user = Member()
-    var currentChannel = Channel()
+    var currentChannel_ = Channel()
     var selected_member = Member()
     var user_stats = Stats()
+    var user_mh = UserMHModel()
+    var allow_admin = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +64,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
         arguments?.let {
             selected_member = it.getParcelable("member_key")!!
-            currentChannel = it.getParcelable("channel_key")!!
+            currentChannel_ = it.getParcelable("channel_key")!!
         }
 
     }
@@ -73,6 +75,8 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     ): View? {
         root = inflater.inflate(R.layout.fragment_view_member, container, false)
         activity?.title = selected_member.firstName + " " + selected_member.surname
+
+        val chart = root.findViewById(R.id.pie_tasks) as PieChart
 
         root.txt_mem_name.text = selected_member.firstName + " " + selected_member.surname
         root.txtViewEmail.text = selected_member.email
@@ -119,6 +123,29 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             }.show()
 
 //        root.textView20.text = "Are You Sure You Wish To Proceed and Kick This User?"
+    }
+
+    fun get_mh_entry() {
+        app.database.child("channels").child(currentChannel.id).child("surveys")
+            .child(app.auth.currentUser!!.uid).child("entry")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    user_mh.set_of_ans_1_per =
+                        snapshot.child("set_of_ans_1_per").value.toString().toDouble()
+                    user_mh.set_of_ans_2_per =
+                        snapshot.child("set_of_ans_2_per").value.toString().toDouble()
+                    user_mh.user_id = snapshot.child("user_id").value.toString()
+
+                    app.database.child("channels").child(currentChannel.id).child("surveys")
+                        .child(app.auth.currentUser!!.uid).child("entry")
+                        .removeEventListener(this)
+                    analyse_data()
+                }
+            })
     }
 
     fun kick_selected_user() {
@@ -173,99 +200,17 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
     }
 
+    override fun onResume() {
+        super.onResume()
+        app.activityResumed(currentChannel, app.currentActiveMember)
+    }
+
+    var due_in_24_hrs = 0
+    var due_in_7_days = 0
+    var due_in_14_days = 0
     fun display_details() {
 //TODO ONLY SHOW STATS + MENTAL HEALTH IF ADMIN {
         if (app.currentActiveMember.role.role_name == "Admin") {
-
-            val aaChartView = root.findViewById<AAChartView>(R.id.aa_chart_view)
-            val aaChartModel: AAChartModel = AAChartModel()
-                .chartType(AAChartType.Area)
-                .title("title")
-                .subtitle("subtitle")
-                .backgroundColor("#4b2b7f")
-                .dataLabelsEnabled(true)
-                .series(
-                    arrayOf(
-                        AASeriesElement()
-                            .name("Tokyo")
-                            .data(
-                                arrayOf(
-                                    7.0,
-                                    6.9,
-                                    9.5,
-                                    14.5,
-                                    18.2,
-                                    21.5,
-                                    25.2,
-                                    26.5,
-                                    23.3,
-                                    18.3,
-                                    13.9,
-                                    9.6
-                                )
-                            ),
-                        AASeriesElement()
-                            .name("NewYork")
-                            .data(
-                                arrayOf(
-                                    0.2,
-                                    0.8,
-                                    5.7,
-                                    11.3,
-                                    17.0,
-                                    22.0,
-                                    24.8,
-                                    24.1,
-                                    20.1,
-                                    14.1,
-                                    8.6,
-                                    2.5
-                                )
-                            ),
-                        AASeriesElement()
-                            .name("London")
-                            .data(
-                                arrayOf(
-                                    0.9,
-                                    0.6,
-                                    3.5,
-                                    8.4,
-                                    13.5,
-                                    17.0,
-                                    18.6,
-                                    17.9,
-                                    14.3,
-                                    9.0,
-                                    3.9,
-                                    1.0
-                                )
-                            ),
-                        AASeriesElement()
-                            .name("Berlin")
-                            .data(
-                                arrayOf(
-                                    3.9,
-                                    4.2,
-                                    5.7,
-                                    8.5,
-                                    11.9,
-                                    15.2,
-                                    17.0,
-                                    16.6,
-                                    14.2,
-                                    10.3,
-                                    6.6,
-                                    4.8
-                                )
-                            )
-                    )
-                )
-
-            aaChartView.aa_drawChartWithChartModel(aaChartModel)
-            root.txtOngoingTasks.text = ongoing.size.toString()
-            root.txtCompletedTasks.text = completed.size.toString()
-            root.txtOverdueTasks.text = overdue.size.toString()
-            root.txtCompletedOverdueTasks.text = completed_overdue.size.toString()
 
             app.generateDateID("1")
             var current = app.valid_from_cal
@@ -279,9 +224,6 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             app.generateDateID("336")
             var plus_14d = app.valid_to_cal
 
-            var due_in_24_hrs = 0
-            var due_in_7_days = 0
-            var due_in_14_days = 0
             ongoing.forEach {
                 if (it.task_due_date_id > plus_24hr) {
                     due_in_24_hrs += 1
@@ -308,8 +250,128 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             root.txtDue24HrsTasks.text = due_in_24_hrs.toString()
             root.txtDue7daysTasks.text = due_in_7_days.toString()
             root.txtDue14daysTasks.text = due_in_14_days.toString()
-            //TODO MENTAL HEALTH
+
+            val entries = ArrayList<PieEntry>()
+
+            entries.add(PieEntry(ongoing.size.toFloat(), "Ongoing"))
+            entries.add(PieEntry(completed.size.toFloat(), "Completed On Time"))
+            entries.add(PieEntry(overdue.size.toFloat(), "Overdue"))
+            entries.add(PieEntry(completed_overdue.size.toFloat(), "Completed Overdue"))
+
+            val set = PieDataSet(entries, "Tasks Statistics")
+
+            val data = PieData(set)
+
+            root.pie_tasks.data = data
+            set.setColors(
+                Color.parseColor("#4300bf"),
+                Color.parseColor("#5910e1"),
+                Color.parseColor("#5c2eb2"),
+                Color.parseColor("#400ee8")
+            )
+            data.setValueTextSize(16f)
+            root.pie_tasks.holeRadius = 6f
+            root.pie_tasks.transparentCircleRadius = 7f
+            root.pie_tasks.description.isEnabled = false
+            root.pie_tasks.legend.isEnabled = false
+            root.pie_tasks.isEnabled = false
+            root.pie_tasks.setEntryLabelTextSize(10f)
+            root.pie_tasks.invalidate() // refresh
+
+            root.txtOngoingTasks.text = ongoing.size.toString()
+            root.txtCompletedTasks.text = completed.size.toString()
+            root.txtOverdueTasks.text = overdue.size.toString()
+            root.txtCompletedOverdueTasks.text = completed_overdue.size.toString()
         }
+        if(allow_admin){
+            root.mem_mental_health.isVisible = true
+            get_mh_entry()
+        } else {
+            root.mem_mental_health.isVisible = false
+        }
+    }
+
+    var string_range_1 = ""
+    var string_range_2 = ""
+    var string_overall = ""
+    var string_mh_desc = ""
+
+    fun analyse_data() {
+
+        root.progressBar_mh.progress = user_mh.set_of_ans_2_per.toInt()
+        root.txt_percentage.text = String.format("%.1f",user_mh.set_of_ans_2_per)
+
+        if (user_mh.set_of_ans_2_per > 85) {
+            string_range_2 = "range_1"
+        } else if (user_mh.set_of_ans_2_per > 70 && user_mh.set_of_ans_2_per <= 85) {
+            string_range_2 = "range_2"
+        } else if (user_mh.set_of_ans_2_per > 55 && user_mh.set_of_ans_2_per <= 70) {
+            string_range_2 = "range_3"
+        } else if (user_mh.set_of_ans_2_per > 40 && user_mh.set_of_ans_2_per <= 55) {
+            string_range_2 = "range_4"
+        } else if (user_mh.set_of_ans_2_per <= 40) {
+            string_range_2 = "range_5"
+        }
+
+        if (user_mh.set_of_ans_1_per > 80) {
+            string_range_1 = "range_1"
+        } else if (user_mh.set_of_ans_1_per > 60.5 && user_mh.set_of_ans_1_per <= 80) {
+            string_range_1 = "range_2"
+        } else if (user_mh.set_of_ans_1_per > 45.5 && user_mh.set_of_ans_1_per <= 60.5) {
+            string_range_1 = "range_3"
+        } else if (user_mh.set_of_ans_1_per > 37 && user_mh.set_of_ans_1_per <= 45.5) {
+            string_range_1 = "range_4"
+        } else if (user_mh.set_of_ans_1_per <= 37) {
+            string_range_1 = "range_5"
+        }
+
+        if (string_range_1 == "range_1"){
+            string_mh_desc += "-Feels Supported, Valued"
+        } else if (string_range_1 == "range_2"){
+            if (due_in_24_hrs >= 3){
+                string_mh_desc += "-With $due_in_24_hrs, user is potentially"
+            }
+            string_mh_desc += "stressed."
+        } else if (string_range_1 == "range_3"){
+            if (due_in_24_hrs >= 3){
+                string_mh_desc += "-With $due_in_24_hrs, user is potentially"
+            }
+            string_mh_desc += "overwhelmed."
+
+        } else if (string_range_1 == "range_4"){
+            string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued."
+        } else if (string_range_1 == "range_5"){
+            string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued.\nand feels overwhelmed and unsupported."
+        }
+
+        if (string_range_2 == "range_1"){
+            string_overall = "Perfectly Well"
+            string_mh_desc += "\n-Feels Perfectly Well"
+
+        } else if (string_range_2 == "range_2"){
+            string_overall = "Potentially Stressed"
+            string_mh_desc += "\n-Could be feeling quite stressed recently."
+
+        } else if (string_range_2 == "range_3"){
+            string_overall = "Quite Concerning"
+            string_mh_desc += "\n-Could be feeling a little down recently."
+
+        } else if (string_range_2 == "range_4"){
+            string_overall = "Unwell"
+            string_mh_desc += "\n-Could be feeling a little down or unwell recently."
+
+        } else if (string_range_2 == "range_5"){
+            string_overall = "Could Use Some Friendly Words"
+            string_mh_desc += "\n-Seems like this user needs some support. Please approach with care and support! \n-Please refer to the following website!\nhttps://www.aware.ie/support/support-line/"
+
+        }
+
+        display_mh_stats()
+    }
+
+    fun display_mh_stats() {
+        root.txt_overall_standing.text = string_overall
+        root.txt_mh_desc.text = string_mh_desc
     }
 
 
@@ -333,7 +395,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     }
 
     fun get_all_projects() {
-        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+        app.database.child("channels").child(currentChannel.id)
             .child("projects")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -347,7 +409,8 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         projects.add(proj!!)
 
                         app.database.child("channels")
-                            .child(ie.wit.teamcom.fragments.currentChannel.id).child("projects")
+                            .child(currentChannel.id)
+                            .child("projects")
                             .removeEventListener(this)
                     }
                     get_all_tasks()
@@ -358,10 +421,13 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     fun get_all_tasks() {
         projects.forEach {
             project = it
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            app.database.child("channels").child(currentChannel_.id)
                 .child("projects")
-                .child(project.proj_id).child("proj_task_stages").child("0")
-                .child("stage_tasks").orderByChild("task_due_date_id")
+                .child(project.proj_id)
+                .child("proj_task_stages")
+                .child("0")
+                .child("stage_tasks")
+                .orderByChild("task_due_date_id")
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
                         info("Firebase tasks/stages error : ${error.message}")
@@ -386,19 +452,26 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel.id)
+                                .child(currentChannel_.id)
                                 .child("projects")
-                                .child(project.proj_id).child("proj_task_stages").child("0")
-                                .child("stage_tasks").orderByChild("task_due_date_id")
+                                .child(project.proj_id)
+                                .child("proj_task_stages")
+                                .child("0")
+                                .child("stage_tasks")
+                                .orderByChild("task_due_date_id")
                                 .removeEventListener(this)
                         }
                     }
                 })
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            app.database.child("channels")
+                .child(currentChannel_.id)
                 .child("projects")
-                .child(project.proj_id).child("proj_task_stages").child("1")
-                .child("stage_tasks").orderByChild("task_due_date_id")
+                .child(project.proj_id)
+                .child("proj_task_stages")
+                .child("1")
+                .child("stage_tasks")
+                .orderByChild("task_due_date_id")
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
                         info("Firebase tasks/stages error : ${error.message}")
@@ -423,10 +496,13 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel.id)
+                                .child(currentChannel_.id)
                                 .child("projects")
-                                .child(project.proj_id).child("proj_task_stages").child("1")
-                                .child("stage_tasks").orderByChild("task_due_date_id")
+                                .child(project.proj_id)
+                                .child("proj_task_stages")
+                                .child("1")
+                                .child("stage_tasks")
+                                .orderByChild("task_due_date_id")
                                 .removeEventListener(this)
                         }
                     }
@@ -434,7 +510,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            app.database.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("2")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -460,7 +536,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel.id)
+                                .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("2")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -470,7 +546,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            app.database.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("3")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -498,7 +574,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel.id)
+                                .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("3")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -507,7 +583,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            app.database.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("4")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -534,7 +610,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel.id)
+                                .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("4")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -543,7 +619,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            app.database.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("5")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -570,15 +646,34 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             app.database.child("channels")
-                                .child(ie.wit.teamcom.fragments.currentChannel.id)
+                                .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("5")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
                                 .removeEventListener(this)
                         }
-                        display_details()
+                        check_pref()
                     }
                 })
         }
+    }
+
+    fun check_pref(){
+        app.database.child("channels").child(currentChannel.id).child("surveys")
+            .child(app.auth.currentUser!!.uid).child("survey_pref")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    allow_admin = snapshot.child("visible_to_admin").value.toString().toBoolean()
+
+                    app.database.child("channels").child(currentChannel.id).child("surveys")
+                        .child(app.auth.currentUser!!.uid).child("survey_pref")
+                        .removeEventListener(this)
+                    display_details()
+                }
+            })
     }
 }

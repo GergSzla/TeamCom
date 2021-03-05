@@ -11,7 +11,7 @@
         android:id="@+id/textView20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="The survey's purpose is to assess users' mental well-being, which will allow the TeamCom Assistant notify ONLY the channel admin eg. Project Leader, Employer, Manager etc. that you may be under more pressure. \n\nThe assistant will also use this to suggest rescheduling tasks if possible. \n\nOf course, this is completely optional, TeamCom respects your privacy! :) \n\nEnable Recurring Survey -> Allows assistant to help with scheduling, turn off if you do not wish to provide mental health stats at all! \n\nEnable Visibility for Admin -> Allows admin to view results. Survey results do not show your survey answers, just the points you scored. :) \nIf you do not feel comfortable sharing, please disable! "
+        android:text="You have enabled visibility for admin! \n\nThis means that anyone with the admin permission will be able to view your survey results! \n\nSurvey results do not show your survey answers, just the points you scored. :)"
         app:layout_constraintBottom_toBottomOf="parent"
         android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"

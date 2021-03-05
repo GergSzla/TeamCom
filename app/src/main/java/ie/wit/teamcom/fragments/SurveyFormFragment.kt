@@ -116,22 +116,24 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
         return root
     }
 
-    fun get_survey_pref(){
-        app.database.child("channels").child(currentChannel.id).child("surveys").child(app.auth.currentUser!!.uid)
+    fun get_survey_pref() {
+        app.database.child("channels").child(currentChannel.id).child("surveys")
+            .child(app.auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val children = snapshot.children
-                    children.forEach {
 
-                        val survey_pref = it.getValue<SurveyPref>(SurveyPref::class.java)
-                        survey_preference = survey_pref!!
+                    survey_preference.enabled = snapshot.child("enabled").value.toString().toBoolean()
+                    survey_preference.frequency = snapshot.child("frequency").value.toString()
+                    survey_preference.next_date_id = snapshot.child("next_date_id").value.toString().toLong()
+                    survey_preference.user_id = snapshot.child("user_id").value.toString()
 
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .removeEventListener(this)
-                    }
+                    app.database.child("channels").child(currentChannel.id).child("surveys")
+                        .child(app.auth.currentUser!!.uid).child("survey_pref")
+                        .removeEventListener(this)
+
                 }
             })
     }
@@ -301,7 +303,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
         user_mh.set_of_ans_2_per = set_2_pts_per
         user_mh.user_id = app.auth.currentUser!!.uid
 
-        if(root.radio_group1.checkedRadioButtonId != -1 &&
+        if (root.radio_group1.checkedRadioButtonId != -1 &&
             root.radio_group2.checkedRadioButtonId != -1 &&
             root.radio_group3.checkedRadioButtonId != -1 &&
             root.radio_group4.checkedRadioButtonId != -1 &&
@@ -309,16 +311,17 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
             root.radio_group6.checkedRadioButtonId != -1 &&
             root.radio_group7.checkedRadioButtonId != -1 &&
             root.radio_group8.checkedRadioButtonId != -1 &&
-            root.radio_group9.checkedRadioButtonId != -1){
+            root.radio_group9.checkedRadioButtonId != -1
+        ) {
             add_to_db()
         } else {
-            Toast.makeText(context,"Information Missing", Toast.LENGTH_LONG)
+            Toast.makeText(context, "Information Missing", Toast.LENGTH_LONG)
         }
     }
 
-    fun add_to_db(){
+    fun add_to_db() {
         var new_date_id = 0
-        if (survey_preference.frequency == "Daily"){
+        if (survey_preference.frequency == "Daily") {
             app.generateDateID("24")
         } else if (survey_preference.frequency == "Weekly") {
             app.generateDateID("168")
@@ -339,8 +342,10 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
                     val childUpdates = HashMap<String, Any>()
                     val childUpdates_ = HashMap<String, Any>()
 
-                    childUpdates["/channels/${currentChannel.id}/surveys/${app.auth.currentUser!!.uid}/entry/"] = user_mh
-                    childUpdates_["/channels/${currentChannel.id}/surveys/${app.auth.currentUser!!.uid}/survey_pref/"] = survey_preference
+                    childUpdates["/channels/${currentChannel.id}/surveys/${app.auth.currentUser!!.uid}/entry/"] =
+                        user_mh
+                    childUpdates_["/channels/${currentChannel.id}/surveys/${app.auth.currentUser!!.uid}/survey_pref/"] =
+                        survey_preference
 
                     app.database.updateChildren(childUpdates)
                     app.database.updateChildren(childUpdates_)

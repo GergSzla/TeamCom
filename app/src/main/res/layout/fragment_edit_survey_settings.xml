@@ -62,6 +62,20 @@
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/toggle_public"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/content_layout_backg"
+                android:checked="false"
+                android:padding="10dp"
+                android:text="@string/survey_public"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
             <TextView
                 android:id="@+id/textView24"
                 android:layout_width="match_parent"

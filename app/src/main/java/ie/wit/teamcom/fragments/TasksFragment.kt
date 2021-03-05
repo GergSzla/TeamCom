@@ -224,14 +224,14 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
             //check if completed before due
             var task_index = task_list_1.indexOf(it)
-            if (it.task_completed_date_id < it.task_due_date_id){
+            if (it.task_completed_date_id > it.task_due_date_id){
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/task_status"] =
                     "Completed"
                 app.database.updateChildren(task_update)
             }
             //check if overdue but completed
-            if (it.task_completed_date_id >= it.task_due_date_id){
+            if (it.task_completed_date_id <= it.task_due_date_id){
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/task_status"] =
                     "Completed Overdue"
@@ -255,7 +255,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
             }
             var task_index = task_list_2.indexOf(it)
-            if (app.valid_from_cal > it.task_due_date_id){
+            if (app.valid_from_cal < it.task_due_date_id){
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/1/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -282,7 +282,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_3.indexOf(it)
-            if (app.valid_from_cal > it.task_due_date_id){
+            if (app.valid_from_cal < it.task_due_date_id){
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/2/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -310,7 +310,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_4.indexOf(it)
-            if (app.valid_from_cal > it.task_due_date_id){
+            if (app.valid_from_cal < it.task_due_date_id){
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/3/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -337,7 +337,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_5.indexOf(it)
-            if (app.valid_from_cal > it.task_due_date_id){
+            if (app.valid_from_cal < it.task_due_date_id){
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/4/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -364,7 +364,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_6.indexOf(it)
-            if (app.valid_from_cal > it.task_due_date_id){
+            if (app.valid_from_cal < it.task_due_date_id){
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/5/stage_tasks/$task_index/task_status"] =
                     "Overdue"

@@ -97,4 +97,5 @@ dependencies {
     implementation 'com.github.AAChartModel:AAChartCore-Kotlin:-SNAPSHOT'
 
     implementation 'com.github.amarjain07:StickyScrollView:1.0.2'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

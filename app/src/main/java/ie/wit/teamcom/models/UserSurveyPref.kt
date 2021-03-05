@@ -11,6 +11,7 @@ import kotlinx.android.parcel.Parcelize
 data class SurveyPref(
     var user_id: String = "",
     var enabled: Boolean = true,
+    var visible_to_admin:Boolean = false,
     var frequency: String = "",
     var next_date_id: Long = 0
 
@@ -20,6 +21,7 @@ data class SurveyPref(
         return mapOf(
             "user_id" to user_id,
             "enabled" to enabled,
+            "visible_to_admin" to visible_to_admin,
             "frequency" to frequency,
             "next_date_id" to next_date_id
         )

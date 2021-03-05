@@ -48,6 +48,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
 
         get_survey_pref()
         root.toggle_survey.isChecked = survey_preference.enabled
+        root.toggle_public.isChecked = survey_preference.visible_to_admin
         if(survey_preference.frequency == "Daily"){
             root.radioButton3.isChecked = true
         } else if(survey_preference.frequency == "Weekly"){
@@ -70,9 +71,11 @@ class EditSurveySettings : Fragment(), AnkoLogger {
             if (isChecked){
                 root.textView24.isVisible = true
                 root.radio_group.isVisible = true
+                root.toggle_public.isVisible = true
             } else {
                 root.textView24.isVisible = false
                 root.radio_group.isVisible = false
+                root.toggle_public.isVisible = false
             }
         }
 
@@ -103,8 +106,21 @@ class EditSurveySettings : Fragment(), AnkoLogger {
             }
         }
 
-        update_pref()
+        if (root.toggle_survey.isChecked){
+            show_public_warning()
+        } else {
+            update_pref()
+        }
 
+    }
+
+    fun show_public_warning(){
+        AlertDialog.Builder(requireContext())
+            .setView(R.layout.survey_info_dialog)
+            .setTitle("Survey Information")
+            .setPositiveButton("Ok") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 
     fun update_pref(){
@@ -124,21 +140,23 @@ class EditSurveySettings : Fragment(), AnkoLogger {
     }
 
     fun get_survey_pref(){
-        app.database.child("channels").child(currentChannel.id).child("surveys").child(app.auth.currentUser!!.uid)
+        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("surveys")
+            .child(app.auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val children = snapshot.children
-                    children.forEach {
 
-                        val survey_pref = it.getValue<SurveyPref>(SurveyPref::class.java)
-                        survey_preference = survey_pref!!
+                    survey_preference.visible_to_admin = snapshot.child("visible_to_admin").value.toString().toBoolean()
+                    survey_preference.user_id = snapshot.child("user_id").value.toString()
+                    survey_preference.enabled = snapshot.child("enabled").value.toString().toBoolean()
+                    survey_preference.frequency = snapshot.child("frequency").value.toString()
+                    survey_preference.next_date_id = snapshot.child("next_date_id").value.toString().toLong()
 
-                        app.database.child("channels").child(currentChannel!!.id)
-                            .removeEventListener(this)
-                    }
+                    app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("surveys")
+                        .child(app.auth.currentUser!!.uid).child("survey_pref")
+                        .removeEventListener(this)
                 }
             })
     }
