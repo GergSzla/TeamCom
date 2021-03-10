@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ie.wit.teamcom"
     android:extractNativeLibs="true">
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.INTERNET" />
 
 
@@ -16,9 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service
-            android:enabled="true"
-            android:name="ie.wit.teamcom.services.RecurringServices" />
 
         <activity
             android:name=".activities.Home"
@@ -75,6 +72,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:enabled="true"
+            android:name="ie.wit.teamcom.services.RecurringServices" />
     </application>
 
 </manifest>

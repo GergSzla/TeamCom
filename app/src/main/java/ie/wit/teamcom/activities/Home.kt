@@ -8,11 +8,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -23,9 +23,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import ie.wit.adventurio.helpers.uploadProfileImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
@@ -39,8 +37,7 @@ import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.startActivity
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 
 class Home : AppCompatActivity(),
@@ -67,7 +64,6 @@ class Home : AppCompatActivity(),
         app = application as MainApp
         app.auth = FirebaseAuth.getInstance()
 
-
         navView.setNavigationItemSelectedListener(this)
 
         startService(Intent(this, RecurringServices::class.java))
@@ -79,8 +75,6 @@ class Home : AppCompatActivity(),
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-
-        //navView.getHeaderView(0).nav_header_email.text = app.auth.currentUser?.email
 
         ft = supportFragmentManager.beginTransaction()
 
@@ -94,8 +88,18 @@ class Home : AppCompatActivity(),
         navView.getHeaderView(0).btn_change_channel.setOnClickListener {
             finish()
         }
+        startService()
+    }
 
+    fun startService() {
+        val serviceIntent = Intent(this, RecurringServices::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
 
+    fun stopService(v: View?) {
+        //TODO: enable stop/start service
+        val serviceIntent = Intent(this, RecurringServices::class.java)
+        stopService(serviceIntent)
     }
 
     fun getMeetings(channel_id: String) {

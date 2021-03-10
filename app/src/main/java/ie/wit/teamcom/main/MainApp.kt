@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.material.textfield.TextInputEditText
@@ -55,6 +56,8 @@ class MainApp : Application() {
         database = FirebaseDatabase.getInstance().reference
         storage = FirebaseStorage.getInstance().reference
 
+        createNotificationChannel()
+
         notificationManager =
             getSystemService(
                 Context.NOTIFICATION_SERVICE
@@ -62,6 +65,23 @@ class MainApp : Application() {
 
     }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceChannel = NotificationChannel(
+                CHANNEL_ID,
+                "Example Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            val manager = getSystemService(
+                NotificationManager::class.java
+            )
+            manager.createNotificationChannel(serviceChannel)
+        }
+    }
+
+    companion object {
+        const val CHANNEL_ID = "exampleServiceChannel"
+    }
     fun isActivityVisible(): Boolean {
         return user_is_online
     }
