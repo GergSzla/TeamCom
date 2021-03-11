@@ -3,6 +3,7 @@ package ie.wit.teamcom.fragments
 import android.graphics.Color
 import android.graphics.Color.RED
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import ie.wit.adventurio.helpers.createLoader
+import ie.wit.adventurio.helpers.hideLoader
+import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
@@ -56,6 +60,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     var user_stats = Stats()
     var user_mh = UserMHModel()
     var allow_admin = false
+    lateinit var loader : androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,9 +109,16 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         root.btn_kick_user.setOnClickListener {
             show_warning_dialog()
         }
+        loader = createLoader(requireActivity())
 
+        showLoader(loader, "Loading . . . ", "Loading Page . . . ")
         get_all_projects()
 
+        Handler().postDelayed({
+                check_pref()
+            },
+            2000 // value in milliseconds
+        )
         return root
     }
 
@@ -283,6 +295,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             root.txtOverdueTasks.text = overdue.size.toString()
             root.txtCompletedOverdueTasks.text = completed_overdue.size.toString()
         }
+        hideLoader(loader)
         if(allow_admin){
             root.mem_mental_health.isVisible = true
             get_mh_entry()
@@ -328,15 +341,19 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         if (string_range_1 == "range_1"){
             string_mh_desc += "-Feels Supported, Valued"
         } else if (string_range_1 == "range_2"){
+
             if (due_in_24_hrs >= 3){
-                string_mh_desc += "-With $due_in_24_hrs, user is potentially"
+                string_mh_desc += "-With $due_in_24_hrs, user is potentially stressed."
+            } else {
+                string_mh_desc += "\nPotentially Stressed."
             }
-            string_mh_desc += "stressed."
+
         } else if (string_range_1 == "range_3"){
             if (due_in_24_hrs >= 3){
-                string_mh_desc += "-With $due_in_24_hrs, user is potentially"
+                string_mh_desc += "-With $due_in_24_hrs, user is potentially overwhelmed."
+            } else {
+                string_mh_desc += "\nPotentially Overwhelmed."
             }
-            string_mh_desc += "overwhelmed."
 
         } else if (string_range_1 == "range_4"){
             string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued."
@@ -652,7 +669,6 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 .child("stage_tasks").orderByChild("task_due_date_id")
                                 .removeEventListener(this)
                         }
-                        check_pref()
                     }
                 })
         }

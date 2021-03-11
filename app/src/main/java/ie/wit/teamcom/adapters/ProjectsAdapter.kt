@@ -49,13 +49,13 @@ class ProjectsAdapter constructor(
             itemView.txt_completed_tasks.text = project.proj_completed_tasks.toString()
 
 
-//            itemView.txt_pending_tasks.text = (project.proj_task_stages[1].stage_tasks.size
-//                    + project.proj_task_stages[2].stage_tasks.size
-//                    + project.proj_task_stages[3].stage_tasks.size
-//                    + project.proj_task_stages[4].stage_tasks.size
-//                    + project.proj_task_stages[5].stage_tasks.size).toString()
+            itemView.txt_pending_tasks.text = (project.proj_task_stages[1].stage_tasks.size
+                    + project.proj_task_stages[2].stage_tasks.size
+                    + project.proj_task_stages[3].stage_tasks.size
+                    + project.proj_task_stages[4].stage_tasks.size
+                    + project.proj_task_stages[5].stage_tasks.size).toString()
 
-            itemView.txt_pending_tasks.text = project.proj_active_tasks.toString()
+            itemView.txt_completed_tasks.text = project.proj_task_stages[0].stage_tasks.size.toString()
 
             itemView.setOnClickListener {
                 listener.onProjClick(project)

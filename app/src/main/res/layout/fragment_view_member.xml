@@ -410,7 +410,7 @@
                 android:id="@+id/txt_overall_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Further Analysis Further AnalysisFurther AnalysisFurther AnalysisFurther AnalysisFurther Analysis"
+                android:text=""
                 android:textColor="@color/color_white"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"

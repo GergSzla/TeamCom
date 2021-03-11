@@ -100,6 +100,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             override fun onRefresh() {
                 root.swiperefreshTasks.isRefreshing = true
                 getAllTasks()
+                check_completed()
             }
         })
     }
@@ -590,7 +591,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                     } else {
                         root.txtStage6Title.text = task_list_6[0].task_current_stage
                     }
-                    check_completed()
                 }
             })
     }
@@ -620,7 +620,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.popup_change_stage)
-        //root.stage_rec.layoutManager = LinearLayoutManager(activity)
 
         val cancel = dialog.findViewById(R.id.btn_cancel_stage) as ImageButton
         val stageRecycler = dialog.findViewById(R.id.stage_rec) as RecyclerView
@@ -639,7 +638,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         val stage = it.getValue<TaskStage>(TaskStage::class.java)
                         if (stage!!.stage_active) {
                             task_stage_list.add(stage)
-
                         }
                         stageRecycler.adapter = StageAdapter(task_stage_list, this@TasksFragment)
                         stageRecycler.adapter?.notifyDataSetChanged()
@@ -652,6 +650,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             })
         cancel.setOnClickListener {
             dialog.dismiss()
+            check_completed()
         }
         dialog.show()
     }
@@ -720,20 +719,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         progressBar.progress = task.task_importance
         taskProgress.text = task.task_importance.toString() + "/5"
         taskStage.text = task.task_current_stage
-        /*proceed.setOnClickListener {
-            app.database.child("channels").child(currentChannel!!.id).child("meetings").child(selected_meeting.meeting_uuid)
-                .addListenerForSingleValueEvent(
-                    object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.ref.removeValue()
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-                    })
-            dialog.dismiss()
-            navigateTo(MeetingsFragment.newInstance(currentChannel))
-        }*/
         cancel.setOnClickListener {
             dialog.dismiss()
         }
@@ -743,14 +728,14 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
     override fun onStageClick(stage: TaskStage) {
         var index_of_task = selected_stage.stage_tasks.indexOf(selected_task)
-        index_of_task
         selected_stage.stage_tasks.removeAt(index_of_task)
         selected_task.task_current_stage = stage.stage_name
         selected_task.task_current_stage_color = stage.stage_color_code
+        if (stage.stage_name == "Completed"){
+            app.generateDateID("1")
+            selected_task.task_completed_date_id = app.valid_to_cal
+        }
         stage.stage_tasks.add(selected_task)
-//        for (i in selected_stage.stage_tasks){
-//            if (selected_stage.stage_tasks[i].id ==  )
-//        }
 
         app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
@@ -770,7 +755,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
-//                    getAllTasks()
+                    check_completed()
                     navigateTo(TasksFragment.newInstance(currentChannel, selected_project))
 
                 }

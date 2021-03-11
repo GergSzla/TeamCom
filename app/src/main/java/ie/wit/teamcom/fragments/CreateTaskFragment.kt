@@ -289,6 +289,11 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         new_task.task_current_stage = selected_stage.stage_name
         new_task.task_current_stage_color = selected_stage.stage_color_code
 
+        if (new_task.task_current_stage == "Completed"){
+            app.generateDateID("1")
+            new_task.task_completed_date_id = app.valid_from_cal
+        }
+
         selected_stage.stage_tasks.add(new_task)
         writeNewTask()
     }

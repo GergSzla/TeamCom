@@ -109,7 +109,11 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
         }
 
         root.btn_save_survey.setOnClickListener {
-            save_survey()
+            if(root.form_comp_prog.progress >= 100){
+                save_survey()
+            } else {
+                makeText(context, "Survey not completed!", Toast.LENGTH_LONG).show()
+            }
         }
 
 
