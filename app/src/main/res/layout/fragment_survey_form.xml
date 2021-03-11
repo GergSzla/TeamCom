@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    tools:context=".fragments.SurveyFormFragment">
+
+
+            <com.amar.library.ui.StickyScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:stickyHeader="@+id/titleLayout">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:background="@drawable/content_layout_backg"
+
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:id="@+id/titleLayout"
+                        android:background="@drawable/content_layout_backg_black"
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtMemberName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="sans-serif"
+                            android:text="Mental Health Assessment Survey"
+                            android:textColor="@color/color_white"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+                        <ProgressBar
+                            android:id="@+id/form_comp_prog"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:max="100"
+                            android:progressDrawable="@drawable/progress_backg"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:progress="0" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Are You Feeling Overwhelmed?"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_1opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All Overwhelmed"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_1opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Neutral"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_1opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="A Little Bit Overwhelmed"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_1opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Quite Overwhelmed"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_1opt5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Very Overwhelmed"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_1opt6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="I'd Rather Not Answer"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+
+                    <TextView
+                        android:id="@+id/txt_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Do You Feel Valued?"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_2opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_2opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Neutral"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_2opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="A Little Bit Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_2opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Quite Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_2opt5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Highly Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_2opt6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="I'd Rather Not Answer"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txt_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Do You Feel That Your Work Is Valued?"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_3opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_3opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Neutral"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_3opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="A Little Bit Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_3opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Quite Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_3opt5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Highly Valued"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_3opt6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="I'd Rather Not Answer"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txt_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Do You Feel Your Place Of Work Is Supportive?"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_4opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Yes"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_4opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="A Little Bit"
+                            android:textColor="@color/color_white" />
+
+
+
+                        <RadioButton
+                            android:id="@+id/_4opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Neutral"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_4opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="No"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_4opt5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_4opt6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="I'd Rather Not Answer"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txt_5.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:padding="5dp"
+                        android:text="How often have you been bothered by any of the following problems?"
+                        android:textColor="@color/color_white"
+                        android:background="@drawable/content_layout_backg"
+                        android:textSize="30sp" />
+                    <TextView
+                        android:id="@+id/txt_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Little interest or pleasure in doing things"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group5"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_5opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_5opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Several Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_5opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="More Than Half The Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_5opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Nearly Every Day"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txt_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Feeling down"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group6"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_6opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_6opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Several Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_6opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="More Than Half The Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_6opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Nearly Every Day"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txt_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Trouble falling or staying asleep, or sleeping too much"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group7"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_7opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_7opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Several Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_7opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="More Than Half The Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_7opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Nearly Every Day"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+
+                    <TextView
+                        android:id="@+id/txt_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Feeling tired or having little energy"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group8"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_8opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_8opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Several Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_8opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="More Than Half The Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_8opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Nearly Every Day"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txt_9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="Feeling bad about yourself"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_group9"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <RadioButton
+                            android:id="@+id/_9opt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Not At All"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_9opt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Several Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_9opt3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="More Than Half The Days"
+                            android:textColor="@color/color_white" />
+
+                        <RadioButton
+                            android:id="@+id/_9opt4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/color_white"
+                            android:text="Nearly Every Day"
+                            android:textColor="@color/color_white" />
+                    </RadioGroup>
+
+
+                    <Button
+                        android:id="@+id/btn_save_survey"
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/color_1"
+                        android:textColor="@color/color_white"
+                        android:text="Save Survey" />
+                </LinearLayout>
+            </com.amar.library.ui.StickyScrollView>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

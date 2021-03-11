@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    tools:context=".fragments.EditSurveySettings">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:background="@drawable/content_layout_backg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtChannelNameSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="100"
+                    android:fontFamily="sans-serif"
+                    android:text="Survey Settings"
+                    android:textColor="@color/color_white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/btn_info_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/color_1"
+                    android:src="@drawable/ic_baseline_info_24"
+                    android:text="@string/btnDateSelect"
+                    android:tint="@color/color_white" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/toggle_survey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/content_layout_backg"
+                android:checked="true"
+                android:padding="10dp"
+                android:text="@string/survey_active"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/toggle_public"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/content_layout_backg"
+                android:checked="false"
+                android:padding="10dp"
+                android:text="@string/survey_public"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Survey Frequency"
+                android:textColor="@color/color_white"
+                android:textSize="20sp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_white"
+                    android:text="Daily"
+                    android:textColor="@color/color_white" />
+
+                <RadioButton
+                    android:id="@+id/radioButton4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_white"
+                    android:checked="true"
+                    android:text="Weekly"
+                    android:textColor="@color/color_white" />
+
+                <RadioButton
+                    android:id="@+id/radioButton5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_white"
+                    android:text="Biweekly"
+                    android:textColor="@color/color_white" />
+
+                <RadioButton
+                    android:id="@+id/radioButton6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_white"
+                    android:text="Monthly"
+                    android:textColor="@color/color_white" />
+            </RadioGroup>
+
+
+            <Button
+                android:id="@+id/btn_save_survey_pref"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/color_1"
+                android:textColor="@color/color_white"
+                android:text="Save Preferences" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

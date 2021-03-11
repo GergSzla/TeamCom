@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    tools:context=".fragments.CreateMeetingFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/content_layout_backg"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/txtMeeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/meetingDeets"
+                android:textColor="@color/color_white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/title"
+                android:textColor="@color/color_white" />
+
+            <EditText
+                android:id="@+id/editTxtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
+                android:ems="10"
+                android:hint="@string/title"
+                android:inputType="textPersonName"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/textViewDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/description"
+                android:textColor="@color/color_white" />
+
+            <EditText
+                android:id="@+id/editTxtDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/description"
+                android:inputType="textMultiLine"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/textViewDateAndTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/select_date"
+                android:textColor="@color/color_white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtDandT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="200"
+                    android:text="[DATE AND TIME SELECTED]"
+                    android:textColor="@color/color_white"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/btnSelectDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/color_1"
+                    android:src="@drawable/ic_baseline_calendar_today_24"
+                    android:text="@string/btnDateSelect"
+                    android:tint="@color/color_white" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/end"
+                android:textColor="@color/color_white" />
+
+            <EditText
+                android:id="@+id/editTxtEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/end_"
+                android:inputType="number"
+                android:padding="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/txtViewChannelMem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="8"
+                    android:text="@string/participant_select"
+                    android:textColor="@color/color_white" />
+
+                <ImageButton
+                    android:id="@+id/btnRefr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/color_1"
+                    android:src="@drawable/ic_baseline_refresh_24" />
+            </LinearLayout>
+
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swiperefreshCreateMeeting_1"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintBottom_toTopOf="@+id/btnAddNew"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_card"
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/selectMemsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/content_layout_backg"
+                    android:scrollbars="vertical"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/card_member_meeting">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+            <ImageView
+                android:id="@+id/randomArrow"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/ic_baseline_arrow_downward_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ic_left_arr"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtSelected"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/participant_selected"
+                android:textColor="@color/color_white" />
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swiperefreshCreateMeeting_2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintBottom_toTopOf="@+id/btnAddNew"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_card"
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/selectedMemsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/content_layout_backg"
+                    android:scrollbars="vertical"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/card_member_meeting">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCheckOnline"
+                    android:layout_width="365dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100"
+                    android:text="Is this an online meeting?"
+                    android:textColor="@color/color_white" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxCheckOnline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewLoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/location"
+                android:textColor="@color/color_white" />
+
+            <EditText
+                android:id="@+id/editTxtLoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="Location"
+                android:inputType="textMultiLine"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/textViewPlatform"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/platform"
+                android:textColor="@color/color_white" />
+
+            <Spinner
+                android:id="@+id/spinnerPlatform"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/spinner_des" />
+
+            <TextView
+                android:id="@+id/textViewOtherPlatform"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/specify"
+                android:textColor="@color/color_white" />
+
+            <EditText
+                android:id="@+id/editTxtOtherPlatform"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
+                android:ems="10"
+                android:hint="@string/specify"
+                android:inputType="textPersonName"
+                android:padding="10dp" />
+
+            <LinearLayout
+                android:id="@+id/lin_external"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/txt_ext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="8"
+                    android:text="@string/create_ext"
+                    android:textColor="@color/color_white" />
+
+                <ImageButton
+                    android:id="@+id/btnCreateExt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/color_1"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/meeting"
+                android:textColor="@color/color_white" />
+
+            <EditText
+                android:id="@+id/editTxtID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
+                android:ems="10"
+                android:hint="@string/meeting"
+                android:inputType="textPersonName"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/textViewPasscode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/passcode"
+                android:textColor="@color/color_white" />
+
+
+            <EditText
+                android:id="@+id/editTxtPasscode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_backg"
+                android:ems="10"
+                android:hint="@string/passcode"
+                android:inputType="textPersonName"
+                android:padding="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCreateNewMeeting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/color_1"
+                    android:text="Create Meeting"
+                    android:textColor="@color/color_white" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

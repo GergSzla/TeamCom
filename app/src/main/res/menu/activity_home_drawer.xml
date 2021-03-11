@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/group_social">
+        <menu>
+            <item
+                android:id="@+id/nav_news_feed"
+                android:icon="@drawable/ic_newspaper_report_svgrepo_com"
+                android:title="@string/menu_news_feed" />
+            <item
+                android:id="@+id/nav_conversations"
+                android:icon="@drawable/ic_conversation_svgrepo_com"
+                android:title="@string/menu_conversations" />
+            <item
+                android:id="@+id/nav_meetings"
+                android:icon="@drawable/ic_meeting_svgrepo_com"
+                android:title="@string/menu_meetings" />
+            <item
+                android:id="@+id/nav_tasks"
+                android:icon="@drawable/ic_baseline_playlist_add_check_24"
+                android:title="@string/menu_tasks" />
+        </menu>
+    </item>
+
+    <item android:title="@string/group_organizational">
+        <menu>
+            <item
+                android:id="@+id/nav_calendar"
+                android:icon="@drawable/ic_baseline_calendar_today_24"
+                android:title="@string/menu_calendar" />
+            <item
+                android:id="@+id/nav_reminders"
+                android:icon="@drawable/ic_baseline_alarm_24"
+                android:title="@string/menu_reminders" />
+        </menu>
+    </item>
+
+    <item android:title="@string/group_channel">
+        <menu>
+            <item
+                android:id="@+id/nav_channel_settings"
+                android:icon="@drawable/ic_baseline_settings_24"
+                android:title="@string/menu_channel_settings" />
+            <item
+                android:id="@+id/nav_log"
+                android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+                android:title="@string/menu_log" />
+            <item
+                android:id="@+id/nav_members"
+                android:icon="@drawable/ic_baseline_people_24"
+                android:title="@string/menu_members" />
+            <item
+                android:id="@+id/nav_support"
+                android:icon="@drawable/ic_baseline_contact_support_24"
+                android:title="@string/menu_support" />
+        </menu>
+    </item>
+
+    <item android:title="@string/account">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_action_logout"
+                android:title="@string/menu_logout" />
+        </menu>
+    </item>
+
+</menu>

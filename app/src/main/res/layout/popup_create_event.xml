@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#CDCDCD"
+    android:layout_gravity="center"
+    android:padding="25dp">
+
+
+    <ImageButton
+        android:id="@+id/btn_cancel_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        app:srcCompat="@drawable/ic_cancel" />
+    <ImageView
+        android:id="@+id/image_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        app:srcCompat="@drawable/ic_color_stat_24" />
+
+    <EditText
+        android:id="@+id/txt_event_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:hint="@string/event_name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/txt_event_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:gravity="start|top"
+        android:hint="@string/event_desc"
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="20dp"/>
+
+
+    <TextView
+        android:id="@+id/txt_date_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+
+        android:text="@string/event_date"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/txt_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="@string/event_color"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="8"
+        android:orientation="horizontal">
+
+        <Button
+            android:id = "@+id/btn_color_1"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_1"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent" />
+        <Button
+            android:id = "@+id/btn_color_2"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_2"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent"/>
+        <Button
+            android:id = "@+id/btn_color_3"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_3"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent" />
+        <Button
+            android:id = "@+id/btn_color_4"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_4"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="8"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <Button
+            android:id = "@+id/btn_color_5"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_5"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent" />
+        <Button
+            android:id = "@+id/btn_color_6"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_6"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent" />
+        <Button
+            android:id = "@+id/btn_color_7"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_7"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent" />
+        <Button
+            android:id = "@+id/btn_color_8"
+            android:background = "@drawable/circle_button"
+            android:backgroundTint="@color/color_8"
+            android:layout_weight="2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:layout_marginBottom="20dp"/>
+
+
+</LinearLayout>

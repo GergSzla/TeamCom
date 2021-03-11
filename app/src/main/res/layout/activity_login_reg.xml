@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/initScreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/splash_background"
+    android:orientation="vertical"
+    tools:context=".activities.LoginRegActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        android:background="@drawable/content_layout_backg"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:src="@drawable/logo" />
+
+        <EditText
+            android:id="@+id/txtFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:autofillHints="textEmailAddress"
+            android:background="@drawable/edit_text_backg"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@."
+            android:ems="10"
+            android:hint="@string/hintFirstname"
+            android:inputType="text"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/txtSurname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:autofillHints="textEmailAddress"
+            android:background="@drawable/edit_text_backg"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@."
+            android:ems="10"
+            android:hint="@string/hintSurname"
+            android:inputType="text"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/txtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:autofillHints="textEmailAddress"
+            android:background="@drawable/edit_text_backg"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@."
+            android:ems="10"
+            android:hint="@string/hintLgnEmail"
+            android:inputType="textEmailAddress"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/txtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:autofillHints="textPassword"
+            android:background="@drawable/edit_text_backg"
+            android:ems="10"
+            android:hint="@string/hintPassword"
+            android:inputType="textPassword"
+            android:padding="10dp" />
+
+
+        <Button
+            android:id="@+id/btnGoogleLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/google_blue"
+            android:drawableLeft="@drawable/googleg_standard_color_18"
+            android:drawableTint="@color/color_white"
+            android:padding="16dp"
+            android:text="Login With Google"
+            android:textColor="@color/color_white" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/google_red"
+            android:drawableLeft="@drawable/ic_baseline_email_24"
+            android:padding="16dp"
+            android:text="@string/btnLogin"
+            android:textColor="@color/color_white" />
+
+
+        <Button
+            android:id="@+id/btnShowReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/google_red"
+            android:padding="16dp"
+            android:text="@string/btnShowReg"
+            android:textColor="@color/color_white" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnShowLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/floatBtnPressed"
+                android:padding="13dp"
+                android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
+                android:text="@string/btnShowLogin" />
+
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/google_red"
+                android:padding="16dp"
+                android:text="@string/btnRegister"
+                android:textColor="@color/color_white" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

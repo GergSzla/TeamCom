@@ -1,3 +1,192 @@
 <resources>
     <string name="app_name">TeamCom</string>
+
+    <!--activity_login_reg-->
+    <string name="btnLogin">Login With Email</string>
+    <string name="btnRegister">Register With Email</string>
+    <string name="btnShowReg">Create An Account</string>
+    <string name="btnShowLogin">Login To Your Account</string>
+    <string name="hintLgnEmail">Email</string>
+    <string name="hintPassword">Password</string>
+    <string name="hintFirstname">First Name</string>
+    <string name="hintSurname">Surname</string>
+
+    <!--fragment_channels_list-->
+    <string name="yourChannels">Your Channels</string>
+    <string name="title_activity_channels_list">ChannelsList</string>
+    <string name="btnAddNew">Add New</string>
+
+    <!--create_channel-->
+    <string name="hintChannelName">Channel Name</string>
+    <string name="hintChannelDesc">Channel Description</string>
+    <string name="createChannel">Create Channel</string>
+
+    <!--join_channel-->
+    <string name="hintChannelCode">Channel Invite Code</string>
+    <string name="btnJoinChannel">Join Channel</string>
+
+    <!--Home-->
+    <string name="nav_header_title">TeamCom</string>
+
+    <string name="group_social">Social</string>
+    <string name="menu_news_feed">News Feed</string>
+    <string name="menu_conversations">Conversations</string>
+    <string name="menu_meetings">Meetings</string>
+
+    <string name="group_organizational">Organizational</string>
+    <string name="menu_calendar">Calendar</string>
+    <string name="menu_tasks">Projects</string>
+    <string name="proj_tasks">Project Tasks</string>
+    <string name="menu_reminders">Reminders</string>
+
+    <string name="group_channel">Channel</string>
+    <string name="menu_channel_settings">Channel Settings</string>
+    <string name="menu_log">Log</string>
+    <string name="menu_members">Members</string>
+    <string name="menu_support">Support</string>
+
+    <string name="imgPick">Select Image</string>
+
+
+    <string name="account">Done for today?</string>
+    <string name="menu_logout">Logout</string>
+
+
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--fragment_settings-->
+    <string name="txtRoles">Roles</string>
+    <string name="txtMembers">Members</string>
+    <string name="txtInvites">Invites</string>
+    <string name="txtDetails">Channel Details</string>
+    <string name="txtQueRem">Survey Settings</string>
+    <string name="txtTaskStages">Task Stages</string>
+
+    <!--fragment roles-->
+    <string name="btnAddNewRole">Add New</string>
+    <string name="btnAddNewConvo">Start New Chat</string>
+
+    <!--fragment invites-->
+    <string name="btnAddNewInv">Create Invite</string>
+    <string name="hint_hoursActive">Expires In (Hrs)</string>
+    <string name="hint_uses">Uses</string>
+
+    <!--fragment invites-->
+
+    <!--title Stuff-->
+    <string name="title_settings">Channel Settings</string>
+    <string name="title_survey">Survey Settings</string>
+    <string name="title_roles_settings">Roles</string>
+    <string name="title_project_settings">Projects</string>
+    <string name="title_logs">Logs</string>
+
+    <string name="title_invites_settings">Invites</string>
+    <string name="title_members_settings">Members</string>
+    <string name="title_conversations">Conversations</string>
+    <string name="title_meetings">Meetings</string>
+    <string name="title_create_meetings">Create Meeting</string>
+    <string name="title_create_tasks">Create Task</string>
+
+    <string name="title_calendar">Team Calendar</string>
+    <string name="title_create_conversations">Start a Conversation</string>
+    <string name="title_news_feed">News Feed</string>
+    <string name="title_reminders">Reminders</string>
+
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="end">Meeting Duration</string>
+    <string name="end_">Meeting Duration (Hours)</string>
+    <string name="select_date">Date</string>
+    <string name="btnDateSelect">Select Date</string>
+    <string name="btnDateRes">Reschedule</string>
+    <string name="participant_select">Select Participants</string>
+    <string name="create_ext">Create Meeting Externally</string>
+    <string name="participant_selected">Selected Participants</string>
+    <string name="location">Meeting Location</string>
+    <string name="platform">Select Platform</string>
+    <string name="specify">Please Specify</string>
+    <string name="meeting">Meeting ID</string>
+    <string name="passcode">Meeting Passcode</string>
+
+
+    <!--loader-->
+    <string name="messageLoading">Loading User . . . </string>
+
+    <!--fragment_roles-->
+    <string name="permissions">Permissions</string>
+    <string name="bugs">Report Bugs</string>
+    <string name="taskStages">Project Setup</string>
+    <string name="projectDeets">Project Details</string>
+    <string name="meetingDeets">Meeting Details</string>
+    <string name="editMeeting">Edit Meeting</string>
+
+    <string name="newTask">New Task</string>
+
+    <string name="editRoleName">Role Name</string>
+    <string name="stage1">Stage One Name</string>
+    <string name="stage2">Stage Two Name</string>
+    <string name="stage3">Stage Three Name</string>
+    <string name="stage4">Stage Four Name</string>
+    <string name="stage5">Stage Five Name</string>
+    <string name="stage6">Stage Six Name</string>
+
+    <string name="txtColorCode">Color Code [eg. #643663]</string>
+    <string name="permAdmin">Admin</string>
+    <string name="viewalllogs">View All Logs</string>
+    <string name="manageRoles">Manage Roles</string>
+    <string name="viewTasks">View Tasks</string>
+    <string name="createTasks">Create Tasks</string>
+    <string name="createInvite">Create Channel Invites</string>
+
+    <string name="createInvite1">Create New Invite</string>
+    <string name="createGC">Create Groupchats</string>
+    <string name="permKickUser">Kick Users</string>
+    <string name="permPostOnFeed">Post On News Feed</string>
+    <string name="permCreateGCInvite">Create Groupchat Invite</string>
+    <string name="permAssignTasksToMembers">Assign Tasks To Members</string>
+    <string name="permCreateMeetings">Create Meetings</string>
+    <string name="permRequestMeetings">Request Meetings</string>
+    <string name="addnewrole">Add Role</string>
+    <string name="editRole">Save Changes</string>
+    <string name="deleteRole">Delete Role</string>
+
+    <string name="title_members_assignments">Role Assignment</string>
+
+
+    <!--card invite-->
+    <string name="invite_code">Code: </string>
+    <string name="valid_from_as_string">Valid From: </string>
+    <string name="valid_to_as_string">Valid To: </string>
+    <string name="invite_uses">Uses: </string>
+
+
+    <string name="btnReassign">Update Member</string>
+    <string name="btnSubmitBug">Send Bug Report</string>
+    <string name="btnCreateConvo">Start Conversation</string>
+
+
+    <!--Events-->
+    <string name="event_name">Event Name </string>
+    <string name="event_desc">Description </string>
+    <string name="event_date">Current Selected Date </string>
+    <string name="event_color">Color: </string>
+
+    <!--strings-->
+    <string name="str_status_def">Completed </string>
+    <string name="str_status_def_2">In Progress </string>
+    <string name="str_status_def_3">To Do </string>
+    <string name="str_color_def">00a500</string>
+    <string name="str_color_def_2">d08800 </string>
+    <string name="str_color_def_3">d00000 </string>
+    <string name="conf">Are you sure you want to delete this? </string>
+
+
+    <string name="btn_kick">Kick User</string>
+    <string name="survey_active">Enable Recurring Survey</string>
+    <string name="survey_public">Enable Visibility for Admin</string>
+
+
 </resources>

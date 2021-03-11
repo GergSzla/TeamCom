@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:layout_marginBottom="1dp"
+    android:elevation="24dp"
+    app:cardCornerRadius="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/card_channel"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/btn_comment_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_edit_24"
+            android:backgroundTint="@color/color_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/card_comment_image"
+            android:layout_width="55dp"
+            android:layout_height="56dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/txtCommentUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/color_white"
+            android:text="[USER]"
+            app:layout_constraintStart_toEndOf="@+id/card_comment_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtCommentTimeAndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            android:layout_marginStart="8dp"
+            android:text="[DATE + TIME]"
+            app:layout_constraintStart_toEndOf="@+id/card_comment_image"
+            app:layout_constraintTop_toBottomOf="@+id/txtPostUser" />
+
+        <TextView
+            android:id="@+id/txtCommentContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            android:layout_marginTop="8dp"
+            android:text="[CONTENT CONTENT CONTENT CONTENT]"
+            app:layout_constraintEnd_toEndOf="@+id/editTxtCommentContent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_comment_image" />
+
+        <EditText
+            android:id="@+id/editTxtCommentContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edit_text_backg"
+            android:padding="10dp"
+            android:text="[CONTENT CONTENT CONTENT CONTENT]"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_save_comment"
+            app:layout_constraintTop_toBottomOf="@+id/card_comment_image" />
+
+        <ImageButton
+            android:id="@+id/btn_save_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/ic_right_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_comment_image" />
+        <!--<Button
+            android:id="@+id/btnLikeComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_baseline_thumb_up_24"
+            android:text="Like"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtCommentContent" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
