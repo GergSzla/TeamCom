@@ -1,9 +1,10 @@
-name: Build & Publish Debug name: Build & Publish Debug APK
+name: Android Build APK
 
 on:
  push:
   branches:
    - master
+   - release
    
 jobs:
   build:
