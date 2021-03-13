@@ -47,6 +47,10 @@
 
     <string name="imgPick">Select Image</string>
 
+    <string name="group_assistant">Assistant</string>
+    <string name="menu_assistant">Personal Assistant</string>
+    <string name="menu_notifications">Channel Notifications</string>
+
 
     <string name="account">Done for today?</string>
     <string name="menu_logout">Logout</string>

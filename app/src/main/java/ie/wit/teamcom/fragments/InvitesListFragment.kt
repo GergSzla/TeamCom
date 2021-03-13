@@ -186,34 +186,8 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         val hrs_active = dialog.findViewById(R.id.txtExpires) as EditText
         val uses = dialog.findViewById(R.id.txtUses) as EditText
         create.setOnClickListener {
-//            validateForm()
-//            if (validateForm()){
-            var valid = true
-
-            val exp = txtExpires.text.toString()
-            if (TextUtils.isEmpty(exp)) {
-                txtExpires.error = "Expires In (Hrs) Required."
-                valid = false
-            } else {
-                txtExpires.error = null
-            }
-
-            if (txtUses.text.toString().toInt() >= 1) {
-                val uses = txtUses.text.toString()
-                if (TextUtils.isEmpty(uses)) {
-                    txtUses.error = "Uses (Minimum 1) Required."
-                    valid = false
-                } else {
-                    txtUses.error = null
-                }
-            }
-
-            if (valid) {
-                createInvite(hrs_active.text.toString(), uses.text.toString())
-                dialog.dismiss()
-            }
-
-//            }
+            createInvite(hrs_active.text.toString(), uses.text.toString())
+            dialog.dismiss()
         }
         cancel.setOnClickListener {
             dialog.dismiss()
