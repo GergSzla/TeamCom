@@ -32,6 +32,7 @@ import ie.wit.teamcom.adapters.EventAdapter
 import ie.wit.teamcom.adapters.MeetingsAdapter
 import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.*
 import ie.wit.teamcom.services.RecurringServices
 import ie.wit.teamcom.services.assistant_status
@@ -65,6 +66,8 @@ class Home : AppCompatActivity(),
     var conversationList = ArrayList<Conversation>()
     var events_list = ArrayList<Event>()
     var user_survey_pref = SurveyPref()
+    lateinit var notif_frag: NotificationsFragment
+    lateinit var mem_frag: ViewMemberFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +75,10 @@ class Home : AppCompatActivity(),
         setContentView(R.layout.home)
         setSupportActionBar(toolbar)
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        notif_frag = NotificationsFragment()
+        mem_frag = ViewMemberFragment()
+
+        auth = FirebaseAuth.getInstance()
 
         navView.setNavigationItemSelectedListener(this)
 
@@ -202,11 +208,26 @@ class Home : AppCompatActivity(),
                 start_conv.replaceRange(start_conv.length - 2, start_conv.length, "00").toLong()
 
             if (it.rem_date_id == new_id) {
-                createNotificationChannel(
-                    "ie.wit.teamcom",
-                    "TeamCom Reminder:",
-                    "$rems is due now!"
-                )
+
+
+                var new_notif = AppNotification()
+                new_notif.type = "Reminder"
+                new_notif.msg = "TeamCom Reminder: $rems is due now!"
+                new_notif.date_id = it.rem_date_id
+                new_notif.date_and_time = it.rem_date_as_string + ", " + it.rem_time_as_string
+                new_notif.id = it.id
+
+                if ((notification_list.filter { it.id == new_notif.id }).isEmpty()) {
+
+                    createNotificationChannel(
+                        "ie.wit.teamcom",
+                        "TeamCom Reminder:",
+                        "$rems is due now!"
+                    )
+
+
+                    notif_frag.pushNotification(app.database, new_notif)
+                }
             }
         }
         if (due_soon != 0) {
@@ -226,22 +247,30 @@ class Home : AppCompatActivity(),
                     "Events Today:",
                     "(${events_list.size}) Events!"
                 )
+                var new_notif = AppNotification()
+                new_notif.type = "Event"
+                new_notif.msg = "Events Today : (${events_list.size}) Events!"
+                new_notif.date_id = app.valid_from_cal
+                new_notif.date_and_time = app.valid_from_String
+                new_notif.id = UUID.randomUUID().toString()
+
+                notif_frag.pushNotification(app.database, new_notif)
             }
         }
     }
-    lateinit var mem_frag: ViewMemberFragment
 
-    fun getTasks(){
-        mem_frag.get_all_projects()
-        Handler().postDelayed({
-            checkUpcomingTasks()
-        },
+    fun getTasks() {
+        mem_frag.get_all_projects(app.database)
+        Handler().postDelayed(
+            {
+                checkUpcomingTasks()
+            },
             2000 // value in milliseconds
         )
     }
 
-    fun checkUpcomingTasks(){
-        if (mem_frag.due_in_24_hrs != 0){
+    fun checkUpcomingTasks() {
+        if (mem_frag.due_in_24_hrs != 0) {
             if (!assistant_status.contains("Upcoming task(s)!")) {
                 assistant_status += "• ${mem_frag.due_in_24_hrs} Upcoming task(s)!"
                 startService()
@@ -252,14 +281,23 @@ class Home : AppCompatActivity(),
         var new_id =
             start_conv.replaceRange(start_conv.length - 2, start_conv.length, "00").toLong()
 
-        if (mem_frag.overdue.size != 0){
+        if (mem_frag.overdue.size != 0) {
             mem_frag.overdue.forEach {
-                if(it.task_due_date_id == new_id){
+                if (it.task_due_date_id == new_id) {
                     createNotificationChannel(
                         "ie.wit.teamcom",
                         "Task due now!",
                         it.task_msg
                     )
+                    var new_notif = AppNotification()
+                    new_notif.type = "Task"
+                    new_notif.msg = "Task due now: ${it.task_msg}"
+                    new_notif.date_id = app.valid_from_cal
+                    new_notif.date_and_time = app.valid_from_String
+
+                    new_notif.id = UUID.randomUUID().toString()
+
+                    notif_frag.pushNotification(app.database, new_notif)
                 }
             }
         }
@@ -278,10 +316,10 @@ class Home : AppCompatActivity(),
                     var i = 0
                     children.forEach {
                         val convo = it.getValue<Conversation>(Conversation::class.java)
-                        if (convo!!.participants[i].id == app.auth.currentUser!!.uid) {
+                        if (convo!!.participants[i].id == auth.currentUser!!.uid) {
                             convo.messages.forEach { _it ->
-                                if (!_it.read_by.contains(app.currentActiveMember)){
-                                    unseen_msgs.add( _it)
+                                if (!_it.read_by.contains(app.currentActiveMember)) {
+                                    unseen_msgs.add(_it)
                                 }
                             }
                         }
@@ -296,13 +334,25 @@ class Home : AppCompatActivity(),
     }
 
     fun checkConversations() {
-        if(unseen_msgs.size != 0){
+        if (unseen_msgs.size != 0) {
             unseen_msgs.forEach {
-                createNotificationChannel(
-                    "ie.wit.teamcom",
-                    "Message from ${it.author.firstName} ${it.author.surname}",
-                    it.content
-                )
+
+                var new_notif = AppNotification()
+                new_notif.type = "Conversation"
+                new_notif.msg =
+                    "New Message From ${it.author.firstName} ${it.author.surname}: ${it.content}"
+                new_notif.date_id = it.mes_date_order
+                new_notif.date_and_time = it.msg_date + ", " + it.msg_time
+                new_notif.id = it.id
+
+                if ((notification_list.filter { it.id == new_notif.id }).isEmpty()) {
+                    createNotificationChannel(
+                        "ie.wit.teamcom",
+                        "Message from ${it.author.firstName} ${it.author.surname}",
+                        it.content
+                    )
+                    notif_frag.pushNotification(app.database, new_notif)
+                }
             }
         }
     }
@@ -333,13 +383,27 @@ class Home : AppCompatActivity(),
             if (app.reminder_due_date_id == app.valid_from_cal) {
                 upcoming++
             }
-        }
-        if (upcoming != 0) {
-            createNotificationChannel(
-                "ie.wit.teamcom",
-                "Meetings Today:",
-                "(${upcoming}) Meetings! How about setting some reminders?"
-            )
+            if (upcoming != 0) {
+
+                var new_notif = AppNotification()
+                new_notif.type = "Meeting"
+                new_notif.msg =
+                    "Meetings Today: (${upcoming}) Meetings! How about setting some reminders through the view meeting screen?"
+                new_notif.date_id = it.meeting_date_id
+                new_notif.date_and_time = it.meeting_date_as_string + ", " + it.meeting_time_as_string
+                new_notif.id = it.meeting_id
+
+                if ((notification_list.filter { it.id == new_notif.id }).isEmpty()) {
+
+                    createNotificationChannel(
+                        "ie.wit.teamcom",
+                        "Meetings Today:",
+                        "(${upcoming}) Meetings! How about setting some reminders?"
+                    )
+
+                    notif_frag.pushNotification(app.database, new_notif)
+                }
+            }
         }
 
         var start_conv = app.valid_from_cal.toString()
@@ -430,47 +494,6 @@ class Home : AppCompatActivity(),
                 }
 
                 uidRef.removeEventListener(this)
-
-                //image upload check
-                /*if(user.image == 0) {
-                    if (app.auth.currentUser?.photoUrl != null) {
-                        Picasso.get().load(app.auth.currentUser?.photoUrl)
-                            .resize(180, 180)
-                            .transform(CropCircleTransformation())
-                            .into(navView.getHeaderView(0).homeProfImage, object : Callback {
-                                override fun onSuccess() {
-                                    // Drawable is ready
-                                    uploadImageView(app, navView.getHeaderView(0).homeProfImage)
-                                    user.image = 1 //set on first login to avoid stock image re-upload
-                                    updateUserProfile(app.auth.currentUser!!.uid, user.image)
-                                }
-
-                                override fun onError(e: Exception) {}
-                            })
-                    } else {
-                        Picasso.get().load(R.mipmap.ic_avatar)
-                            .resize(180, 180)
-                            .transform(CropCircleTransformation())
-                            .into(navView.getHeaderView(0).homeProfImage, object : Callback {
-                                override fun onSuccess() {
-                                    // Drawable is ready
-                                    uploadImageView(app, navView.getHeaderView(0).homeProfImage)
-                                    user.image = 1
-                                    updateUserProfile(app.auth.currentUser!!.uid, user.image)
-                                }
-
-                                override fun onError(e: Exception) {}
-                            })
-                    }
-                } else if (user.image == 1){ // if this isnt the users first login
-                    var ref = FirebaseStorage.getInstance().getReference("photos/${app.auth.currentUser!!.uid}.jpg")
-                    ref.downloadUrl.addOnSuccessListener {
-                        Picasso.get().load(it)
-                            .resize(180, 180)
-                            .transform(CropCircleTransformation())
-                            .into(navView.getHeaderView(0).homeProfImage)
-                    }
-                }*/
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -539,55 +562,55 @@ class Home : AppCompatActivity(),
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+
+            ///assistant
+            R.id.nav_assistant -> {
+
+            }
+            R.id.nav_notifications -> {
+                navigateTo(NotificationsFragment.newInstance(channel))
+            }
+
+
             ///social
             R.id.nav_news_feed -> {
-                //recurring_methods()
                 navigateTo(NewsFeedFragment.newInstance(channel))
             }
             R.id.nav_conversations -> {
-                //recurring_methods()
                 navigateTo(ConversationFragment.newInstance(channel))
             }
             R.id.nav_meetings -> {
-//                recurring_methods()
                 navigateTo(MeetingsFragment.newInstance(channel))
             }
 
 
             ///Organizational
             R.id.nav_calendar -> {
-//                recurring_methods()
                 navigateTo(CalendarFragment.newInstance(channel))
             }
 
             R.id.nav_tasks -> {
-//                recurring_methods()
                 navigateTo(ProjectListFragment.newInstance(channel))
             }
 
             R.id.nav_reminders -> {
-//                recurring_methods()
                 navigateTo(RemindersFragment.newInstance(channel))
             }
 
 
             ///Channel
             R.id.nav_channel_settings -> {
-//                recurring_methods()
                 navigateTo(SettingsFragment.newInstance(channel))
             }
 
             R.id.nav_log -> {
-//                recurring_methods()
                 navigateTo(LogFragment.newInstance(channel))
             }
 
             R.id.nav_members -> {
-//                recurring_methods()
                 navigateTo(MembersFragment.newInstance(channel))
             }
             R.id.nav_support -> {
-//                recurring_methods()
                 navigateTo(SupportFragment.newInstance(channel))
             }
             /////////////////////////
@@ -611,7 +634,7 @@ class Home : AppCompatActivity(),
 
 
     private fun signOut() {
-        app.auth.signOut()
+        auth.signOut()
         app.googleSignInClient.signOut()
         finish()
         startActivity<LoginRegActivity>()

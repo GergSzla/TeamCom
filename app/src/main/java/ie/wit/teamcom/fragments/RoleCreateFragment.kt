@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Role
@@ -168,7 +169,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
     }
 
     fun deleteRole(roleId: String?) {
-        val uid = app.auth.currentUser!!.uid
+        val uid = auth.currentUser!!.uid
         app.database.child("channels").child(currentChannel!!.id).child("roles").child(roleId!!)
             .addListenerForSingleValueEvent(
                 object : ValueEventListener {

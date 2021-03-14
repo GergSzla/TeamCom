@@ -26,6 +26,7 @@ import ie.wit.teamcom.adapters.ChannelListener
 import ie.wit.teamcom.adapters.ChannelsAdapter
 import ie.wit.teamcom.fragments.currentChannel
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
@@ -54,7 +55,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_channels_list)
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
@@ -63,8 +64,8 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         user = intent.extras!!.getParcelable<Account>("user_key")!!
 
         if (user.image == 0) {
-            if (app.auth.currentUser?.photoUrl != null) {
-                Picasso.get().load(app.auth.currentUser?.photoUrl)
+            if (auth.currentUser?.photoUrl != null) {
+                Picasso.get().load(auth.currentUser?.photoUrl)
                     .resize(260, 260)
                     .transform(CropCircleTransformation())
                     .into(profImage, object : Callback {
@@ -72,7 +73,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                             // Drawable is ready
                             uploadProfileImageView(app, profImage)
                             user.image = 1
-                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                            updateUserProfile(auth.currentUser!!.uid, user.image)
                         }
 
                         override fun onError(e: Exception) {
@@ -88,7 +89,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
                             // Drawable is ready
                             uploadProfileImageView(app, profImage)
                             user.image = 1
-                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                            updateUserProfile(auth.currentUser!!.uid, user.image)
                         }
 
                         override fun onError(e: Exception) {}
@@ -96,7 +97,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
             }
         } else if (user.image == 1) {
             var ref = FirebaseStorage.getInstance()
-                .getReference("photos/${app.auth.currentUser!!.uid}.jpg")
+                .getReference("photos/${auth.currentUser!!.uid}.jpg")
             ref.downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it)
                     .resize(260, 260)
@@ -110,7 +111,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         hideLoader(loader)
 
         setSwipeRefresh()
-        getAllUserChannels(app.auth.currentUser!!.uid)
+        getAllUserChannels(auth.currentUser!!.uid)
 
         card_full_name.text = user.firstName + " " + user.surname
         card_email.text = user.email
@@ -207,7 +208,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
 
     fun change_user_details_in_channels() {
         is_edited = true
-        getAllUserChannels(app.auth.currentUser!!.uid)
+        getAllUserChannels(auth.currentUser!!.uid)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -313,7 +314,7 @@ class ChannelsListActivity : AppCompatActivity(), AnkoLogger, ChannelListener {
         swiperefresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 swiperefresh.isRefreshing = true
-                getAllUserChannels(app.auth.currentUser!!.uid)
+                getAllUserChannels(auth.currentUser!!.uid)
             }
         })
     }

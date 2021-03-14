@@ -27,6 +27,7 @@ import ie.wit.teamcom.adapters.CommentListener
 import ie.wit.teamcom.adapters.CommentsAdapter
 import ie.wit.teamcom.adapters.PostAdapter
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Log
@@ -112,7 +113,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
     }
 
     fun delete_comment( comment: Comment) {
-        if ( comment.comment_author.id == app.auth.currentUser!!.uid){
+        if ( comment.comment_author.id == auth.currentUser!!.uid){
             var i = commentsList.indexOf(comment)
             app.database.child("channels").child(currentChannel.id).child("posts")
                 .child(currentPost.id).child("post_comments").child("$i")

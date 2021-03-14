@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import kotlinx.android.synthetic.main.loading.*
 import kotlinx.android.synthetic.main.loading_progress.*
 import java.io.ByteArrayOutputStream
@@ -38,7 +39,7 @@ fun createProgressLoader(activity: FragmentActivity): AlertDialog {
 
 fun uploadProfileImageView(app: MainApp, imageView: ImageView) {
     // Get the data from an ImageView as bytes
-    val uid = app.auth.currentUser!!.uid
+    val uid = auth.currentUser!!.uid
     val imageRef = app.storage.child("photos").child("${uid}.jpg")
     val bitmap = (imageView.drawable as BitmapDrawable).bitmap
     val baos = ByteArrayOutputStream()
@@ -51,7 +52,7 @@ fun uploadProfileImageView(app: MainApp, imageView: ImageView) {
 
 fun uploadChannelImageView(app: MainApp, imageView: ImageView, channel_id: String) {
     // Get the data from an ImageView as bytes
-    val uid = app.auth.currentUser!!.uid
+    val uid = auth.currentUser!!.uid
     val imageRef = app.storage.child("channel_photos").child("profile").child("${channel_id}.jpg")
     val bitmap = (imageView.drawable as BitmapDrawable).bitmap
     val baos = ByteArrayOutputStream()

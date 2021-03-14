@@ -11,6 +11,7 @@ import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.BuildConfig
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Meeting
 import kotlinx.android.synthetic.main.activity_zoom_meeting.*
 import org.jetbrains.anko.AnkoLogger
@@ -48,7 +49,7 @@ class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_zoom_meeting)
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 

@@ -24,6 +24,7 @@ import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import kotlinx.android.synthetic.main.activity_login_reg.*
@@ -47,7 +48,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
         app = application as MainApp
 
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
@@ -108,10 +109,10 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
         btnLogin.setOnClickListener {
             validateForm(false)
             if(!(txtEmail.text.toString() == "" || txtPassword.text.toString() == "")){
-                app.auth.signInWithEmailAndPassword(txtEmail.text.toString(), txtPassword.text.toString())
+                auth.signInWithEmailAndPassword(txtEmail.text.toString(), txtPassword.text.toString())
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            val user = app.auth.currentUser
+                            val user = auth.currentUser
                             app.database = FirebaseDatabase.getInstance().reference
 //                            startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
                             getUser(false)
@@ -128,7 +129,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun check_auto_login(){
-        if(app.auth.currentUser !== null){
+        if(auth.currentUser !== null){
             getUser(true)
         }
     }
@@ -200,13 +201,13 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
     private fun createAccount(email: String, password: String) {
         showLoader(loader, "Loading . . .", "Registering User . . .")
-        app.auth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    val user = app.auth.currentUser
+                    val user = auth.currentUser
                     app.database = FirebaseDatabase.getInstance().reference
-                    writeNewUserStats(Account(id = app.auth.currentUser!!.uid, email = app.auth.currentUser!!.email.toString(), firstName = txtFirstName.text.toString(),
+                    writeNewUserStats(Account(id = auth.currentUser!!.uid, email = auth.currentUser!!.email.toString(), firstName = txtFirstName.text.toString(),
                         surname = txtSurname.text.toString(), login_used = "firebaseAuth"))
                     hideLoader(loader)
                 } else {
@@ -220,7 +221,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     fun writeNewUserStats(user: Account) {
         showLoader(loader, "Loading . . .", "Adding User to Firebase")
 
-        val uid = app.auth.currentUser!!.uid
+        val uid = auth.currentUser!!.uid
         app.database.child("users")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -300,15 +301,15 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         showLoader(loader, "Loading . . .", "Logging In with Google...")
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        app.auth.signInWithCredential(credential)
+        auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithCredential:success")
-                    val user = app.auth.currentUser!!
+                    val user = auth.currentUser!!
                     val fname = user.displayName!!.substringBefore(" ")
                     val sname = user.displayName!!.substringAfter(" ")
                     writeNewUserStats(
-                        Account(id = app.auth.currentUser!!.uid, email = app.auth.currentUser!!.email.toString(), firstName = fname,
+                        Account(id = auth.currentUser!!.uid, email = auth.currentUser.email.toString(), firstName = fname,
                         surname = sname, image = 0, login_used = "google")
                     )
                 } else {

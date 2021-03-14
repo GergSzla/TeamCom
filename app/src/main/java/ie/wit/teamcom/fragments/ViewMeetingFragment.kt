@@ -22,6 +22,7 @@ import ie.wit.teamcom.activities.CreateZoomMeetingActivity
 import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.adapters.MembersListener
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Meeting
 import ie.wit.teamcom.models.Member
@@ -129,7 +130,7 @@ class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
             dialog.show()
         }
 
-        if (selected_meeting.meeting_creator.id !== app.auth.currentUser!!.uid) {
+        if (selected_meeting.meeting_creator.id !== auth.currentUser!!.uid) {
             root.linearCreator.isVisible = false
         }
 

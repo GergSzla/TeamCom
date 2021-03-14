@@ -19,6 +19,7 @@ import ie.wit.adventurio.helpers.showImagePicker
 import ie.wit.adventurio.helpers.uploadProfileImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Account
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_channel_create.*
@@ -38,7 +39,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
@@ -46,8 +47,8 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
         user = intent.extras!!.getParcelable<Account>("user_key")!!
 
         if (user.image == 0) {
-            if (app.auth.currentUser?.photoUrl != null) {
-                Picasso.get().load(app.auth.currentUser?.photoUrl)
+            if (auth.currentUser?.photoUrl != null) {
+                Picasso.get().load(auth.currentUser?.photoUrl)
                     .resize(260, 260)
                     .transform(CropCircleTransformation())
                     .into(profImage_edit_view, object : Callback {
@@ -55,7 +56,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
                             // Drawable is ready
                             uploadProfileImageView(app, profImage_edit_view)
                             user.image = 1
-                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                            updateUserProfile(auth.currentUser!!.uid, user.image)
                         }
 
                         override fun onError(e: Exception) {
@@ -71,7 +72,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
                             // Drawable is ready
                             uploadProfileImageView(app, profImage_edit_view)
                             user.image = 1
-                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                            updateUserProfile(auth.currentUser!!.uid, user.image)
                         }
 
                         override fun onError(e: Exception) {}
@@ -79,7 +80,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
             }
         } else if (user.image == 1) {
             var ref = FirebaseStorage.getInstance()
-                .getReference("photos/${app.auth.currentUser!!.uid}.jpg")
+                .getReference("photos/${auth.currentUser!!.uid}.jpg")
             ref.downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it)
                     .resize(260, 260)

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -28,6 +29,7 @@ import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.*
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.card_member.view.*
@@ -112,7 +114,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         loader = createLoader(requireActivity())
 
         showLoader(loader, "Loading . . . ", "Loading Page . . . ")
-        get_all_projects()
+        get_all_projects(app.database)
 
         Handler().postDelayed({
                 check_pref()
@@ -139,7 +141,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
     fun get_mh_entry() {
         app.database.child("channels").child(currentChannel.id).child("surveys")
-            .child(app.auth.currentUser!!.uid).child("entry")
+            .child(auth.currentUser!!.uid).child("entry")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -153,7 +155,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     user_mh.user_id = snapshot.child("user_id").value.toString()
 
                     app.database.child("channels").child(currentChannel.id).child("surveys")
-                        .child(app.auth.currentUser!!.uid).child("entry")
+                        .child(auth.currentUser!!.uid).child("entry")
                         .removeEventListener(this)
                     analyse_data()
                 }
@@ -178,7 +180,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 //            override fun onCancelled(error: DatabaseError) {
 //            }
 //        }
-        if (selected_member.id !== app.auth.currentUser!!.uid) {
+        if (selected_member.id !== auth.currentUser!!.uid) {
 
             delete_user_from_channel()
 
@@ -411,8 +413,8 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             .commit()
     }
 
-    fun get_all_projects() {
-        app.database.child("channels").child(currentChannel.id)
+    fun get_all_projects(db : DatabaseReference) {
+        db.child("channels").child(currentChannel.id)
             .child("projects")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -425,20 +427,20 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         val proj = it.getValue<Project>(Project::class.java)
                         projects.add(proj!!)
 
-                        app.database.child("channels")
+                        db.child("channels")
                             .child(currentChannel.id)
                             .child("projects")
                             .removeEventListener(this)
                     }
-                    get_all_tasks()
+                    get_all_tasks(db)
                 }
             })
     }
 
-    fun get_all_tasks() {
+    fun get_all_tasks(db : DatabaseReference) {
         projects.forEach {
             project = it
-            app.database.child("channels").child(currentChannel_.id)
+            db.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id)
                 .child("proj_task_stages")
@@ -456,7 +458,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == app.auth.currentUser!!.uid) {
+                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
                                 if (task.task_status == "Ongoing") {
                                     ongoing.add(task)
                                 } else if (task.task_status == "Completed") {
@@ -468,7 +470,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
 
-                            app.database.child("channels")
+                            db.child("channels")
                                 .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id)
@@ -481,7 +483,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels")
+            db.child("channels")
                 .child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id)
@@ -500,7 +502,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == app.auth.currentUser!!.uid) {
+                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
                                 if (task.task_status == "Ongoing") {
                                     ongoing.add(task)
                                 } else if (task.task_status == "Completed") {
@@ -512,7 +514,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
 
-                            app.database.child("channels")
+                            db.child("channels")
                                 .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id)
@@ -527,7 +529,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            app.database.child("channels").child(currentChannel_.id)
+            db.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("2")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -541,7 +543,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == app.auth.currentUser!!.uid) {
+                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
                                 if (task.task_status == "Ongoing") {
                                     ongoing.add(task)
                                 } else if (task.task_status == "Completed") {
@@ -552,7 +554,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                     overdue.add(task)
                                 }
                             }
-                            app.database.child("channels")
+                            db.child("channels")
                                 .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("2")
@@ -563,7 +565,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            app.database.child("channels").child(currentChannel_.id)
+            db.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("3")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -578,7 +580,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == app.auth.currentUser!!.uid) {
+                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
                                 if (task.task_status == "Ongoing") {
                                     ongoing.add(task)
                                 } else if (task.task_status == "Completed") {
@@ -590,7 +592,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
 
-                            app.database.child("channels")
+                            db.child("channels")
                                 .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("3")
@@ -600,7 +602,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels").child(currentChannel_.id)
+            db.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("4")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -615,7 +617,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == app.auth.currentUser!!.uid) {
+                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
                                 if (task.task_status == "Ongoing") {
                                     ongoing.add(task)
                                 } else if (task.task_status == "Completed") {
@@ -626,7 +628,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                     overdue.add(task)
                                 }
                             }
-                            app.database.child("channels")
+                            db.child("channels")
                                 .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("4")
@@ -636,7 +638,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            app.database.child("channels").child(currentChannel_.id)
+            db.child("channels").child(currentChannel_.id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("5")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -651,7 +653,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == app.auth.currentUser!!.uid) {
+                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
                                 if (task.task_status == "Ongoing") {
                                     ongoing.add(task)
                                 } else if (task.task_status == "Completed") {
@@ -662,7 +664,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                     overdue.add(task)
                                 }
                             }
-                            app.database.child("channels")
+                            db.child("channels")
                                 .child(currentChannel_.id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("5")
@@ -676,7 +678,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
     fun check_pref(){
         app.database.child("channels").child(currentChannel.id).child("surveys")
-            .child(app.auth.currentUser!!.uid).child("survey_pref")
+            .child(auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -686,7 +688,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     allow_admin = snapshot.child("visible_to_admin").value.toString().toBoolean()
 
                     app.database.child("channels").child(currentChannel.id).child("surveys")
-                        .child(app.auth.currentUser!!.uid).child("survey_pref")
+                        .child(auth.currentUser!!.uid).child("survey_pref")
                         .removeEventListener(this)
                     display_details()
                 }

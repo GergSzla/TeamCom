@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
@@ -38,7 +39,7 @@ class ChannelJoin : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_channel_join)
 
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
@@ -67,7 +68,7 @@ class ChannelJoin : AppCompatActivity(), AnkoLogger {
     }
 
     private fun checkInvite(invite_code: String) {
-        val uid = app.auth.currentUser!!.uid
+        val uid = auth.currentUser!!.uid
 
         app.database.child("invites")
             .addValueEventListener(object : ValueEventListener {

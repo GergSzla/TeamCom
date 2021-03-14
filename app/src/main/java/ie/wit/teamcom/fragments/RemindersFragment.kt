@@ -33,6 +33,7 @@ import ie.wit.teamcom.adapters.CommentsAdapter
 import ie.wit.teamcom.adapters.ReminderListener
 import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Reminder
@@ -100,7 +101,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     fun delete_reminder(reminder: Reminder) {
         var i = reminderList.indexOf(reminder)
         app.database.child("channels").child(currentChannel.id).child("reminders")
-            .child(app.auth.currentUser!!.uid).child(reminder.id)
+            .child(auth.currentUser!!.uid).child(reminder.id)
             .addListenerForSingleValueEvent(
                 object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {

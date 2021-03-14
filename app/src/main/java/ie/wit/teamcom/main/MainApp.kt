@@ -23,10 +23,10 @@ import us.zoom.sdk.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+lateinit var auth: FirebaseAuth
 
 class MainApp : Application() {
 
-    lateinit var auth: FirebaseAuth
     lateinit var database: DatabaseReference
     lateinit var googleSignInClient: GoogleSignInClient
     lateinit var storage: StorageReference

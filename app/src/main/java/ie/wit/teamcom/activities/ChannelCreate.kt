@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso
 import ie.wit.adventurio.helpers.*
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.*
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_channel_create.*
@@ -33,7 +34,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_channel_create)
 
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
@@ -112,7 +113,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
     private fun createChannel(channel: Channel){
         showLoader(loader, "Loading . . .","Creating Channel ${channel.id} . . .")
-        val uid = app.auth.currentUser!!.uid
+        val uid = auth.currentUser!!.uid
         val userValues = app.user
         var role = Role(id = UUID.randomUUID().toString(), role_name = "Admin", permission_code = "10000000000000", color_code = "b20202", isDefault = true)
 //        var task_stage_1 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "To Do",stage_color_code =  "d00000", stage_no = 1, stage_active = true)

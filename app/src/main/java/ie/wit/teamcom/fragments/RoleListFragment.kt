@@ -16,6 +16,7 @@ import ie.wit.teamcom.adapters.ChannelsAdapter
 import ie.wit.teamcom.adapters.RoleAdapter
 import ie.wit.teamcom.adapters.RoleListener
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Role
 import kotlinx.android.synthetic.main.activity_channels_list.*
@@ -64,7 +65,7 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
     override fun onResume() {
         super.onResume()
         app.activityResumed(currentChannel,app.currentActiveMember)
-        getAllChannelRoles(app.auth.currentUser!!.uid)
+        getAllChannelRoles(auth.currentUser!!.uid)
     }
 
     override fun onPause() {

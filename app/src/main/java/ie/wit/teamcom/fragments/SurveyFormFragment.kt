@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.InviteAdapter
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Invite
 import ie.wit.teamcom.models.SurveyPref
@@ -122,7 +123,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
 
     fun get_survey_pref() {
         app.database.child("channels").child(currentChannel.id).child("surveys")
-            .child(app.auth.currentUser!!.uid).child("survey_pref")
+            .child(auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -135,7 +136,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
                     survey_preference.user_id = snapshot.child("user_id").value.toString()
 
                     app.database.child("channels").child(currentChannel.id).child("surveys")
-                        .child(app.auth.currentUser!!.uid).child("survey_pref")
+                        .child(auth.currentUser!!.uid).child("survey_pref")
                         .removeEventListener(this)
 
                 }
@@ -305,7 +306,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
         }
 
         user_mh.set_of_ans_2_per = set_2_pts_per
-        user_mh.user_id = app.auth.currentUser!!.uid
+        user_mh.user_id = auth.currentUser!!.uid
 
         if (root.radio_group1.checkedRadioButtonId != -1 &&
             root.radio_group2.checkedRadioButtonId != -1 &&
@@ -346,9 +347,9 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
                     val childUpdates = HashMap<String, Any>()
                     val childUpdates_ = HashMap<String, Any>()
 
-                    childUpdates["/channels/${currentChannel.id}/surveys/${app.auth.currentUser!!.uid}/entry/"] =
+                    childUpdates["/channels/${currentChannel.id}/surveys/${auth.currentUser!!.uid}/entry/"] =
                         user_mh
-                    childUpdates_["/channels/${currentChannel.id}/surveys/${app.auth.currentUser!!.uid}/survey_pref/"] =
+                    childUpdates_["/channels/${currentChannel.id}/surveys/${auth.currentUser!!.uid}/survey_pref/"] =
                         survey_preference
 
                     app.database.updateChildren(childUpdates)
