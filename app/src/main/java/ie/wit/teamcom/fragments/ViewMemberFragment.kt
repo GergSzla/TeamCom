@@ -41,6 +41,21 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.*
 
+var user_mh = UserMHModel()
+var string_range_1 = ""
+var string_range_2 = ""
+var string_overall = ""
+var string_mh_desc = ""
+var allow_admin = false
+var survey_enabled = false
+var survey_freq = ""
+var completed = ArrayList<Task>()
+var overdue = ArrayList<Task>()
+var completed_overdue = ArrayList<Task>()
+var ongoing = ArrayList<Task>()
+var due_in_24_hrs = 0
+var due_in_7_days = 0
+var due_in_14_days = 0
 
 class ViewMemberFragment : Fragment(), AnkoLogger {
 
@@ -49,10 +64,6 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     lateinit var eventListener: ValueEventListener
     lateinit var root: View
 
-    var completed = ArrayList<Task>()
-    var overdue = ArrayList<Task>()
-    var completed_overdue = ArrayList<Task>()
-    var ongoing = ArrayList<Task>()
 
     var projects = ArrayList<Project>()
     var project = Project()
@@ -60,9 +71,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     var currentChannel_ = Channel()
     var selected_member = Member()
     var user_stats = Stats()
-    var user_mh = UserMHModel()
-    var allow_admin = false
-    lateinit var loader : androidx.appcompat.app.AlertDialog
+    lateinit var loader: androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,8 +125,9 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         showLoader(loader, "Loading . . . ", "Loading Page . . . ")
         get_all_projects(app.database)
 
-        Handler().postDelayed({
-                check_pref()
+        Handler().postDelayed(
+            {
+                check_pref(app.database, false)
             },
             2000 // value in milliseconds
         )
@@ -139,8 +149,8 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 //        root.textView20.text = "Are You Sure You Wish To Proceed and Kick This User?"
     }
 
-    fun get_mh_entry() {
-        app.database.child("channels").child(currentChannel.id).child("surveys")
+    fun get_mh_entry(db: DatabaseReference, pa: Boolean) {
+        db.child("channels").child(currentChannel.id).child("surveys")
             .child(auth.currentUser!!.uid).child("entry")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -154,10 +164,10 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         snapshot.child("set_of_ans_2_per").value.toString().toDouble()
                     user_mh.user_id = snapshot.child("user_id").value.toString()
 
-                    app.database.child("channels").child(currentChannel.id).child("surveys")
+                    db.child("channels").child(currentChannel.id).child("surveys")
                         .child(auth.currentUser!!.uid).child("entry")
                         .removeEventListener(this)
-                    analyse_data()
+                    analyse_data(db, pa)
                 }
             })
     }
@@ -165,21 +175,6 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     fun kick_selected_user() {
 
         //TODO: CHECK IF ADMIN
-//        var channel_admin = ""
-//
-//        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-//        val rootRef = FirebaseDatabase.getInstance().reference
-//        val uidRef = rootRef.child("channels").child(currentChannel.id).child("admin")
-//        eventListener = object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                var channel_admin = dataSnapshot.value.toString()
-//
-//                channel_admin
-//                uidRef.removeEventListener(this)
-//            }
-//            override fun onCancelled(error: DatabaseError) {
-//            }
-//        }
         if (selected_member.id !== auth.currentUser!!.uid) {
 
             delete_user_from_channel()
@@ -219,12 +214,15 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         app.activityResumed(currentChannel, app.currentActiveMember)
     }
 
-    var due_in_24_hrs = 0
-    var due_in_7_days = 0
-    var due_in_14_days = 0
+
     fun display_details() {
-//TODO ONLY SHOW STATS + MENTAL HEALTH IF ADMIN {
+
+        due_in_24_hrs = 0
+        due_in_7_days = 0
+        due_in_14_days = 0
+
         if (app.currentActiveMember.role.role_name == "Admin") {
+
 
             app.generateDateID("1")
             var current = app.valid_from_cal
@@ -296,25 +294,27 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             root.txtCompletedTasks.text = completed.size.toString()
             root.txtOverdueTasks.text = overdue.size.toString()
             root.txtCompletedOverdueTasks.text = completed_overdue.size.toString()
+
+            hideLoader(loader)
+            if (allow_admin) {
+                root.mem_mental_health.isVisible = true
+                get_mh_entry(app.database, false)
+            } else {
+                root.mem_mental_health.isVisible = false
+            }
+
         }
-        hideLoader(loader)
-        if(allow_admin){
-            root.mem_mental_health.isVisible = true
-            get_mh_entry()
-        } else {
-            root.mem_mental_health.isVisible = false
-        }
+
     }
 
-    var string_range_1 = ""
-    var string_range_2 = ""
-    var string_overall = ""
-    var string_mh_desc = ""
 
-    fun analyse_data() {
+    fun analyse_data(db: DatabaseReference, pa: Boolean) {
 
-        root.progressBar_mh.progress = user_mh.set_of_ans_2_per.toInt()
-        root.txt_percentage.text = String.format("%.1f",user_mh.set_of_ans_2_per)
+        if (!pa) {
+            root.progressBar_mh.progress = user_mh.set_of_ans_2_per.toInt()
+            root.txt_percentage.text = String.format("%.1f", user_mh.set_of_ans_2_per)
+        }
+
 
         if (user_mh.set_of_ans_2_per > 85) {
             string_range_2 = "range_1"
@@ -340,52 +340,54 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             string_range_1 = "range_5"
         }
 
-        if (string_range_1 == "range_1"){
+        if (string_range_1 == "range_1") {
             string_mh_desc += "-Feels Supported, Valued"
-        } else if (string_range_1 == "range_2"){
+        } else if (string_range_1 == "range_2") {
 
-            if (due_in_24_hrs >= 3){
+            if (due_in_24_hrs >= 3) {
                 string_mh_desc += "-With $due_in_24_hrs, user is potentially stressed."
             } else {
                 string_mh_desc += "\nPotentially Stressed."
             }
 
-        } else if (string_range_1 == "range_3"){
-            if (due_in_24_hrs >= 3){
+        } else if (string_range_1 == "range_3") {
+            if (due_in_24_hrs >= 3) {
                 string_mh_desc += "-With $due_in_24_hrs, user is potentially overwhelmed."
             } else {
                 string_mh_desc += "\nPotentially Overwhelmed."
             }
 
-        } else if (string_range_1 == "range_4"){
+        } else if (string_range_1 == "range_4") {
             string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued."
-        } else if (string_range_1 == "range_5"){
+        } else if (string_range_1 == "range_5") {
             string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued.\nand feels overwhelmed and unsupported."
         }
 
-        if (string_range_2 == "range_1"){
+        if (string_range_2 == "range_1") {
             string_overall = "Perfectly Well"
             string_mh_desc += "\n-Feels Perfectly Well"
 
-        } else if (string_range_2 == "range_2"){
+        } else if (string_range_2 == "range_2") {
             string_overall = "Potentially Stressed"
             string_mh_desc += "\n-Could be feeling quite stressed recently."
 
-        } else if (string_range_2 == "range_3"){
+        } else if (string_range_2 == "range_3") {
             string_overall = "Quite Concerning"
             string_mh_desc += "\n-Could be feeling a little down recently."
 
-        } else if (string_range_2 == "range_4"){
+        } else if (string_range_2 == "range_4") {
             string_overall = "Unwell"
             string_mh_desc += "\n-Could be feeling a little down or unwell recently."
 
-        } else if (string_range_2 == "range_5"){
+        } else if (string_range_2 == "range_5") {
             string_overall = "Could Use Some Friendly Words"
             string_mh_desc += "\n-Seems like this user needs some support. Please approach with care and support! \n-Please refer to the following website!\nhttps://www.aware.ie/support/support-line/"
 
         }
 
-        display_mh_stats()
+        if (!pa) {
+            display_mh_stats()
+        }
     }
 
     fun display_mh_stats() {
@@ -413,7 +415,15 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             .commit()
     }
 
-    fun get_all_projects(db : DatabaseReference) {
+    fun get_all_projects(db: DatabaseReference) {
+
+        //clear global vars
+         completed.clear()
+         overdue.clear()
+         completed_overdue.clear()
+         ongoing.clear()
+        //
+        projects = ArrayList<Project>()
         db.child("channels").child(currentChannel.id)
             .child("projects")
             .addValueEventListener(object : ValueEventListener {
@@ -432,15 +442,15 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             .child("projects")
                             .removeEventListener(this)
                     }
-                    get_all_tasks(db)
+                    get_all_tasks(db,currentChannel.id )
                 }
             })
     }
 
-    fun get_all_tasks(db : DatabaseReference) {
+    fun get_all_tasks(db: DatabaseReference, channel_id : String) {
         projects.forEach {
             project = it
-            db.child("channels").child(currentChannel_.id)
+            db.child("channels").child(channel_id)
                 .child("projects")
                 .child(project.proj_id)
                 .child("proj_task_stages")
@@ -471,7 +481,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             db.child("channels")
-                                .child(currentChannel_.id)
+                                .child(channel_id)
                                 .child("projects")
                                 .child(project.proj_id)
                                 .child("proj_task_stages")
@@ -484,7 +494,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
             db.child("channels")
-                .child(currentChannel_.id)
+                .child(channel_id)
                 .child("projects")
                 .child(project.proj_id)
                 .child("proj_task_stages")
@@ -515,7 +525,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             db.child("channels")
-                                .child(currentChannel_.id)
+                                .child(channel_id)
                                 .child("projects")
                                 .child(project.proj_id)
                                 .child("proj_task_stages")
@@ -529,7 +539,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            db.child("channels").child(currentChannel_.id)
+            db.child("channels").child(channel_id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("2")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -555,7 +565,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             db.child("channels")
-                                .child(currentChannel_.id)
+                                .child(channel_id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("2")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -565,7 +575,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 })
 
 
-            db.child("channels").child(currentChannel_.id)
+            db.child("channels").child(channel_id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("3")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -593,7 +603,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             }
 
                             db.child("channels")
-                                .child(currentChannel_.id)
+                                .child(channel_id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("3")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -602,7 +612,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            db.child("channels").child(currentChannel_.id)
+            db.child("channels").child(channel_id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("4")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -629,7 +639,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             db.child("channels")
-                                .child(currentChannel_.id)
+                                .child(channel_id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("4")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -638,7 +648,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     }
                 })
 
-            db.child("channels").child(currentChannel_.id)
+            db.child("channels").child(channel_id)
                 .child("projects")
                 .child(project.proj_id).child("proj_task_stages").child("5")
                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -665,7 +675,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                                 }
                             }
                             db.child("channels")
-                                .child(currentChannel_.id)
+                                .child(channel_id)
                                 .child("projects")
                                 .child(project.proj_id).child("proj_task_stages").child("5")
                                 .child("stage_tasks").orderByChild("task_due_date_id")
@@ -676,8 +686,8 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         }
     }
 
-    fun check_pref(){
-        app.database.child("channels").child(currentChannel.id).child("surveys")
+    fun check_pref(db: DatabaseReference, pa: Boolean) {
+        db.child("channels").child(currentChannel.id).child("surveys")
             .child(auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -686,11 +696,16 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     allow_admin = snapshot.child("visible_to_admin").value.toString().toBoolean()
+                    survey_freq = snapshot.child("frequency").value.toString()
+                    survey_enabled = snapshot.child("enabled").value.toString().toBoolean()
 
-                    app.database.child("channels").child(currentChannel.id).child("surveys")
+                    db.child("channels").child(currentChannel.id).child("surveys")
                         .child(auth.currentUser!!.uid).child("survey_pref")
                         .removeEventListener(this)
-                    display_details()
+
+                    if (!pa){
+                        display_details()
+                    }
                 }
             })
     }

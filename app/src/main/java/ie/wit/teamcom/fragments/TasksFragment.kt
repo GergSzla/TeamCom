@@ -100,7 +100,12 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             override fun onRefresh() {
                 root.swiperefreshTasks.isRefreshing = true
                 getAllTasks()
-                check_completed()
+                Handler().postDelayed(
+                    {
+                        check_completed()
+                    },
+                    2000 // value in milliseconds
+                )
             }
         })
     }
@@ -208,7 +213,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     }
 
     fun check_completed() {
-
         app.generateDateID("1")
         task_list_1.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
@@ -225,14 +229,14 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
             //check if completed before due
             var task_index = task_list_1.indexOf(it)
-            if (it.task_completed_date_id > it.task_due_date_id){
+            if (it.task_completed_date_id > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/task_status"] =
                     "Completed"
                 app.database.updateChildren(task_update)
             }
             //check if overdue but completed
-            if (it.task_completed_date_id <= it.task_due_date_id){
+            if (it.task_completed_date_id <= it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/task_status"] =
                     "Completed Overdue"
@@ -256,7 +260,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
             }
             var task_index = task_list_2.indexOf(it)
-            if (app.valid_from_cal < it.task_due_date_id){
+            if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/1/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -268,6 +272,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 app.database.updateChildren(task_update)
             }
         }
+
         task_list_3.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
                 var check_comp_task = it
@@ -283,7 +288,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_3.indexOf(it)
-            if (app.valid_from_cal < it.task_due_date_id){
+            if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/2/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -311,7 +316,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_4.indexOf(it)
-            if (app.valid_from_cal < it.task_due_date_id){
+            if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/3/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -338,7 +343,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_5.indexOf(it)
-            if (app.valid_from_cal < it.task_due_date_id){
+            if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/4/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -365,7 +370,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
 
             var task_index = task_list_6.indexOf(it)
-            if (app.valid_from_cal < it.task_due_date_id){
+            if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/5/stage_tasks/$task_index/task_status"] =
                     "Overdue"
@@ -731,7 +736,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         selected_stage.stage_tasks.removeAt(index_of_task)
         selected_task.task_current_stage = stage.stage_name
         selected_task.task_current_stage_color = stage.stage_color_code
-        if (stage.stage_name == "Completed"){
+        if (stage.stage_name == "Completed") {
             app.generateDateID("1")
             selected_task.task_completed_date_id = app.valid_to_cal
         }
@@ -760,43 +765,5 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
                 }
             })
-
-//        app.database.child("channels").child(currentChannel!!.id).child("projects")
-//            .child(selected_project.proj_id).child("proj_task_stages").child("${stage.stage_no - 1}").child("stage_tasks")
-//            .addListenerForSingleValueEvent(
-//                object : ValueEventListener {
-//                    override fun onDataChange(snapshot: DataSnapshot) {
-//                        snapshot.ref.removeValue()
-//                    }
-//
-//                    override fun onCancelled(error: DatabaseError) {
-//                    }
-//                })
-
-//        var deleted = false
-//        var i = 0
-//        while (!deleted) {
-//            app.database.child("channels").child("projects").child(selected_project.proj_id).child("proj_task_stages")
-//                .child("${selected_stage.stage_no - 1}").child("stage_tasks").child("$i")
-//                .addListenerForSingleValueEvent(
-//                    object : ValueEventListener {
-//                        override fun onDataChange(snapshot: DataSnapshot) {
-//                            snapshot.ref.removeValue()
-//                            deleted = true
-//                            return
-//                        }
-//
-//                        override fun onCancelled(error: DatabaseError) {
-//                        }
-//                    })
-//            if (i <= 5 && !deleted) {
-//                i++
-//            } else if (i > 5 && !deleted) {
-//                //Toast.makeText(requireContext(), "Error: Task Not Found In Any Stages!", Toast.LENGTH_SHORT).show()
-//                return
-//            }
-//        }
     }
-
-
 }

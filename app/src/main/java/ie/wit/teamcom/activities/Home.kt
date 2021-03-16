@@ -270,9 +270,9 @@ class Home : AppCompatActivity(),
     }
 
     fun checkUpcomingTasks() {
-        if (mem_frag.due_in_24_hrs != 0) {
+        if (due_in_24_hrs != 0) {
             if (!assistant_status.contains("Upcoming task(s)!")) {
-                assistant_status += "• ${mem_frag.due_in_24_hrs} Upcoming task(s)!"
+                assistant_status += "• ${due_in_24_hrs} Upcoming task(s)!"
                 startService()
             }
         }
@@ -281,8 +281,8 @@ class Home : AppCompatActivity(),
         var new_id =
             start_conv.replaceRange(start_conv.length - 2, start_conv.length, "00").toLong()
 
-        if (mem_frag.overdue.size != 0) {
-            mem_frag.overdue.forEach {
+        if (overdue.size != 0) {
+            overdue.forEach {
                 if (it.task_due_date_id == new_id) {
                     createNotificationChannel(
                         "ie.wit.teamcom",
@@ -565,7 +565,7 @@ class Home : AppCompatActivity(),
 
             ///assistant
             R.id.nav_assistant -> {
-
+                navigateTo(PersonalAssistantFragment.newInstance(channel))
             }
             R.id.nav_notifications -> {
                 navigateTo(NotificationsFragment.newInstance(channel))

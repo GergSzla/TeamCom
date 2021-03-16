@@ -24,18 +24,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import ie.wit.adventurio.helpers.createLoader
-import ie.wit.adventurio.helpers.hideLoader
-import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.CommentsAdapter
 import ie.wit.teamcom.adapters.ReminderListener
 import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Reminder
 import ie.wit.utils.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.floating_popup.*
@@ -45,14 +41,14 @@ import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import kotlinx.android.synthetic.main.popup_create_event.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.time.LocalDate
 import java.util.*
+
+var reminderList = ArrayList<Reminder>()
 
 class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
 
     lateinit var root: View
     lateinit var app: MainApp
-    var reminderList = ArrayList<Reminder>()
     var new_reminder = Reminder()
     var edit_reminder = Reminder()
     private var dialog: Dialog? = null
@@ -116,7 +112,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     override fun onResume() {
         super.onResume()
         app.activityResumed(currentChannel, app.currentActiveMember)
-        getAllReminders()
+        getAllReminders(app.database, false)
     }
 
     override fun onPause() {
@@ -288,10 +284,10 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
             })
     }
 
-    fun getAllReminders() {
+    fun getAllReminders(db : DatabaseReference, pa : Boolean) {
         reminderList = ArrayList<Reminder>()
-        app.database.child("channels").child(currentChannel!!.id).child("reminders")
-            .child(app.currentActiveMember.id)
+        db.child("channels").child(currentChannel.id).child("reminders")
+            .child(auth.currentUser.uid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase nf error : ${error.message}")
@@ -303,18 +299,22 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                     children.forEach {
                         val reminder = it.getValue<Reminder>(Reminder::class.java)
                         reminderList.add(reminder!!)
-                        root.remindersRecyclerView.adapter = RemindersAdapter(
-                            reminderList,
-                            this@RemindersFragment
-                        )
-                        root.remindersRecyclerView.adapter?.notifyDataSetChanged()
-                        if (reminderList.size > 0 ) {
-                            root.txtEmpty_reminders.isVisible = false
+
+                        if (!pa){
+                            root.remindersRecyclerView.adapter = RemindersAdapter(
+                                reminderList,
+                                this@RemindersFragment
+                            )
+                            root.remindersRecyclerView.adapter?.notifyDataSetChanged()
+                            if (reminderList.size > 0 ) {
+                                root.txtEmpty_reminders.isVisible = false
+                            }
+                            checkSwipeRefresh()
                         }
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("reminders")
+
+                        db.child("channels").child(currentChannel.id).child("reminders")
                             .child(
-                                app.currentActiveMember.id
+                                auth.currentUser.uid
                             )
                             .removeEventListener(this)
                     }
@@ -327,7 +327,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
             SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 root.swiperefreshReminders.isRefreshing = true
-                getAllReminders()
+                getAllReminders(app.database,false)
             }
         })
     }
