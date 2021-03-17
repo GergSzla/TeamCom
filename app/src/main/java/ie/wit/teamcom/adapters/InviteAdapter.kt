@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Invite
-import ie.wit.teamcom.models.Meeting
 import kotlinx.android.synthetic.main.card_invite.view.*
 
 

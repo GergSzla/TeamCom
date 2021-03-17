@@ -7,7 +7,7 @@
     android:background="@drawable/splash_background"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    tools:context=".fragments.ViewMemberFragment">
+    tools:context=".fragments.PersonalAssistantFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -254,6 +254,32 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/txt_meeting_desc"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/google_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtMTitle" />
+
+            <TextView
+
+                android:id="@+id/txt_reschedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+                android:clickable="true"
+                android:fontFamily="sans-serif-thin"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Go To Meetings"
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -467,6 +493,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_tasks_desc"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/google_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtMTitle" />
+
+            <TextView
+
+                android:id="@+id/txt_gotoTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+                android:clickable="true"
+                android:fontFamily="sans-serif-thin"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Go To Projects"
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -536,6 +588,32 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/txt_reminder_desc"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/google_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtMTitle" />
+
+            <TextView
+
+                android:id="@+id/txt_gotoReminders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+                android:clickable="true"
+                android:fontFamily="sans-serif-thin"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Go To Reminders"
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

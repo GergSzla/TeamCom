@@ -26,15 +26,11 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Account
-import ie.wit.teamcom.models.Channel
 import kotlinx.android.synthetic.main.activity_login_reg.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
 
 class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 

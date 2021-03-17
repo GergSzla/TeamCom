@@ -1,7 +1,6 @@
 package ie.wit.teamcom.fragments
 
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -13,18 +12,15 @@ import android.view.Window
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.adventurio.helpers.*
 import ie.wit.teamcom.R
-import ie.wit.teamcom.activities.LoginRegActivity
 import ie.wit.teamcom.adapters.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
@@ -96,18 +92,16 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshTasks.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshTasks.isRefreshing = true
-                getAllTasks()
-                Handler().postDelayed(
-                    {
-                        check_completed()
-                    },
-                    2000 // value in milliseconds
-                )
-            }
-        })
+        root.swiperefreshTasks.setOnRefreshListener {
+            root.swiperefreshTasks.isRefreshing = true
+            getAllTasks()
+            Handler().postDelayed(
+                {
+                    check_completed()
+                },
+                2000 // value in milliseconds
+            )
+        }
     }
 
 
@@ -116,7 +110,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     }
 
     fun update_project_stats() {
-        //count active tasks (excl. complete)
         active_tasks = ArrayList<Task>()
         for (i in 1..5) {
             app.database.child("channels").child(currentChannel!!.id).child("projects")
@@ -176,7 +169,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                             .child("stage_tasks")
                             .removeEventListener(this)
                     }
-                    var completed = completed_tasks.size
+                    val completed = completed_tasks.size
                     app.database.child("channels").child(currentChannel.id)
                         .addValueEventListener(object : ValueEventListener {
                             override fun onCancelled(error: DatabaseError) {
@@ -216,10 +209,10 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         app.generateDateID("1")
         task_list_1.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
-                var check_comp_task = it
+                val check_comp_task = it
                 check_comp_task.passed_due_date = true
 
-                var task_index = task_list_1.indexOf(it)
+                val task_index = task_list_1.indexOf(it)
                 val task_update = HashMap<String, Any>()
 
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/passed_due_date"] =
@@ -228,7 +221,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 app.database.updateChildren(task_update)
             }
             //check if completed before due
-            var task_index = task_list_1.indexOf(it)
+            val task_index = task_list_1.indexOf(it)
             if (it.task_completed_date_id > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/0/stage_tasks/$task_index/task_status"] =
@@ -246,10 +239,10 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
         task_list_2.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
-                var check_comp_task = it
+                val check_comp_task = it
                 check_comp_task.passed_due_date = true
 
-                var task_index = task_list_2.indexOf(it)
+                val task_index = task_list_2.indexOf(it)
                 val task_update = HashMap<String, Any>()
 
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/1/stage_tasks/$task_index/passed_due_date"] =
@@ -259,7 +252,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 app.database.updateChildren(task_update)
 
             }
-            var task_index = task_list_2.indexOf(it)
+            val task_index = task_list_2.indexOf(it)
             if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/1/stage_tasks/$task_index/task_status"] =
@@ -275,10 +268,10 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_3.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
-                var check_comp_task = it
+                val check_comp_task = it
                 check_comp_task.passed_due_date = true
 
-                var task_index = task_list_3.indexOf(it)
+                val task_index = task_list_3.indexOf(it)
                 val task_update = HashMap<String, Any>()
 
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/2/stage_tasks/$task_index/passed_due_date"] =
@@ -287,7 +280,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 app.database.updateChildren(task_update)
             }
 
-            var task_index = task_list_3.indexOf(it)
+            val task_index = task_list_3.indexOf(it)
             if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/2/stage_tasks/$task_index/task_status"] =
@@ -303,10 +296,10 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
         task_list_4.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
-                var check_comp_task = it
+                val check_comp_task = it
                 check_comp_task.passed_due_date = true
 
-                var task_index = task_list_2.indexOf(it)
+                val task_index = task_list_2.indexOf(it)
                 val task_update = HashMap<String, Any>()
 
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/3/stage_tasks/$task_index/passed_due_date"] =
@@ -315,7 +308,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 app.database.updateChildren(task_update)
             }
 
-            var task_index = task_list_4.indexOf(it)
+            val task_index = task_list_4.indexOf(it)
             if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/3/stage_tasks/$task_index/task_status"] =
@@ -330,10 +323,10 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
         task_list_5.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
-                var check_comp_task = it
+                val check_comp_task = it
                 check_comp_task.passed_due_date = true
 
-                var task_index = task_list_2.indexOf(it)
+                val task_index = task_list_2.indexOf(it)
                 val task_update = HashMap<String, Any>()
 
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/4/stage_tasks/$task_index/passed_due_date"] =
@@ -342,7 +335,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 app.database.updateChildren(task_update)
             }
 
-            var task_index = task_list_5.indexOf(it)
+            val task_index = task_list_5.indexOf(it)
             if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/4/stage_tasks/$task_index/task_status"] =
@@ -357,10 +350,10 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
         task_list_6.forEach {
             if (app.valid_from_cal > it.task_due_date_id) {
-                var check_comp_task = it
+                val check_comp_task = it
                 check_comp_task.passed_due_date = true
 
-                var task_index = task_list_2.indexOf(it)
+                val task_index = task_list_2.indexOf(it)
                 val task_update = HashMap<String, Any>()
 
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/5/stage_tasks/$task_index/passed_due_date"] =
@@ -369,7 +362,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                 app.database.updateChildren(task_update)
             }
 
-            var task_index = task_list_6.indexOf(it)
+            val task_index = task_list_6.indexOf(it)
             if (app.valid_from_cal > it.task_due_date_id) {
                 val task_update = HashMap<String, Any>()
                 task_update["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/5/stage_tasks/$task_index/task_status"] =
@@ -384,7 +377,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
     }
 
-    fun getAllTasks() {
+    private fun getAllTasks() {
         task_list_1 = ArrayList<Task>()
         root.tasks1RecyclerView.adapter = TasksAdapter(task_list_1, this@TasksFragment)
         app.database.child("channels").child(currentChannel!!.id).child("projects")
@@ -531,7 +524,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_5 = ArrayList<Task>()
         root.tasks5RecyclerView.adapter = TasksAdapter(task_list_5, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("projects")
+        app.database.child("channels").child(currentChannel.id).child("projects")
             .child(selected_project.proj_id).child("proj_task_stages").child("4")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
@@ -566,7 +559,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         task_list_6 = ArrayList<Task>()
         root.tasks6RecyclerView.adapter = TasksAdapter(task_list_6, this@TasksFragment)
-        app.database.child("channels").child(currentChannel!!.id).child("projects")
+        app.database.child("channels").child(currentChannel.id).child("projects")
             .child(selected_project.proj_id).child("proj_task_stages").child("5")
             .child("stage_tasks").orderByChild("task_due_date_id")
             .addValueEventListener(object : ValueEventListener {
@@ -585,7 +578,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                         root.tasks6RecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
 
-                        app.database.child("channels").child(currentChannel!!.id).child("projects")
+                        app.database.child("channels").child(currentChannel.id).child("projects")
                             .child(selected_project.proj_id).child("proj_task_stages").child("5")
                             .child("stage_tasks").orderByChild("task_due_date_id")
                             .removeEventListener(this)
@@ -619,7 +612,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
     }
 
-    fun change_state_dialog(stage: TaskStage, task: Task) {
+    private fun change_state_dialog(stage: TaskStage, task: Task) {
         task_stage_list = ArrayList<TaskStage>()
         val dialog = Dialog(requireActivity())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -661,7 +654,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     }
 
 
-    fun getCurrentTaskStage(task: Task) {
+    private fun getCurrentTaskStage(task: Task) {
         app.database.child("channels").child(currentChannel!!.id).child("projects")
             .child(selected_project.proj_id).child("proj_task_stages")
             .addValueEventListener(object : ValueEventListener {
@@ -706,9 +699,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         taskName.text = task.task_msg
         taskDesc.text = task.task_desc
-        taskCreator.text = task.task_creator.firstName + " " + task.task_creator.surname
-        taskAssignee.text = task.task_assignee.firstName + " " + task.task_assignee.surname
-        taskDueDate.text = task.task_due_date_as_string + ", " + task.task_due_time_as_string
+        (task.task_creator.firstName + " " + task.task_creator.surname).also { taskCreator.text = it }
+        (task.task_assignee.firstName + " " + task.task_assignee.surname).also { taskAssignee.text = it }
+        (task.task_due_date_as_string + ", " + task.task_due_time_as_string).also { taskDueDate.text = it }
 
         if (task.task_current_stage_color.take(1) != "#") {
             taskStage.setBackgroundColor(Color.parseColor("#" + task.task_current_stage_color))
@@ -722,7 +715,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
 
         progressBar.progress = task.task_importance
-        taskProgress.text = task.task_importance.toString() + "/5"
+        (task.task_importance.toString() + "/5").also { taskProgress.text = it }
         taskStage.text = task.task_current_stage
         cancel.setOnClickListener {
             dialog.dismiss()
@@ -732,7 +725,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
 
     override fun onStageClick(stage: TaskStage) {
-        var index_of_task = selected_stage.stage_tasks.indexOf(selected_task)
+        val index_of_task = selected_stage.stage_tasks.indexOf(selected_task)
         selected_stage.stage_tasks.removeAt(index_of_task)
         selected_task.task_current_stage = stage.stage_name
         selected_task.task_current_stage_color = stage.stage_color_code

@@ -8,23 +8,18 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import android.widget.Toast.makeText
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.InviteAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Invite
 import ie.wit.teamcom.models.SurveyPref
 import ie.wit.teamcom.models.UserMHModel
-import kotlinx.android.synthetic.main.fragment_invites_list.view.*
 import kotlinx.android.synthetic.main.fragment_survey_form.view.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import java.util.HashMap
 
 class SurveyFormFragment : Fragment(), AnkoLogger {
@@ -121,7 +116,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
         return root
     }
 
-    fun get_survey_pref() {
+    private fun get_survey_pref() {
         app.database.child("channels").child(currentChannel.id).child("surveys")
             .child(auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
@@ -148,9 +143,9 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
     var answer_2 = ""
     var answer_3 = ""
     var answer_4 = ""
-    fun save_survey() {
+    private fun save_survey() {
         if (root.radio_group1.checkedRadioButtonId != -1) {
-            var selected_1 =
+            val selected_1 =
                 root.findViewById<RadioButton>(root.radio_group1.checkedRadioButtonId)
             answer_1 = selected_1.text.toString()
             if (answer_1 !== "I'd Rather Not Answer") {
@@ -158,7 +153,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
             }
         }
         if (root.radio_group2.checkedRadioButtonId != -1) {
-            var selected_2 =
+            val selected_2 =
                 root.findViewById<RadioButton>(root.radio_group2.checkedRadioButtonId)
 
             answer_2 = selected_2.text.toString()
@@ -167,7 +162,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
             }
         }
         if (root.radio_group3.checkedRadioButtonId != -1) {
-            var selected_3 =
+            val selected_3 =
                 root.findViewById<RadioButton>(root.radio_group3.checkedRadioButtonId)
             answer_3 = selected_3.text.toString()
             if (answer_3 !== "I'd Rather Not Answer") {
@@ -175,7 +170,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
             }
         }
         if (root.radio_group4.checkedRadioButtonId != -1) {
-            var selected_4 =
+            val selected_4 =
                 root.findViewById<RadioButton>(root.radio_group4.checkedRadioButtonId)
 
             answer_4 = selected_4.text.toString()
@@ -190,7 +185,7 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
 
     var surveyable_percentage = 0.0
     var question_worth = 0.0
-    fun calc_set_1(ans_1: String, ans_2: String, ans_3: String, ans_4: String) {
+    private fun calc_set_1(ans_1: String, ans_2: String, ans_3: String, ans_4: String) {
         if (no_valid > 0.0.toInt()) {
             surveyable_percentage = (100 - (100 / no_valid)).toDouble()
             question_worth = (100 / no_valid).toDouble()
@@ -320,12 +315,11 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
         ) {
             add_to_db()
         } else {
-            Toast.makeText(context, "Information Missing", Toast.LENGTH_LONG)
+            makeText(context, "Information Missing", Toast.LENGTH_LONG).show()
         }
     }
 
-    fun add_to_db() {
-        var new_date_id = 0
+    private fun add_to_db() {
         if (survey_preference.frequency == "Daily") {
             app.generateDateID("24")
         } else if (survey_preference.frequency == "Weekly") {

@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import ie.wit.teamcom.R
-import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Conversation
-import kotlinx.android.synthetic.main.card_channel.view.*
 import kotlinx.android.synthetic.main.card_conversation.view.*
 
 

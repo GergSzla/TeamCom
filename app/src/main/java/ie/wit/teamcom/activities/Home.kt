@@ -15,21 +15,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.ConversationAdapter
-import ie.wit.teamcom.adapters.EventAdapter
-import ie.wit.teamcom.adapters.MeetingsAdapter
 import ie.wit.teamcom.fragments.*
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
@@ -46,7 +39,6 @@ import kotlinx.android.synthetic.main.fragment_meetings.view.*
 import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
-import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 import java.util.*
 
@@ -259,20 +251,20 @@ class Home : AppCompatActivity(),
         }
     }
 
-    fun getTasks() {
-        mem_frag.get_all_projects(app.database)
+    fun getTasks(db : DatabaseReference) {
+        mem_frag.get_all_projects(db)
         Handler().postDelayed(
             {
-                checkUpcomingTasks()
+                checkUpcomingTasks(db)
             },
             2000 // value in milliseconds
         )
     }
 
-    fun checkUpcomingTasks() {
+    fun checkUpcomingTasks(db : DatabaseReference) {
         if (due_in_24_hrs != 0) {
             if (!assistant_status.contains("Upcoming task(s)!")) {
-                assistant_status += "• ${due_in_24_hrs} Upcoming task(s)!"
+                assistant_status += "• $due_in_24_hrs Upcoming task(s)!"
                 startService()
             }
         }
@@ -297,7 +289,7 @@ class Home : AppCompatActivity(),
 
                     new_notif.id = UUID.randomUUID().toString()
 
-                    notif_frag.pushNotification(app.database, new_notif)
+                    notif_frag.pushNotification(db, new_notif)
                 }
             }
         }
@@ -357,69 +349,6 @@ class Home : AppCompatActivity(),
         }
     }
 
-    fun getMeetings(channel_id: String) {
-        meetingList = ArrayList<Meeting>()
-        app.database.child("channels").child(channel_id).child("meetings")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val children = snapshot.children
-                    children.forEach {
-                        val meeting = it.getValue<Meeting>(Meeting::class.java)
-                        meetingList.add(meeting!!)
-                        app.database.child("channels").child(channel_id).child("meetings")
-                            .removeEventListener(this)
-                    }
-                    checkUpcoming()
-                }
-            })
-    }
-
-    fun checkUpcoming() {
-        var upcoming = 0
-        meetingList.forEach {
-            if (app.reminder_due_date_id == app.valid_from_cal) {
-                upcoming++
-            }
-            if (upcoming != 0) {
-
-                var new_notif = AppNotification()
-                new_notif.type = "Meeting"
-                new_notif.msg =
-                    "Meetings Today: (${upcoming}) Meetings! How about setting some reminders through the view meeting screen?"
-                new_notif.date_id = it.meeting_date_id
-                new_notif.date_and_time = it.meeting_date_as_string + ", " + it.meeting_time_as_string
-                new_notif.id = it.meeting_id
-
-                if ((notification_list.filter { it.id == new_notif.id }).isEmpty()) {
-
-                    createNotificationChannel(
-                        "ie.wit.teamcom",
-                        "Meetings Today:",
-                        "(${upcoming}) Meetings! How about setting some reminders?"
-                    )
-
-                    notif_frag.pushNotification(app.database, new_notif)
-                }
-            }
-        }
-
-        var start_conv = app.valid_from_cal.toString()
-        var new_id =
-            start_conv.replaceRange(start_conv.length - 2, start_conv.length, "00").toLong()
-
-        meetingList.forEach {
-            if (it.meeting_date_id == new_id) {
-                createNotificationChannel(
-                    "ie.wit.teamcom",
-                    "Meeting Starting Now:",
-                    it.meeting_title
-                )
-            }
-        }
-    }
 
     fun getEvents(channel_id: String) {
         app.generateDateID("1")
@@ -477,7 +406,7 @@ class Home : AppCompatActivity(),
                 user.image = dataSnapshot.child("image").value.toString().toInt()
                 user.login_used = dataSnapshot.child("login_used").value.toString()
                 getActiveReminders(channel.id)
-                getMeetings(channel.id)
+                app.getMeetings(channel.id)
 
                 var newsFeedFragment = NewsFeedFragment.newInstance(channel)
                 navigateTo(NewsFeedFragment.newInstance(channel))
@@ -542,9 +471,9 @@ class Home : AppCompatActivity(),
         getActiveReminders(channel.id)
         getSurvey(channel.id)
         getEvents(channel.id)
-        getMeetings(channel.id)
+        app.getMeetings(channel.id)
         getConversations(channel.id)
-        getTasks()
+        getTasks(app.database)
     }
 
     val h2 = Handler()

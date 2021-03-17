@@ -6,13 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
-import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Member
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.card_member.view.*
 
 

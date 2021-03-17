@@ -1,13 +1,8 @@
 package ie.wit.teamcom.fragments
 
-import android.R.attr.label
 import android.app.Dialog
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +10,9 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -47,7 +39,6 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
     var invitesList = ArrayList<Invite>()
     var invite = Invite()
     var key_set: String = ""
-    var myClipboard: ClipboardManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +58,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         activity?.title = getString(R.string.title_invites_settings)
 
         root.btnAddNewInvite.setOnClickListener {
-            showDialog("")
+            showDialog()
         }
 
         root.invitesRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -152,13 +143,10 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshInvites.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshInvites.isRefreshing = true
-                getAllChannelInvites()
-            }
-        })
+        root.swiperefreshInvites.setOnRefreshListener {
+            root.swiperefreshInvites.isRefreshing = true
+            getAllChannelInvites()
+        }
     }
 
 
@@ -176,7 +164,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
             }
     }
 
-    private fun showDialog(title: String) {
+    private fun showDialog() {
         val dialog = Dialog(requireActivity())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -215,14 +203,14 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
 
 
     fun keyGen() {
-        var res: Resources = resources
-        var key_1 = res.getStringArray(R.array.randomLetters).random()
-        var key_2 = res.getStringArray(R.array.randomLetters).random()
-        var key_3 = res.getStringArray(R.array.randomLetters).random()
-        var key_4 = res.getStringArray(R.array.randomLetters).random()
-        var key_5 = res.getStringArray(R.array.randomLetters).random()
-        var key_6 = res.getStringArray(R.array.randomLetters).random()
-        var key_7 = res.getStringArray(R.array.randomLetters).random()
+        val res: Resources = resources
+        val key_1 = res.getStringArray(R.array.randomLetters).random()
+        val key_2 = res.getStringArray(R.array.randomLetters).random()
+        val key_3 = res.getStringArray(R.array.randomLetters).random()
+        val key_4 = res.getStringArray(R.array.randomLetters).random()
+        val key_5 = res.getStringArray(R.array.randomLetters).random()
+        val key_6 = res.getStringArray(R.array.randomLetters).random()
+        val key_7 = res.getStringArray(R.array.randomLetters).random()
 
         key_set = key_1 + key_2 + "-" + key_3 + key_4 + key_5 + key_6 + "_" + key_7
     }
@@ -247,7 +235,7 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
                         currentChannel
                     app.database.updateChildren(childUpdates)
 
-                    var new_log = Log(
+                    val new_log = Log(
                         log_id = app.valid_from_cal,
                         log_triggerer = app.currentActiveMember,
                         log_date = app.dateAsString,
@@ -263,14 +251,6 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
                     //startActivity(intentFor<ChannelsListActivity>().putExtra("user_key", user))
                 }
             })
-    }
-
-    private fun navigateTo(fragment: Fragment) {
-        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
-        fragmentManager.beginTransaction()
-            .replace(R.id.homeFrame, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     ///Log Nightmare Functions Below

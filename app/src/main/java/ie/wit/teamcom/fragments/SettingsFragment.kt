@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
-import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Project
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 import org.jetbrains.anko.AnkoLogger
 
@@ -40,15 +38,15 @@ class SettingsFragment : Fragment(), AnkoLogger {
         root.txtChannelNameSettings.text = currentChannel.channelName
 
         root.txtSettingsRoles.setOnClickListener {
-            navigateTo(RoleListFragment.newInstance(currentChannel!!))
+            navigateTo(RoleListFragment.newInstance(currentChannel))
         }
 
         root.txtSettingsMembers.setOnClickListener {
-            navigateTo(MembersFragment.newInstance(currentChannel!!))
+            navigateTo(MembersFragment.newInstance(currentChannel))
         }
 
         root.txtSettingsInvites.setOnClickListener {
-            navigateTo(InvitesListFragment.newInstance(currentChannel!!))
+            navigateTo(InvitesListFragment.newInstance(currentChannel))
         }
 
         root.txtSettingsChannelDetails.setOnClickListener {
@@ -64,12 +62,12 @@ class SettingsFragment : Fragment(), AnkoLogger {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
     companion object {

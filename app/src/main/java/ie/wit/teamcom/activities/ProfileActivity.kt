@@ -22,8 +22,6 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Account
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.android.synthetic.main.activity_channel_create.*
-import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.jetbrains.anko.AnkoLogger
 import java.io.IOException
@@ -105,16 +103,6 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
             user.auto_login = chkAutoLogin.isChecked
             //TODO: user.what_i_do = editTxtDisplayWhatIDo.text.toString()
 
-//
-//            txtDisplayFullName.isVisible = false
-//            txtDisplayEmail.isVisible = false
-//            txtSaveProfile.isVisible = false
-//            txtClickChangeImg.isVisible = false
-//
-//
-//            txtDisplayFullName.isVisible = true
-//            txtDisplayEmail.isVisible = true
-//            txtEditProfile.isVisible = true
             uploadProfileImageView(app, profImage_edit_view)
 
             app.database.child("users").child(user.id)
@@ -136,7 +124,6 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
 
 
                         finish()
-//                        change_user_details_in_channels()
                         app.database.child("users").child(user.id)
                             .removeEventListener(this)
                     }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -58,13 +57,10 @@ class NotificationsFragment : Fragment(), AnkoLogger, NotificationsListener {
     }
 
     fun setSwipeRefresh() {
-        root.refreshNotifications.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.refreshNotifications.isRefreshing = true
-                getAllNotifications(app.database,false)
-            }
-        })
+        root.refreshNotifications.setOnRefreshListener {
+            root.refreshNotifications.isRefreshing = true
+            getAllNotifications(app.database, false)
+        }
     }
 
     fun checkSwipeRefresh() {

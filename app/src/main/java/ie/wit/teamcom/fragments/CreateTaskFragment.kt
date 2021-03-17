@@ -2,7 +2,6 @@ package ie.wit.teamcom.fragments
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -14,7 +13,6 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -25,7 +23,6 @@ import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
-import kotlinx.android.synthetic.main.fragment_task_stages.view.*
 import org.jetbrains.anko.AnkoLogger
 import java.util.*
 
@@ -46,7 +43,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
     var m = ""
     var selected_stage = TaskStage()
     var project = Project()
-    lateinit var loader : androidx.appcompat.app.AlertDialog
+    lateinit var loader: androidx.appcompat.app.AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +68,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
         showLoader(loader, "Loading . . .", "Loading Page . . .")
         getStages()
-        root.txtImportanceStatus.text = "(1) Very Low"
+        "(1) Very Low".also { root.txtImportanceStatus.text = it }
         new_task.task_importance = 1
 
         val date = Calendar.getInstance()
@@ -79,31 +76,31 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
         dd = if (date.get(Calendar.DATE) < 10) {
             "0" + "${date.get(Calendar.DATE)}"
-        } else{
+        } else {
             "${date.get(Calendar.DATE)}"
         }
 
-        mm = if ((date.get(Calendar.MONTH)+1) < 10) {
-            "0" + "${(date.get(Calendar.MONTH)+1)}"
-        } else{
-            "${(date.get(Calendar.MONTH)+1)}"
+        mm = if ((date.get(Calendar.MONTH) + 1) < 10) {
+            "0" + "${(date.get(Calendar.MONTH) + 1)}"
+        } else {
+            "${(date.get(Calendar.MONTH) + 1)}"
         }
 
         yyyy = "${date.get(Calendar.YEAR)}"
-        h = if ((date.get(Calendar.HOUR_OF_DAY) +1 )< 10) {
-            "0" + "${(date.get(Calendar.HOUR_OF_DAY) +1 )}"
-        } else{
-            "${(date.get(Calendar.HOUR_OF_DAY) +1 )}"
+        h = if ((date.get(Calendar.HOUR_OF_DAY) + 1) < 10) {
+            "0" + "${(date.get(Calendar.HOUR_OF_DAY) + 1)}"
+        } else {
+            "${(date.get(Calendar.HOUR_OF_DAY) + 1)}"
         }
 
         m = if (date.get(Calendar.MINUTE) < 10) {
             "0" + "${date.get(Calendar.MINUTE)}"
-        } else{
+        } else {
             "${date.get(Calendar.MINUTE)}"
         }
 
 
-        root.txtDandT.text = " $dd/$mm/$yyyy @ $h:$m"
+        " $dd/$mm/$yyyy @ $h:$m".also { root.txtDandT.text = it }
 
         hideLoader(loader)
 
@@ -119,11 +116,11 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                     when (progress) {
-                        1 -> root.txtImportanceStatus.text = "(${progress}) Very Low"
-                        2 -> root.txtImportanceStatus.text = "(${progress}) Low"
-                        3 -> root.txtImportanceStatus.text = "(${progress}) Normal"
-                        4 -> root.txtImportanceStatus.text = "(${progress}) High"
-                        5 -> root.txtImportanceStatus.text = "(${progress}) Urgent"
+                        1 -> "(${progress}) Very Low".also { root.txtImportanceStatus.text = it }
+                        2 -> "(${progress}) Low".also { root.txtImportanceStatus.text = it }
+                        3 -> "(${progress}) Normal".also { root.txtImportanceStatus.text = it }
+                        4 -> "(${progress}) High".also { root.txtImportanceStatus.text = it }
+                        5 -> "(${progress}) Urgent".also { root.txtImportanceStatus.text = it }
                     }
                     new_task.task_importance = progress
                 }
@@ -168,8 +165,9 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                                 "$minute"
                             }
 
-                            if (date.timeInMillis - tem.timeInMillis > 0) root.txtDandT.text =
-                                "$dd/$mm/$yyyy @ $h:$m" else Toast.makeText(
+                            if (date.timeInMillis - tem.timeInMillis > 0) "$dd/$mm/$yyyy @ $h:$m".also {
+                                root.txtDandT.text = it
+                            } else Toast.makeText(
                                 requireContext(),
                                 "Invalid time",
                                 Toast.LENGTH_SHORT
@@ -188,26 +186,26 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
 
             dd = if (date.get(Calendar.DATE) < 10) {
                 "0" + "${date.get(Calendar.DATE)}"
-            } else{
+            } else {
                 "${date.get(Calendar.DATE)}"
             }
 
-            mm = if ((date.get(Calendar.MONTH)+1) < 10) {
-                "0" + "${(date.get(Calendar.MONTH)+1)}"
-            } else{
-                "${(date.get(Calendar.MONTH)+1)}"
+            mm = if ((date.get(Calendar.MONTH) + 1) < 10) {
+                "0" + "${(date.get(Calendar.MONTH) + 1)}"
+            } else {
+                "${(date.get(Calendar.MONTH) + 1)}"
             }
 
             yyyy = "${date.get(Calendar.YEAR)}"
             h = if (date.get(Calendar.HOUR_OF_DAY) < 10) {
                 "0" + "${date.get(Calendar.HOUR_OF_DAY)}"
-            } else{
+            } else {
                 "${date.get(Calendar.HOUR_OF_DAY)}"
             }
 
             m = if (date.get(Calendar.MINUTE) < 10) {
                 "0" + "${date.get(Calendar.MINUTE)}"
-            } else{
+            } else {
                 "${date.get(Calendar.MINUTE)}"
             }
 
@@ -218,7 +216,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
             showLoader(loader, "Loading . . .", "Validating . . .")
             validateForm()
             hideLoader(loader)
-            if (validateForm()){
+            if (validateForm()) {
                 createNewTask()
             }
         }
@@ -226,7 +224,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         return root
     }
 
-    private fun validateForm(): Boolean{
+    private fun validateForm(): Boolean {
         var valid = true
 
         val task_name = root.txtTaskName.text.toString()
@@ -237,34 +235,27 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
             root.txtTaskName.error = null
         }
 
-//        val task_desc = root.txt_project_desc.text.toString()
-//        if (TextUtils.isEmpty(task_desc)) {
-//            root.txt_project_desc.error = "Task Description Required."
-//            valid = false
-//        } else {
-//            root.txt_project_desc.error = null
-//        }
 
         return valid
     }
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
-    fun createNewTask(){
+    fun createNewTask() {
         showLoader(loader, "Loading . . .", "Creating New Task ${new_task.task_msg} . . .")
         new_task.id = UUID.randomUUID().toString()
 
         var i = 0
-        members_list.forEach{
-            if (root.spinnerAssignee.selectedItem == (members_list[i].firstName+" "+members_list[i].surname ) || root.spinnerAssignee.selectedItem == (members_list[i].firstName+" "+members_list[i].surname+" (Me)" )){
+        members_list.forEach {
+            if (root.spinnerAssignee.selectedItem == (members_list[i].firstName + " " + members_list[i].surname) || root.spinnerAssignee.selectedItem == (members_list[i].firstName + " " + members_list[i].surname + " (Me)")) {
                 new_task.task_assignee = members_list[i]
             } else {
                 i++
@@ -272,7 +263,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         }
 
         tasks_stages_list.forEach {
-            if(root.spinnerStage.selectedItem == it.stage_name){
+            if (root.spinnerStage.selectedItem == it.stage_name) {
                 selected_stage = it
             }
         }
@@ -289,7 +280,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         new_task.task_current_stage = selected_stage.stage_name
         new_task.task_current_stage_color = selected_stage.stage_color_code
 
-        if (new_task.task_current_stage == "Completed"){
+        if (new_task.task_current_stage == "Completed") {
             app.generateDateID("1")
             new_task.task_completed_date_id = app.valid_from_cal
         }
@@ -298,10 +289,10 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         writeNewTask()
     }
 
-    fun writeNewTask(){
+    fun writeNewTask() {
 
         //TODO: FOREACH -> ADD TASK
-        app.database.child("channels").child(currentChannel!!.id)
+        app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -320,8 +311,9 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
             })
     }
 
-    fun getStages(){
-        app.database.child("channels").child(currentChannel!!.id).child("projects").child(project.proj_id).child("proj_task_stages")
+    fun getStages() {
+        app.database.child("channels").child(currentChannel.id).child("projects")
+            .child(project.proj_id).child("proj_task_stages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -336,7 +328,7 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                             tasks_stages_list.add(task)
                         }
 
-                        app.database.child("channel").child(currentChannel!!.id)
+                        app.database.child("channel").child(currentChannel.id)
                             .child("projects").child(project.proj_id).child("proj_task_stages")
                             .removeEventListener(this)
                     }
@@ -352,9 +344,9 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
         getMembers()
     }
 
-    fun getMembers(){
+    fun getMembers() {
         members.add("")
-        app.database.child("channels").child(currentChannel!!.id).child("members")
+        app.database.child("channels").child(currentChannel.id).child("members")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -365,11 +357,11 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                         val member = it.getValue<Member>(Member::class.java)
 
                         if (member!!.id == app.currentActiveMember.id) {
-                            members.add(member!!.firstName + " " + member!!.surname + " (Me)")
+                            members.add(member.firstName + " " + member.surname + " (Me)")
                             members_list.add(member)
                         }
 
-                        app.database.child("channel").child(currentChannel!!.id).child("members")
+                        app.database.child("channel").child(currentChannel.id).child("members")
                             .removeEventListener(this)
                     }
                     val adapter1 = ArrayAdapter(
@@ -383,17 +375,9 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
             })
     }
 
-    private fun navigateTo(fragment: Fragment) {
-        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
-        fragmentManager.beginTransaction()
-            .replace(R.id.homeFrame, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
     companion object {
         @JvmStatic
-        fun newInstance(channel: Channel,project: Project) =
+        fun newInstance(channel: Channel, project: Project) =
             CreateTaskFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("channel_key", channel)

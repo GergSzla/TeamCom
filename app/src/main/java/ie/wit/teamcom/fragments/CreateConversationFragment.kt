@@ -31,13 +31,10 @@ import java.util.*
 
 class CreateConversationFragment : Fragment(), AnkoLogger, ConvoMembersListener {
 
-    var members_as_string = ArrayList<String>()
-    var members_list = ArrayList<Member>()
     lateinit var app: MainApp
     lateinit var eventListener: ValueEventListener
     lateinit var root: View
     var new_conversation = Conversation()
-    var convo_participant = Member()
     var channel_members = ArrayList<Member>()
     var selected_members = ArrayList<Member>()
 
@@ -60,7 +57,6 @@ class CreateConversationFragment : Fragment(), AnkoLogger, ConvoMembersListener 
 
         root.selectMemsConvoRecyclerView.layoutManager = LinearLayoutManager(activity)
         root.selectedMemsConvoRecyclerView.layoutManager = LinearLayoutManager(activity)
-//        getMemberNames()
 
         root.btnCreateConvo.setOnClickListener {
             if (selected_members.size > 2 && root.editTxtGroupChatName.text.toString() != "") {
@@ -239,50 +235,6 @@ class CreateConversationFragment : Fragment(), AnkoLogger, ConvoMembersListener 
             })
     }
 
-//    fun getMemberNames() {
-//        members_as_string.add("")
-//        app.database.child("channels").child(currentChannel!!.id).child("members")
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onCancelled(error: DatabaseError) {
-//                }
-//
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    val children = snapshot.children
-//                    children.forEach {
-//                        val member = it.getValue<Member>(Member::class.java)
-//                        if (member!!.id != app.currentActiveMember.id) {
-//                            members_as_string.add(member!!.firstName + " " + member!!.surname)
-//                            members_list.add(member)
-//                        }
-//
-//                        app.database.child("channel").child(currentChannel!!.id).child("members")
-//                            .removeEventListener(this)
-//                    }
-//                    val adapter1 = ArrayAdapter(
-//                        requireContext(),
-//                        android.R.layout.simple_spinner_item, // Layout
-//                        members_as_string
-//                    )
-//                    adapter1.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-//                    root.spinnerMembers.adapter = adapter1
-//                    root.spinnerMembers.onItemSelectedListener = object : OnItemSelectedListener {
-//                        override fun onItemSelected(
-//                            parentView: AdapterView<*>?,
-//                            selectedItemView: View,
-//                            position: Int,
-//                            id: Long
-//                        ) {
-//                            root.txtMembers.text = ""
-//                            root.txtMembers.append("[${root.spinnerMembers.selectedItem}] ")
-//                        }
-//
-//                        override fun onNothingSelected(parentView: AdapterView<*>?) {
-//                        }
-//                    }
-//                }
-//            })
-//
-//    }
 
     companion object {
         @JvmStatic

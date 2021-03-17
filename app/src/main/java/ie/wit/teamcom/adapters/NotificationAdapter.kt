@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.AppNotification
 import kotlinx.android.synthetic.main.card_notification.view.*
-import kotlinx.android.synthetic.main.item_task.view.*
 
 
 interface NotificationsListener {

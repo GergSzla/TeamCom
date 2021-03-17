@@ -2,8 +2,6 @@ package ie.wit.teamcom.activities
 
 import android.content.Context
 import android.os.Bundle
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -55,7 +53,6 @@ class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
 
         meeting = intent.extras!!.getParcelable<Meeting>("meeting_key")!!
 
-
         initializeSdk(this)
         initViews()
     }
@@ -82,9 +79,6 @@ class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
         join_button.setOnClickListener {
             join_meeting()
         }
-
-
-
     }
 
     /**
@@ -111,8 +105,10 @@ class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun join_meeting() {
-        joinMeeting(this@CreateZoomMeetingActivity, meeting.meeting_id.replace("\\s".toRegex(), ""), meeting.meeting_passcode.replace("\\s".toRegex(), ""))
+        joinMeeting(
+            this@CreateZoomMeetingActivity,
+            meeting.meeting_id.replace("\\s".toRegex(), ""),
+            meeting.meeting_passcode.replace("\\s".toRegex(), "")
+        )
     }
-
-
 }

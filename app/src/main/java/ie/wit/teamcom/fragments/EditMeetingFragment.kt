@@ -100,7 +100,7 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         }
 
 
-        root.txtDandT.text = " $dd/$mm/$yyyy @ $h:$m"
+        " $dd/$mm/$yyyy @ $h:$m".also { root.txtDandT.text = it }
 
         ///INITIALLY ONLINE = TRUE
         root.textViewLoc.isVisible = false
@@ -196,8 +196,9 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
                                 "$minute"
                             }
 
-                            if (date.timeInMillis - tem.timeInMillis > 0) root.txtDandT.text =
-                                "$dd/$mm/$yyyy @ $h:$m" else Toast.makeText(
+                            if (date.timeInMillis - tem.timeInMillis > 0) "$dd/$mm/$yyyy @ $h:$m".also {
+                                root.txtDandT.text = it
+                            } else Toast.makeText(
                                 requireContext(),
                                 "Invalid time",
                                 Toast.LENGTH_SHORT
@@ -241,7 +242,7 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
 
         }
-        root.btnCreateNewMeeting.text = "Update Meeting"
+        "Update Meeting".also { root.btnCreateNewMeeting.text = it }
 //        root.btnSelectDate.text = "Reschedule"
         root.btnRefr.setOnClickListener {
             root.swiperefreshCreateMeeting_1.isRefreshing = true
@@ -379,8 +380,9 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
         root.editTxtTitle.setText(selected_meeting.meeting_title)
         root.editTxtDesc.setText(selected_meeting.meeting_desc)
-        root.txtDandT.text =
-            "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}"
+        "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}".also {
+            root.txtDandT.text = it
+        }
         root.checkBoxCheckOnline.isChecked = selected_meeting.online
 
         if (!root.checkBoxCheckOnline.isChecked) {
@@ -423,14 +425,14 @@ class EditMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
     }
 
     fun editMeeting(meeting: Meeting) {
-        app.database.child("channels").child(currentChannel!!.id)
+        app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel!!.id}/meetings/${new_meeting.meeting_uuid}"] =
+                    childUpdates["/channels/${currentChannel.id}/meetings/${new_meeting.meeting_uuid}"] =
                         meeting
                     app.database.updateChildren(childUpdates)
 

@@ -6,11 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Member
 import ie.wit.teamcom.models.Message
 import kotlinx.android.synthetic.main.card_log.view.*
-import kotlinx.android.synthetic.main.card_member.view.*
 import kotlinx.android.synthetic.main.card_message.view.*
 
 

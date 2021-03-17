@@ -60,7 +60,7 @@ class SupportFragment : Fragment(), AnkoLogger {
 
         root.btnSubmitBug.setOnClickListener {
             validateForm()
-            if (validateForm()){
+            if (validateForm()) {
                 new_bug.bug_no = bugs_list.size + 1
                 new_bug.channel = currentChannel.channelName
                 app.generateDateID("1")
@@ -79,7 +79,7 @@ class SupportFragment : Fragment(), AnkoLogger {
         return root
     }
 
-    private fun validateForm(): Boolean{
+    private fun validateForm(): Boolean {
         var valid = true
 
         val issue = root.editTxtIssue.text.toString()
@@ -103,25 +103,25 @@ class SupportFragment : Fragment(), AnkoLogger {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
-    fun getAllBugs(){
+    private fun getAllBugs() {
         app.database.child("bugs")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase bugs error : ${error.message}")
                 }
+
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val children = snapshot.children
                     children.forEach {
-                        val bug = it.
-                        getValue<Bug>(Bug::class.java)
+                        val bug = it.getValue<Bug>(Bug::class.java)
                         bugs_list.add(bug!!)
 
                         app.database.child("bugs")
@@ -131,7 +131,7 @@ class SupportFragment : Fragment(), AnkoLogger {
             })
     }
 
-    fun addBugReport(){
+    private fun addBugReport() {
         app.database.child("bugs")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {

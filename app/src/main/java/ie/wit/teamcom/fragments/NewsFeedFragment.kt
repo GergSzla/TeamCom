@@ -5,19 +5,16 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.PostAdapter
 import ie.wit.teamcom.adapters.PostListener
-import ie.wit.teamcom.interfaces.IOnBackPressed
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
@@ -55,7 +52,6 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         root = inflater.inflate(R.layout.fragment_news_feed, container, false)
         activity?.title = getString(R.string.title_news_feed)
         root.postsRecyclerView.layoutManager = LinearLayoutManager(activity)
-//        getAllPosts()
 
         root.imgBtnSend.setOnClickListener {
             validateForm()
@@ -81,7 +77,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         return valid
     }
 
-    fun sendPost(){
+    private fun sendPost(){
         app.generateDateID("1")
         new_post.post_content = root.editTextPost.text.toString()
         new_post.id = UUID.randomUUID().toString()
@@ -93,7 +89,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         root.editTextPost.setText("")
     }
 
-    fun createPost(){
+    private fun createPost(){
         app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -126,13 +122,10 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshPosts.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshPosts.isRefreshing = true
-                getAllPosts()
-            }
-        })
+        root.swiperefreshPosts.setOnRefreshListener {
+            root.swiperefreshPosts.isRefreshing = true
+            getAllPosts()
+        }
     }
     fun checkSwipeRefresh() {
         if (root.swiperefreshPosts.isRefreshing) root.swiperefreshPosts.isRefreshing = false

@@ -23,7 +23,6 @@ import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Member
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.fragment_edit_channel_details.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info

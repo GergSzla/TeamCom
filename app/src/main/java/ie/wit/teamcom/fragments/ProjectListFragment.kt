@@ -8,25 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.ProjectListener
 import ie.wit.teamcom.adapters.ProjectsAdapter
-import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Project
-import ie.wit.teamcom.models.Reminder
 import ie.wit.utils.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.fragment_news_feed.view.*
 import kotlinx.android.synthetic.main.fragment_projects_list.view.*
@@ -121,7 +117,7 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
         dialog!!.show()
     }
 
-    fun delete_project(project : Project){
+    private fun delete_project(project : Project){
         app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("projects")
             .child(project.proj_id)
             .addListenerForSingleValueEvent(
@@ -165,13 +161,10 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
 
 
     fun setSwipeRefresh() {
-        root.swiperefreshProjects.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshProjects.isRefreshing = true
-                getAllProjects()
-            }
-        })
+        root.swiperefreshProjects.setOnRefreshListener {
+            root.swiperefreshProjects.isRefreshing = true
+            getAllProjects()
+        }
     }
 
     fun checkSwipeRefresh() {

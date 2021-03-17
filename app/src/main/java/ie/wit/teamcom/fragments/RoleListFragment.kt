@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.ChannelsAdapter
 import ie.wit.teamcom.adapters.RoleAdapter
 import ie.wit.teamcom.adapters.RoleListener
 import ie.wit.teamcom.main.MainApp
@@ -64,18 +62,19 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllChannelRoles(auth.currentUser!!.uid)
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
     fun getAllChannelRoles(roleId: String?) {
         rolesList = ArrayList<Role>()
-        app.database.child("channels").child(currentChannel!!.id).child("roles").orderByChild("permission_code")
+        app.database.child("channels").child(currentChannel!!.id).child("roles")
+            .orderByChild("permission_code")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase roles error : ${error.message}")
@@ -85,13 +84,14 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
                     //hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val role = it.
-                        getValue<Role>(Role::class.java)
+                        val role = it.getValue<Role>(Role::class.java)
                         rolesList.add(role!!)
-                        root.rolesRecyclerView.adapter = RoleAdapter(rolesList, this@RoleListFragment)
+                        root.rolesRecyclerView.adapter =
+                            RoleAdapter(rolesList, this@RoleListFragment)
                         root.rolesRecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("roles").orderByChild("permission_code")
+                        app.database.child("channels").child(currentChannel!!.id).child("roles")
+                            .orderByChild("permission_code")
                             .removeEventListener(this)
                     }
                 }
@@ -99,12 +99,10 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshRoles.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshRoles.isRefreshing = true
-                getAllChannelRoles(currentChannel!!.id)
-            }
-        })
+        root.swiperefreshRoles.setOnRefreshListener {
+            root.swiperefreshRoles.isRefreshing = true
+            getAllChannelRoles(currentChannel!!.id)
+        }
     }
 
 
@@ -131,6 +129,6 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
     }
 
     override fun onRoleClick(role: Role) {
-        navigateTo(RoleCreateFragment.editInstance(role,currentChannel))
+        navigateTo(RoleCreateFragment.editInstance(role, currentChannel))
     }
 }

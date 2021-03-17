@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -93,13 +92,10 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshMeetings.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshMeetings.isRefreshing = true
-                getAllMeetings(app.database, false)
-            }
-        })
+        root.swiperefreshMeetings.setOnRefreshListener {
+            root.swiperefreshMeetings.isRefreshing = true
+            getAllMeetings(app.database, false)
+        }
     }
 
     override fun onResume() {

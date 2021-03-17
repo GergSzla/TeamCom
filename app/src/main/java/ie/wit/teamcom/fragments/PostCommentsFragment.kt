@@ -1,6 +1,5 @@
 package ie.wit.teamcom.fragments
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,15 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.view.isVisible
+import android.widget.Toast.makeText
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -25,7 +21,6 @@ import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.CommentListener
 import ie.wit.teamcom.adapters.CommentsAdapter
-import ie.wit.teamcom.adapters.PostAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
@@ -46,9 +41,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
     lateinit var root: View
     lateinit var app: MainApp
     var commentsList = ArrayList<Comment>()
-    var likesList = ArrayList<String>()
     var new_comment = Comment()
-    var edit_comment = Comment()
     var currentPost = Post()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,9 +64,8 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         activity?.title = getString(R.string.title_news_feed)
         root.commentsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        root.txtPostUserView.text =
-            currentPost.post_author.firstName + " " + currentPost.post_author.surname
-        root.txtPostTimeAndDateView.text = currentPost.post_date + " @ " + currentPost.post_time
+        (currentPost.post_author.firstName + " " + currentPost.post_author.surname).also { root.txtPostUserView.text = it }
+        (currentPost.post_date + " @ " + currentPost.post_time).also { root.txtPostTimeAndDateView.text = it }
         root.txtPostContentView.text = currentPost.post_content
 
         root.imgBtnPostComment.setOnClickListener {
@@ -114,7 +106,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
 
     fun delete_comment( comment: Comment) {
         if ( comment.comment_author.id == auth.currentUser!!.uid){
-            var i = commentsList.indexOf(comment)
+            val i = commentsList.indexOf(comment)
             app.database.child("channels").child(currentChannel.id).child("posts")
                 .child(currentPost.id).child("post_comments").child("$i")
                 .addListenerForSingleValueEvent(
@@ -127,7 +119,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
                         }
                     })
         } else {
-            Toast.makeText(context, "Comment Can Only Be Deleted By Its Owner or Members With The Appropriate Permissions.", Toast.LENGTH_LONG)
+            makeText(context, "Comment Can Only Be Deleted By Its Owner or Members With The Appropriate Permissions.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -157,20 +149,17 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshComments.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshComments.isRefreshing = true
-                getAllComments()
-            }
-        })
+        root.swiperefreshComments.setOnRefreshListener {
+            root.swiperefreshComments.isRefreshing = true
+            getAllComments()
+        }
     }
 
     fun checkSwipeRefresh() {
         if (root.swiperefreshComments.isRefreshing) root.swiperefreshComments.isRefreshing = false
     }
 
-    fun sendComment() {
+    private fun sendComment() {
         app.generateDateID("1")
         new_comment.comment_content = root.editComment.text.toString()
         new_comment.id = UUID.randomUUID().toString()
@@ -182,7 +171,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         root.editComment.setText("")
     }
 
-    fun createPost() {
+    private fun createPost() {
         app.database.child("channels").child(currentChannel!!.id).child("posts")
             .child(currentPost.id)
             .addValueEventListener(object : ValueEventListener {
@@ -220,7 +209,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
     }
 
 
-    fun getAllComments() {
+    private fun getAllComments() {
         commentsList = ArrayList<Comment>()
         app.database.child("channels").child(currentChannel!!.id).child("posts")
             .child(currentPost.id).child("post_comments")
@@ -247,31 +236,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         checkSwipeRefresh()
     }
 
-    var alreadyLiked = false
-    fun getAllCommentLikes(comment: Comment) {
-        likesList = ArrayList<String>()
-        app.database.child("channels").child(currentChannel!!.id).child("posts")
-            .child(currentPost.id).child("post_comments").child(comment.id)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    info("Firebase comments error : ${error.message}")
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    //hideLoader(loader)
-                    val children = snapshot.children
-                    children.forEach {
-                        val like = it.getValue<String>(String::class.java)
-                        likesList.add(like!!)
-
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("posts")
-                            .child(currentPost.id).child("post_comments").child(comment.id)
-                            .removeEventListener(this)
-                    }
-                }
-            })
-    }
+    //TODO: Get Comment Likes
 
     companion object {
         @JvmStatic
@@ -293,11 +258,11 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
     }
 
     override fun onLikeCommentClicked(comment: Comment) {
-        //getAllCommentLikes(comment)
+        //TODO: Get Comment Likes
     }
 
     override fun onCommentEditClicked(comment: Comment) {
-        var i = commentsList.indexOf(comment)
+        val i = commentsList.indexOf(comment)
         
         app.database.child("channels").child(currentChannel.id).child("posts")
             .child(currentPost.id).child("post_comments").child("$i")

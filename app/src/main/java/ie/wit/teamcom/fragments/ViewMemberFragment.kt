@@ -1,23 +1,21 @@
 package ie.wit.teamcom.fragments
 
 import android.graphics.Color
-import android.graphics.Color.RED
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -32,11 +30,7 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.*
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.android.synthetic.main.card_member.view.*
-import kotlinx.android.synthetic.main.fragment_tasks.view.*
 import kotlinx.android.synthetic.main.fragment_view_member.view.*
-import kotlinx.android.synthetic.main.warning_dialog.*
-import kotlinx.android.synthetic.main.warning_dialog.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.*
@@ -101,7 +95,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
         user_stats.user_id = selected_member.id
 
-        var ref = FirebaseStorage.getInstance().getReference("photos/${selected_member.id}.jpg")
+        val ref = FirebaseStorage.getInstance().getReference("photos/${selected_member.id}.jpg")
         ref.downloadUrl.addOnSuccessListener {
             Picasso.get().load(it)
                 .resize(260, 260)
@@ -134,7 +128,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         return root
     }
 
-    fun show_warning_dialog() {
+    private fun show_warning_dialog() {
         AlertDialog.Builder(requireContext())
             .setView(R.layout.warning_dialog_kick)
             .setTitle("Warning!")
@@ -172,7 +166,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             })
     }
 
-    fun kick_selected_user() {
+    private fun kick_selected_user() {
 
         //TODO: CHECK IF ADMIN
         if (selected_member.id !== auth.currentUser!!.uid) {
@@ -180,11 +174,11 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             delete_user_from_channel()
 
         } else {
-            Toast.makeText(context, "You Cannot Kick Yourself", Toast.LENGTH_LONG)
+            makeText(context, "You Cannot Kick Yourself", Toast.LENGTH_LONG).show()
         }
     }
 
-    fun delete_user_from_channel() {
+    private fun delete_user_from_channel() {
         app.database.child("channels").child(currentChannel.id).child("members")
             .child(selected_member.id)
             .addListenerForSingleValueEvent(
@@ -216,11 +210,6 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
 
     fun display_details() {
-
-        due_in_24_hrs = 0
-        due_in_7_days = 0
-        due_in_14_days = 0
-
         if (app.currentActiveMember.role.role_name == "Admin") {
 
 
@@ -390,7 +379,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         }
     }
 
-    fun display_mh_stats() {
+    private fun display_mh_stats() {
         root.txt_overall_standing.text = string_overall
         root.txt_mh_desc.text = string_mh_desc
     }
@@ -418,10 +407,15 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
     fun get_all_projects(db: DatabaseReference) {
 
         //clear global vars
-         completed.clear()
-         overdue.clear()
-         completed_overdue.clear()
-         ongoing.clear()
+        completed.clear()
+        overdue.clear()
+        completed_overdue.clear()
+        ongoing.clear()
+
+        due_in_24_hrs = 0
+        due_in_7_days = 0
+        due_in_14_days = 0
+
         //
         projects = ArrayList<Project>()
         db.child("channels").child(currentChannel.id)
@@ -442,12 +436,12 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             .child("projects")
                             .removeEventListener(this)
                     }
-                    get_all_tasks(db,currentChannel.id )
+                    get_all_tasks(db, currentChannel.id)
                 }
             })
     }
 
-    fun get_all_tasks(db: DatabaseReference, channel_id : String) {
+    fun get_all_tasks(db: DatabaseReference, channel_id: String) {
         projects.forEach {
             project = it
             db.child("channels").child(channel_id)
@@ -703,7 +697,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         .child(auth.currentUser!!.uid).child("survey_pref")
                         .removeEventListener(this)
 
-                    if (!pa){
+                    if (!pa) {
                         display_details()
                     }
                 }

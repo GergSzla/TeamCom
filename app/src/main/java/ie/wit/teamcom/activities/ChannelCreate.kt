@@ -27,7 +27,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
     lateinit var app: MainApp
     val IMAGE_REQUEST = 1
-    lateinit var loader : AlertDialog
+    lateinit var loader: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         app.storage = FirebaseStorage.getInstance().reference
 
         loader = createLoader(this)
-        
+
         showLoader(loader, "Loading . . .", "Loading User Details . . .")
         app.getUser()
 
@@ -49,16 +49,16 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
             .into(imageView2)
         hideLoader(loader)
         //Icons made by <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
-        
+
         btnChannelImage.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
         }
 
         btnCreateNew.setOnClickListener {
-            showLoader(loader,"Loading . . .","Validating . . . ")
+            showLoader(loader, "Loading . . .", "Validating . . . ")
             validateForm()
             hideLoader(loader)
-            if (!(txtChannelName.text.toString() == "" || txtChannelDesc.text.toString() == "")){
+            if (!(txtChannelName.text.toString() == "" || txtChannelDesc.text.toString() == "")) {
                 createChannel(
                     Channel(
                         id = UUID.randomUUID().toString(),
@@ -111,25 +111,21 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         return valid
     }
 
-    private fun createChannel(channel: Channel){
-        showLoader(loader, "Loading . . .","Creating Channel ${channel.id} . . .")
+    private fun createChannel(channel: Channel) {
+        showLoader(loader, "Loading . . .", "Creating Channel ${channel.id} . . .")
         val uid = auth.currentUser!!.uid
         val userValues = app.user
-        var role = Role(id = UUID.randomUUID().toString(), role_name = "Admin", permission_code = "10000000000000", color_code = "b20202", isDefault = true)
-//        var task_stage_1 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "To Do",stage_color_code =  "d00000", stage_no = 1, stage_active = true)
-//        var task_stage_2 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "In Progress",stage_color_code =  "d08800", stage_no = 2, stage_active = true)
-//        var task_stage_3 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "Completed",stage_color_code =  "00a500", stage_no = 3, stage_active = true)
-//        var task_stage_4 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "",stage_color_code =  "6e087a", stage_no = 4, stage_active = false)
-//        var task_stage_5 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "",stage_color_code =  "1c087a", stage_no = 5, stage_active = false)
-//        var task_stage_6 = TaskStage(id = UUID.randomUUID().toString(), stage_name = "",stage_color_code =  "7a0832", stage_no = 6, stage_active = false)
-//
-//        val task_stage_arr = arrayListOf<TaskStage>(task_stage_1,task_stage_2,task_stage_3,task_stage_4,task_stage_5,task_stage_6)
-
+        var role = Role(
+            id = UUID.randomUUID().toString(),
+            role_name = "Admin",
+            permission_code = "10000000000000",
+            color_code = "b20202",
+            isDefault = true
+        )
 
         val roleValues = role
 
         uploadChannelImageView(app, imageView2, channel.id)
-
 
         app.generateDateID("1")
 
@@ -149,12 +145,22 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         roleChildUpdates["/channels/${channel.id}/members/$uid/role"] = roleValues
         app.database.updateChildren(roleChildUpdates)
 
-//        val taskStageChildUpdate = HashMap<String, Any>()
-//        taskStageChildUpdate["/channels/${channel.id}/task_stages/"] = task_stage_arr
-//        app.database.updateChildren(taskStageChildUpdate)
-
-        var new_member = Member(id = uid, firstName = userValues.firstName, surname = userValues.surname, email = userValues.email, image = 0, login_used = userValues.login_used, role = roleValues)
-        var new_log = Log(log_id = app.valid_from_cal, log_triggerer = new_member, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "The channel, ${channel.channelName} has been successfully created.")
+        var new_member = Member(
+            id = uid,
+            firstName = userValues.firstName,
+            surname = userValues.surname,
+            email = userValues.email,
+            image = 0,
+            login_used = userValues.login_used,
+            role = roleValues
+        )
+        var new_log = Log(
+            log_id = app.valid_from_cal,
+            log_triggerer = new_member,
+            log_date = app.dateAsString,
+            log_time = app.timeAsString,
+            log_content = "The channel, ${channel.channelName} has been successfully created."
+        )
         val logChildUpdate = HashMap<String, Any>()
         logChildUpdate["/channels/${channel.id}/logs/${new_log.log_id}"] = new_log
         app.database.updateChildren(logChildUpdate)

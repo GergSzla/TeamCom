@@ -46,7 +46,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
     var month = ""
     var event = Event()
     var eventsList = ArrayList<Event>()
-    lateinit var loader : androidx.appcompat.app.AlertDialog
+    lateinit var loader: androidx.appcompat.app.AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +87,7 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         }
 
         root.btn_scroll_to_events.setOnClickListener {
-            root.calendar_scroll.smoothScrollTo(1000,0)
+            root.calendar_scroll.smoothScrollTo(1000, 0)
         }
 
         return root
@@ -107,12 +107,12 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         }
 
         var selected_date = "$yyyy-$month-$day" //DATE TO YYYY/MM/DD for easy database sorting
-        if (new_event){
+        if (new_event) {
             add_new_event(selected_date)
-            getCurDateEvents(yyyy.toString(),month,day)
+            getCurDateEvents(yyyy.toString(), month, day)
         } else {
             getEventsForDate(selected_date)
-            getCurDateEvents(yyyy.toString(),month,day)
+            getCurDateEvents(yyyy.toString(), month, day)
         }
     }
 
@@ -154,7 +154,8 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         txt_date_selected.text = date
 
         //https://stackoverflow.com/questions/11376516/change-drawable-color-programmatically
-        val unwrappedDrawable = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_color_stat_24)
+        val unwrappedDrawable =
+            AppCompatResources.getDrawable(requireContext(), R.drawable.ic_color_stat_24)
         val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
         DrawableCompat.setTint(wrappedDrawable, Color.RED)
 
@@ -162,40 +163,40 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         image_stat.setColorFilter(Color.parseColor("#6200EE"))
         event.event_color = "#6200EE"
 
-        btn_color_1.setOnClickListener{
+        btn_color_1.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#6200EE"))
             event.event_color = "#6200EE"
         }
-        btn_color_2.setOnClickListener{
+        btn_color_2.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#0057EE"))
             event.event_color = "#0057EE"
         }
-        btn_color_3.setOnClickListener{
+        btn_color_3.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#06CD8F"))
             event.event_color = "#06CD8F"
         }
-        btn_color_4.setOnClickListener{
+        btn_color_4.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#00B103"))
             event.event_color = "#00B103"
         }
-        btn_color_5.setOnClickListener{
+        btn_color_5.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#BCB200"))
             event.event_color = "#BCB200"
         }
-        btn_color_6.setOnClickListener{
+        btn_color_6.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#EE6700"))
             event.event_color = "#EE6700"
         }
-        btn_color_7.setOnClickListener{
+        btn_color_7.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#A30000"))
             event.event_color = "#A30000"
         }
-        btn_color_8.setOnClickListener{
+        btn_color_8.setOnClickListener {
             image_stat.setColorFilter(Color.parseColor("#CA00EE"))
             event.event_color = "#CA00EE"
         }
 
-        create_event.setOnClickListener{
+        create_event.setOnClickListener {
 //            showLoader(loader, "Loading . . .", "Validating . . .")
             var valid = true
 
@@ -207,19 +208,19 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
                 txt_event_name.error = null
             }
 
-            if (txt_event_desc.text.toString() == ""){
+            if (txt_event_desc.text.toString() == "") {
                 event.event_desc = " "
             }
 
 //            hideLoader(loader)
 
 
-            if (valid){
+            if (valid) {
                 showLoader(loader, "Loading . . .", "Creating Event ${event.event_name} . . .")
                 event.event_name = txt_event_name.text.toString()
                 event.event_desc = txt_event_desc.text.toString()
 
-                var edited_date = txt_date_selected.text.toString().replace("-","/",false)
+                var edited_date = txt_date_selected.text.toString().replace("-", "/", false)
                 event.event_date = edited_date
                 event.event_type = "[TODO]"
                 event.event_id = UUID.randomUUID().toString()
@@ -232,7 +233,8 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
 
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val childUpdates = HashMap<String, Any>()
-                            childUpdates["/channels/${currentChannel.id}/events/${event.event_date}/${event.event_id}"] = event
+                            childUpdates["/channels/${currentChannel.id}/events/${event.event_date}/${event.event_id}"] =
+                                event
                             app.database.updateChildren(childUpdates)
 
                             hideLoader(loader)
@@ -274,7 +276,8 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
 
     fun getCurDateEvents(yyyy: String, mm: String, dd: String) {
         eventsList = ArrayList<Event>()
-        app.database.child("channels").child(currentChannel.id).child("events").child(yyyy).child(mm).child(dd)
+        app.database.child("channels").child(currentChannel.id).child("events").child(yyyy)
+            .child(mm).child(dd)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase events error : ${error.message}")
@@ -296,7 +299,8 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
                         )
                         root.calendarRecyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel.id).child("events").child(yyyy).child(mm).child(dd)
+                        app.database.child("channels").child(currentChannel.id).child("events")
+                            .child(yyyy).child(mm).child(dd)
                             .removeEventListener(this)
                     }
                     root.btn_scroll_to_events.text = "Show Events (${eventsList.size})"
