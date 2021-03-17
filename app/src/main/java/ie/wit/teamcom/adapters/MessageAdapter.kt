@@ -6,19 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Member
 import ie.wit.teamcom.models.Message
 import kotlinx.android.synthetic.main.card_log.view.*
-import kotlinx.android.synthetic.main.card_member.view.*
 import kotlinx.android.synthetic.main.card_message.view.*
 
 
 interface MessageListener {
 }
 
-class MessageAdapter constructor(var messages: ArrayList<Message>,
-                                 private val listener: MessageListener): RecyclerView.Adapter<MessageAdapter.MainHolder>(){
+class MessageAdapter constructor(
+    var messages: ArrayList<Message>,
+    private val listener: MessageListener
+) : RecyclerView.Adapter<MessageAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         return MainHolder(
@@ -47,11 +46,16 @@ class MessageAdapter constructor(var messages: ArrayList<Message>,
 
             itemView.msgAuthor.text = msg.author.firstName + " " + msg.author.surname
 
-            if(msg.author.role.color_code.take(1) != "#"){
-                itemView.msgAuthor.setTextColor(Color.parseColor("#"+msg.author.role.color_code))
+            if (msg.author.role.role_name != "") {
+                if (msg.author.role.color_code.take(1) != "#") {
+                    itemView.msgAuthor.setTextColor(Color.parseColor("#" + msg.author.role.color_code))
+                } else {
+                    itemView.txtLogTriggerer.setTextColor(Color.parseColor(msg.author.role.color_code))
+                }
             } else {
-                itemView.txtLogTriggerer.setTextColor(Color.parseColor(msg.author.role.color_code))
+                itemView.msgAuthor.setTextColor(Color.parseColor("#ffffff" ))
             }
+
 
             itemView.msgDandT.text = "${msg.msg_date} @ ${msg.msg_time}"
             itemView.msgContent.text = msg.content

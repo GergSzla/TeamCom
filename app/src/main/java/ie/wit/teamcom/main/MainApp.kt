@@ -7,26 +7,23 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import ie.wit.teamcom.fragments.currentChannel
-import ie.wit.teamcom.models.Account
-import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Member
-import ie.wit.teamcom.models.Reminder
+import ie.wit.teamcom.fragments.NotificationsFragment
+import ie.wit.teamcom.fragments.notification_list
+import ie.wit.teamcom.models.*
 import us.zoom.sdk.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+lateinit var auth: FirebaseAuth
+
 class MainApp : Application() {
 
-    lateinit var auth: FirebaseAuth
     lateinit var database: DatabaseReference
     lateinit var googleSignInClient: GoogleSignInClient
     lateinit var storage: StorageReference
@@ -49,12 +46,16 @@ class MainApp : Application() {
     lateinit var eventListener: ValueEventListener
     lateinit var notificationManager: NotificationManager
     var user_is_online: Boolean = false
+    lateinit var notif_frag: NotificationsFragment
+    var meetingList = ArrayList<Meeting>()
+
 
     override fun onCreate() {
         super.onCreate()
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
         storage = FirebaseStorage.getInstance().reference
+        notif_frag = NotificationsFragment()
 
         createNotificationChannel()
 
@@ -82,6 +83,7 @@ class MainApp : Application() {
     companion object {
         const val CHANNEL_ID = "exampleServiceChannel"
     }
+
     fun isActivityVisible(): Boolean {
         return user_is_online
     }
@@ -413,6 +415,58 @@ class MainApp : Application() {
         rem_dateAsString = "${day}/${month}/${year}"
         rem_timeAsString = "${hour}:${minutes}"
         reminder_due_date_id = 100000000000000 - date.toLong()
+    }
+
+    fun getMeetings(channel_id: String) {
+        meetingList = ArrayList<Meeting>()
+        database.child("channels").child(channel_id).child("meetings")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val children = snapshot.children
+                    children.forEach {
+                        val meeting = it.getValue<Meeting>(Meeting::class.java)
+                        meetingList.add(meeting!!)
+                        database.child("channels").child(channel_id).child("meetings")
+                            .removeEventListener(this)
+                    }
+                    checkUpcoming()
+                }
+            })
+    }
+
+    var upcoming_meetings = 0
+    fun checkUpcoming() {
+        upcoming_meetings = 0
+        meetingList.forEach {
+            if (reminder_due_date_id == valid_from_cal) {
+                upcoming_meetings++
+            }
+            if (upcoming_meetings != 0) {
+
+                var new_notif = AppNotification()
+                new_notif.type = "Meeting"
+                new_notif.msg =
+                    "Meetings Today: (${upcoming_meetings}) Meetings! How about setting some reminders through the view meeting screen?"
+                new_notif.date_id = it.meeting_date_id
+                new_notif.date_and_time =
+                    it.meeting_date_as_string + ", " + it.meeting_time_as_string
+                new_notif.id = it.meeting_id
+
+                if ((notification_list.filter { it.id == new_notif.id }).isEmpty()) {
+
+                    createNotificationChannel(
+                        "ie.wit.teamcom",
+                        "Meetings Today:",
+                        "(${upcoming_meetings}) Meetings! How about setting some reminders?"
+                    )
+
+                    notif_frag.pushNotification(database, new_notif)
+                }
+            }
+        }
     }
 
     fun getUser() {

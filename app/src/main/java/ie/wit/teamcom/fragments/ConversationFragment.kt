@@ -70,23 +70,25 @@ class ConversationFragment : Fragment(), AnkoLogger, ConversationListener {
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel,app.currentActiveMember)
+        app.activityResumed(currentChannel, app.currentActiveMember)
         getAllConversations()
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel,app.currentActiveMember)
+        app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
 
     fun checkSwipeRefresh() {
-        if (root.swiperefreshConversations.isRefreshing) root.swiperefreshConversations.isRefreshing = false
+        if (root.swiperefreshConversations.isRefreshing) root.swiperefreshConversations.isRefreshing =
+            false
     }
 
     fun getAllConversations() {
         conversationList = ArrayList<Conversation>()
-        app.database.child("channels").child(currentChannel!!.id).child("conversations").orderByChild("conv_date_order")
+        app.database.child("channels").child(currentChannel!!.id).child("conversations")
+            .orderByChild("conv_date_order")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase Conversations error : ${error.message}")
@@ -97,7 +99,7 @@ class ConversationFragment : Fragment(), AnkoLogger, ConversationListener {
                     children.forEach {
                         val convo = it.getValue<Conversation>(Conversation::class.java)
                         convo!!.participants.forEach { par_it ->
-                            if (par_it.id == app.currentActiveMember.id){
+                            if (par_it.id == app.currentActiveMember.id) {
                                 conversationList.add(convo!!)
                                 root.conversationsRecyclerView.adapter = ConversationAdapter(
                                     conversationList,
@@ -106,11 +108,12 @@ class ConversationFragment : Fragment(), AnkoLogger, ConversationListener {
                                 root.conversationsRecyclerView.adapter?.notifyDataSetChanged()
                             }
                         }
-                        if (conversationList.size > 0 ) {
+                        if (conversationList.size > 0) {
                             root.txtEmpty_convo.isVisible = false
                         }
                         checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("conversations").orderByChild("conv_date_order")
+                        app.database.child("channels").child(currentChannel!!.id)
+                            .child("conversations").orderByChild("conv_date_order")
                             .removeEventListener(this)
                     }
                 }

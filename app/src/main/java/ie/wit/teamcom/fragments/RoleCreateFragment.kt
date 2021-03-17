@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
 import ie.wit.teamcom.models.Role
@@ -167,8 +168,8 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
         app.activityPaused(currentChannel!!,app.currentActiveMember)
     }
 
-    fun deleteRole(roleId: String?) {
-        val uid = app.auth.currentUser!!.uid
+    private fun deleteRole(roleId: String?) {
+        val uid = auth.currentUser!!.uid
         app.database.child("channels").child(currentChannel!!.id).child("roles").child(roleId!!)
             .addListenerForSingleValueEvent(
                 object : ValueEventListener {
@@ -195,7 +196,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
 
                     app.generateDateID("1")
                     val logUpdates = HashMap<String, Any>()
-                    var new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "New Role [${role.role_name}] created.")
+                    val new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "New Role [${role.role_name}] created.")
                     logUpdates["/channels/${currentChannel!!.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 

@@ -1,6 +1,5 @@
 package ie.wit.teamcom.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,32 +8,28 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
-import ie.wit.teamcom.activities.ChannelsListActivity
-import ie.wit.teamcom.activities.CreateZoomMeetingActivity
 import ie.wit.teamcom.adapters.MeetingListener
 import ie.wit.teamcom.adapters.MeetingsAdapter
-import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Meeting
-import ie.wit.teamcom.models.Reminder
 import kotlinx.android.synthetic.main.fragment_meetings.view.*
 import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.ArrayList
 
+var meetingList = ArrayList<Meeting>()
+
 class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
 
     lateinit var app: MainApp
     lateinit var root: View
-    var meetingList = ArrayList<Meeting>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +58,9 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
     }
 
 
-    fun getAllMeetings(){
+    fun getAllMeetings(db : DatabaseReference, pa : Boolean){
         meetingList = ArrayList<Meeting>()
-        app.database.child("channels").child(currentChannel!!.id).child("meetings")
+        db.child("channels").child(currentChannel.id).child("meetings")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase nf error : ${error.message}")
@@ -77,35 +72,36 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
                     children.forEach {
                         val meeting = it.getValue<Meeting>(Meeting::class.java)
                         meetingList.add(meeting!!)
-                        root.meetingsRecyclerView.adapter = MeetingsAdapter(
-                            meetingList,
-                            this@MeetingsFragment
-                        )
-                        root.meetingsRecyclerView.adapter?.notifyDataSetChanged()
-                        if (meetingList.size > 0 ) {
-                            root.txtEmpty_meetings.isVisible = false
+
+                        if (!pa){
+                            root.meetingsRecyclerView.adapter = MeetingsAdapter(
+                                meetingList,
+                                this@MeetingsFragment
+                            )
+                            root.meetingsRecyclerView.adapter?.notifyDataSetChanged()
+                            if (meetingList.size > 0 ) {
+                                root.txtEmpty_meetings.isVisible = false
+                            }
+                            checkSwipeRefresh()
                         }
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("meetings").removeEventListener(this)
+
+                        db.child("channels").child(currentChannel.id).child("meetings").removeEventListener(this)
                     }
                 }
             })
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshMeetings.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshMeetings.isRefreshing = true
-                getAllMeetings()
-            }
-        })
+        root.swiperefreshMeetings.setOnRefreshListener {
+            root.swiperefreshMeetings.isRefreshing = true
+            getAllMeetings(app.database, false)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         app.activityResumed(currentChannel,app.currentActiveMember)
-        getAllMeetings()
+        getAllMeetings(app.database, false)
     }
 
     override fun onPause() {

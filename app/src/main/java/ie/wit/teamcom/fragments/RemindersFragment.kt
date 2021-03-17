@@ -17,24 +17,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import ie.wit.adventurio.helpers.createLoader
-import ie.wit.adventurio.helpers.hideLoader
-import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.CommentsAdapter
 import ie.wit.teamcom.adapters.ReminderListener
 import ie.wit.teamcom.adapters.RemindersAdapter
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
-import ie.wit.teamcom.models.Comment
 import ie.wit.teamcom.models.Reminder
 import ie.wit.utils.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.floating_popup.*
@@ -44,19 +39,18 @@ import kotlinx.android.synthetic.main.fragment_reminders.view.*
 import kotlinx.android.synthetic.main.popup_create_event.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.time.LocalDate
 import java.util.*
+
+var reminderList = ArrayList<Reminder>()
 
 class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
 
     lateinit var root: View
     lateinit var app: MainApp
-    var reminderList = ArrayList<Reminder>()
     var new_reminder = Reminder()
     var edit_reminder = Reminder()
     private var dialog: Dialog? = null
 
-//    lateinit var loader : androidx.appcompat.app.AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +94,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     fun delete_reminder(reminder: Reminder) {
         var i = reminderList.indexOf(reminder)
         app.database.child("channels").child(currentChannel.id).child("reminders")
-            .child(app.auth.currentUser!!.uid).child(reminder.id)
+            .child(auth.currentUser!!.uid).child(reminder.id)
             .addListenerForSingleValueEvent(
                 object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -115,7 +109,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     override fun onResume() {
         super.onResume()
         app.activityResumed(currentChannel, app.currentActiveMember)
-        getAllReminders()
+        getAllReminders(app.database, false)
     }
 
     override fun onPause() {
@@ -126,7 +120,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     val newDate = Calendar.getInstance()
     val newTime = Calendar.getInstance()
 
-    fun addReminder(id:String , edit:Boolean) {
+    private fun addReminder(id:String, edit:Boolean) {
         dialog = Dialog(requireContext())
         dialog!!.setContentView(R.layout.floating_popup)
 
@@ -194,12 +188,12 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                 new_reminder.id = id
                 app.generateDateID("1")
 
-                var date_day = remind_date.get(Calendar.DATE).toString()
-                var date_month = (remind_date.get(Calendar.MONTH) + 1).toString()
-                var date_year = remind_date.get(Calendar.YEAR).toString()
-                var date_hour = remind_date.get(Calendar.HOUR_OF_DAY).toString()
-                var date_minute = remind_date.get(Calendar.MINUTE).toString()
-                var date_seconds = remind_date.get(Calendar.SECOND).toString()
+                val date_day = remind_date.get(Calendar.DATE).toString()
+                val date_month = (remind_date.get(Calendar.MONTH) + 1).toString()
+                val date_year = remind_date.get(Calendar.YEAR).toString()
+                val date_hour = remind_date.get(Calendar.HOUR_OF_DAY).toString()
+                val date_minute = remind_date.get(Calendar.MINUTE).toString()
+                val date_seconds = remind_date.get(Calendar.SECOND).toString()
 
                 app.generate_date_reminder_id(
                     date_day,
@@ -221,12 +215,12 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                     date_hour.toInt(),
                     date_minute.toInt()
                 )
-                var d = ddate.get(Calendar.DATE).toString()
-                var m = ddate.get(Calendar.MONTH).toString()
-                var y = ddate.get(Calendar.YEAR).toString()
-                var h = ddate.get(Calendar.HOUR_OF_DAY).toString()
-                var mm = ddate.get(Calendar.MINUTE).toString()
-                var s = ddate.get(Calendar.SECOND).toString()
+                val d = ddate.get(Calendar.DATE).toString()
+                val m = ddate.get(Calendar.MONTH).toString()
+                val y = ddate.get(Calendar.YEAR).toString()
+                val h = ddate.get(Calendar.HOUR_OF_DAY).toString()
+                val mm = ddate.get(Calendar.MINUTE).toString()
+                val s = ddate.get(Calendar.SECOND).toString()
 
                 app.generate_date_reminder_id(d, m, y, h, mm, s)
 
@@ -242,30 +236,9 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
         }
         dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog!!.show()
-//        dialog!!.show()
     }
 
-    private fun validateForm(): Boolean {
-        var valid = true
-
-        val msg = message.text.toString()
-        if (TextUtils.isEmpty(msg)) {
-            message.error = "Message Required."
-            valid = false
-        } else {
-            message.error = null
-        }
-
-        val date_ = date.text.toString()
-        if (TextUtils.isEmpty(date_)) {
-            date.error = "Date Required."
-            valid = false
-        } else {
-            date.error = null
-        }
-
-        return valid
-    }
+    //TODO: Validation
 
     fun createReminder() {
         app.database.child("channels").child(currentChannel!!.id)
@@ -279,7 +252,6 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                         new_reminder
                     app.database.updateChildren(childUpdates)
 
-//                    hideLoader(loader)
                     app.database.child("channels").child(currentChannel!!.id)
                         .removeEventListener(this)
                     dialog!!.dismiss()
@@ -287,10 +259,10 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
             })
     }
 
-    fun getAllReminders() {
+    fun getAllReminders(db : DatabaseReference, pa : Boolean) {
         reminderList = ArrayList<Reminder>()
-        app.database.child("channels").child(currentChannel!!.id).child("reminders")
-            .child(app.currentActiveMember.id)
+        db.child("channels").child(currentChannel.id).child("reminders")
+            .child(auth.currentUser.uid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase nf error : ${error.message}")
@@ -302,18 +274,22 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
                     children.forEach {
                         val reminder = it.getValue<Reminder>(Reminder::class.java)
                         reminderList.add(reminder!!)
-                        root.remindersRecyclerView.adapter = RemindersAdapter(
-                            reminderList,
-                            this@RemindersFragment
-                        )
-                        root.remindersRecyclerView.adapter?.notifyDataSetChanged()
-                        if (reminderList.size > 0 ) {
-                            root.txtEmpty_reminders.isVisible = false
+
+                        if (!pa){
+                            root.remindersRecyclerView.adapter = RemindersAdapter(
+                                reminderList,
+                                this@RemindersFragment
+                            )
+                            root.remindersRecyclerView.adapter?.notifyDataSetChanged()
+                            if (reminderList.size > 0 ) {
+                                root.txtEmpty_reminders.isVisible = false
+                            }
+                            checkSwipeRefresh()
                         }
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("reminders")
+
+                        db.child("channels").child(currentChannel.id).child("reminders")
                             .child(
-                                app.currentActiveMember.id
+                                auth.currentUser.uid
                             )
                             .removeEventListener(this)
                     }
@@ -322,26 +298,14 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshReminders.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshReminders.isRefreshing = true
-                getAllReminders()
-            }
-        })
+        root.swiperefreshReminders.setOnRefreshListener {
+            root.swiperefreshReminders.isRefreshing = true
+            getAllReminders(app.database, false)
+        }
     }
 
     fun checkSwipeRefresh() {
         if (root.swiperefreshReminders.isRefreshing) root.swiperefreshReminders.isRefreshing = false
-    }
-
-
-    private fun navigateTo(fragment: Fragment) {
-        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
-        fragmentManager.beginTransaction()
-            .replace(R.id.homeFrame, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     companion object {

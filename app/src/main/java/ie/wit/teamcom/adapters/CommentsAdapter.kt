@@ -1,13 +1,9 @@
 package ie.wit.teamcom.adapters
 
-import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -15,12 +11,9 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
-import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Comment
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.card_comment.view.*
-import kotlinx.android.synthetic.main.card_post.view.*
-import org.jetbrains.anko.AnkoLogger
 
 
 interface CommentListener {

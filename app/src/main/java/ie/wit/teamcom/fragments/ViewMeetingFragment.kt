@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +21,7 @@ import ie.wit.teamcom.activities.CreateZoomMeetingActivity
 import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.adapters.MembersListener
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Meeting
 import ie.wit.teamcom.models.Member
@@ -36,7 +36,6 @@ import kotlinx.android.synthetic.main.fragment_view_meeting.view.textViewPlatfor
 import kotlinx.android.synthetic.main.fragment_view_meeting.view.textViewTitle
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
 import java.util.ArrayList
 
 class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
@@ -80,8 +79,7 @@ class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
 
         root.textViewTitle.text = selected_meeting.meeting_title
         root.textViewDesc.text = selected_meeting.meeting_desc
-        root.textViewDateAndTime.text =
-            "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}"
+        "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}".also { root.textViewDateAndTime.text = it }
 
         if (selected_meeting.online) {
             root.linearOnline.isVisible = true
@@ -129,7 +127,7 @@ class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
             dialog.show()
         }
 
-        if (selected_meeting.meeting_creator.id !== app.auth.currentUser!!.uid) {
+        if (selected_meeting.meeting_creator.id !== auth.currentUser!!.uid) {
             root.linearCreator.isVisible = false
         }
 
@@ -203,7 +201,7 @@ class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
             .commit()
     }
 
-    fun getAllMeetingMembers() {
+    private fun getAllMeetingMembers() {
         memberList = ArrayList<Member>()
         app.database.child("channels").child(currentChannel!!.id).child("meetings")
             .child(selected_meeting.meeting_uuid).child("participants")

@@ -19,10 +19,10 @@ import ie.wit.adventurio.helpers.showImagePicker
 import ie.wit.adventurio.helpers.uploadChannelImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Member
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.fragment_edit_channel_details.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -137,10 +137,10 @@ class EditChannelDetails : Fragment(), AnkoLogger {
                         val member = it.getValue<Member>(Member::class.java)
                         member!!.id.forEach { par_it ->
                             val childUpdates = HashMap<String, Any>()
-                            childUpdates["/users/${app.auth.currentUser!!.uid}/channels/${currentChannel.id}/channelName"] =
+                            childUpdates["/users/${auth.currentUser!!.uid}/channels/${currentChannel.id}/channelName"] =
                                 currentChannel.channelName
                             val childUpdates_ = HashMap<String, Any>()
-                            childUpdates_["/users/${app.auth.currentUser!!.uid}/channels/${currentChannel.id}/channelDescription"] =
+                            childUpdates_["/users/${auth.currentUser!!.uid}/channels/${currentChannel.id}/channelDescription"] =
                                 currentChannel.channelDescription
 
                             app.database.updateChildren(childUpdates)

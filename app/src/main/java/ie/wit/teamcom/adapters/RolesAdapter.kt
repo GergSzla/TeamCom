@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
-import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Role
 import kotlinx.android.synthetic.main.card_role.view.*
 

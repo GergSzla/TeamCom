@@ -7,17 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.MembersAdapter
 import ie.wit.teamcom.adapters.MembersListener
 import ie.wit.teamcom.main.MainApp
-import ie.wit.teamcom.models.Account
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Member
 import kotlinx.android.synthetic.main.fragment_members.view.*
@@ -55,7 +51,6 @@ class MembersFragment : Fragment() , AnkoLogger, MembersListener {
         activity?.title = getString(R.string.title_members_settings)
         root.membersRecyclerView.layoutManager = LinearLayoutManager(activity)
         getAllMembers()
-        //setSwipeRefresh()
         return root
     }
 
@@ -70,13 +65,10 @@ class MembersFragment : Fragment() , AnkoLogger, MembersListener {
     }
 
     fun setSwipeRefresh() {
-        root.swiperefreshMembers.setOnRefreshListener(object :
-            SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                root.swiperefreshMembers.isRefreshing = true
-                getAllMembers()
-            }
-        })
+        root.swiperefreshMembers.setOnRefreshListener {
+            root.swiperefreshMembers.isRefreshing = true
+            getAllMembers()
+        }
     }
     fun checkSwipeRefresh() {
         if (root.swiperefreshMembers.isRefreshing) root.swiperefreshMembers.isRefreshing = false

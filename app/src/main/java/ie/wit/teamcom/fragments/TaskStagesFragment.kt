@@ -21,14 +21,10 @@ import ie.wit.adventurio.helpers.createLoader
 import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
-import ie.wit.teamcom.activities.Home
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
-import kotlinx.android.synthetic.main.fragment_create_meeting.view.*
 import kotlinx.android.synthetic.main.fragment_task_stages.view.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
 import java.util.*
 
 class TaskStagesFragment : Fragment(), AnkoLogger {
@@ -36,7 +32,6 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
     lateinit var app: MainApp
     lateinit var root: View
     var currentChannel = Channel()
-    var task_stage_list = ArrayList<TaskStage>()
     var task_stage_1 = TaskStage()
     var task_stage_2 = TaskStage()
     var task_stage_3 = TaskStage()
@@ -49,7 +44,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
     var yyyy = ""
     var h = ""
     var m = ""
-    lateinit var loader : androidx.appcompat.app.AlertDialog
+    lateinit var loader: androidx.appcompat.app.AlertDialog
     var edit = false
 
 
@@ -59,7 +54,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")!!
             edit = it.getBoolean("bool")
-            if (edit){
+            if (edit) {
                 project = it.getParcelable("project_key")!!
             }
         }
@@ -82,10 +77,12 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         hideLoader(loader)
 
 
-        if(edit){
+        if (edit) {
             root.txt_project_name.setText(project.proj_name)
             root.txt_project_desc.setText(project.proj_description)
-            root.txtProjDateAndTime.setText(project.proj_due_date + " @ " + project.proj_due_time)
+            (project.proj_due_date + " @ " + project.proj_due_time).also {
+                root.txtProjDateAndTime.text = it
+            }
             root.txtChannelStage1.setText(project.proj_task_stages[0].stage_name)
             root.txtColorCodeStage1.setText(project.proj_task_stages[0].stage_color_code)
 
@@ -110,7 +107,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
 
 
         } else {
-            root.checkboxStage3.setOnCheckedChangeListener { compoundButton, b ->
+            root.checkboxStage3.setOnCheckedChangeListener { _, b ->
                 if (b) {
                     root.txtChannelStage3.isEnabled = true
                     root.txtColorCodeStage3.isEnabled = true
@@ -122,7 +119,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
                 }
             }
 
-            root.checkboxStage4.setOnCheckedChangeListener { compoundButton, b ->
+            root.checkboxStage4.setOnCheckedChangeListener { _, b ->
                 if (b) {
                     root.txtChannelStage4.isEnabled = true
                     root.txtColorCodeStage4.isEnabled = true
@@ -134,7 +131,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
                 }
             }
 
-            root.checkboxStage5.setOnCheckedChangeListener { compoundButton, b ->
+            root.checkboxStage5.setOnCheckedChangeListener { _, b ->
                 if (b) {
                     root.txtChannelStage5.isEnabled = true
                     root.txtColorCodeStage5.isEnabled = true
@@ -146,7 +143,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
                 }
             }
 
-            root.checkboxStage6.setOnCheckedChangeListener { compoundButton, b ->
+            root.checkboxStage6.setOnCheckedChangeListener { _, b ->
                 if (b) {
                     root.txtChannelStage6.isEnabled = true
                     root.txtColorCodeStage6.isEnabled = true
@@ -296,7 +293,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
             showLoader(loader, "Loading . . . ", "Validating . . . ")
             validateForm()
             hideLoader(loader)
-            if (validateForm()){
+            if (validateForm()) {
                 save_stages_changes()
             }
         }
@@ -342,8 +339,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
                                 "$minute"
                             }
 
-                            if (date.timeInMillis - tem.timeInMillis > 0) root.txtProjDateAndTime.text =
-                                "$dd/$mm/$yyyy @ $h:$m" else Toast.makeText(
+                            if (date.timeInMillis - tem.timeInMillis > 0) "$dd/$mm/$yyyy @ $h:$m".also {
+                                root.txtProjDateAndTime.text = it
+                            } else Toast.makeText(
                                 requireContext(),
                                 "Invalid time",
                                 Toast.LENGTH_SHORT
@@ -408,7 +406,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
             root.txt_project_desc.error = null
         }
 
-        if (root.txtProjDateAndTime.text.toString() == "No Due Date Selected"){
+        if (root.txtProjDateAndTime.text.toString() == "No Due Date Selected") {
             val proj_date = root.txtProjDateAndTime.text.toString()
             if (TextUtils.isEmpty(proj_date)) {
                 root.txtProjDateAndTime.error = "Project Due Date Required."
@@ -451,7 +449,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //Opt Stage 3
-        if (root.checkboxStage3.isChecked){
+        if (root.checkboxStage3.isChecked) {
             val stage_3 = root.txtChannelStage3.text.toString()
             if (TextUtils.isEmpty(stage_3)) {
                 root.txtChannelStage3.error = "Stage Three Name Required."
@@ -473,7 +471,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //Opt Stage 4
-        if (root.checkboxStage4.isChecked){
+        if (root.checkboxStage4.isChecked) {
             val stage_4 = root.txtChannelStage4.text.toString()
             if (TextUtils.isEmpty(stage_4)) {
                 root.txtChannelStage4.error = "Stage Four Name Required."
@@ -495,7 +493,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //Opt Stage 5
-        if (root.checkboxStage5.isChecked){
+        if (root.checkboxStage5.isChecked) {
             val stage_5 = root.txtChannelStage5.text.toString()
             if (TextUtils.isEmpty(stage_5)) {
                 root.txtChannelStage5.error = "Stage Five Name Required."
@@ -517,7 +515,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //Opt Stage 6
-        if (root.checkboxStage6.isChecked){
+        if (root.checkboxStage6.isChecked) {
             val stage_6 = root.txtChannelStage6.text.toString()
             if (TextUtils.isEmpty(stage_6)) {
                 root.txtChannelStage6.error = "Stage Six Name Required."
@@ -551,7 +549,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         app.activityPaused(ie.wit.teamcom.fragments.currentChannel, app.currentActiveMember)
     }
 
-    fun create_def_stages() {
+    private fun create_def_stages() {
         root.txtChannelStage1.setText(R.string.str_status_def)
         root.txtChannelStage2.setText(R.string.str_status_def_2)
         root.txtChannelStage3.setText(R.string.str_status_def_3)
@@ -561,10 +559,10 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         root.txtColorCodeStage3.setText(R.string.str_color_def_3)
     }
 
-    fun save_stages_changes() {
+    private fun save_stages_changes() {
         showLoader(loader, "Loading . . . ", "Saving Task Stages . . . ")
         //stage 1
-        if(!edit){
+        if (!edit) {
             task_stage_1.id = UUID.randomUUID().toString()
         }
         task_stage_1.stage_no = 1
@@ -578,7 +576,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 2
-        if(!edit) {
+        if (!edit) {
             task_stage_2.id = UUID.randomUUID().toString()
         }
         task_stage_2.stage_no = 2
@@ -592,7 +590,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 3
-        if(!edit) {
+        if (!edit) {
             task_stage_3.id = UUID.randomUUID().toString()
         }
         task_stage_3.stage_name = root.txtChannelStage3.text.toString()
@@ -604,7 +602,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 4
-        if(!edit) {
+        if (!edit) {
             task_stage_4.id = UUID.randomUUID().toString()
         }
         task_stage_4.stage_no = 4
@@ -617,7 +615,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 5
-        if(!edit) {
+        if (!edit) {
             task_stage_5.id = UUID.randomUUID().toString()
         }
         task_stage_5.stage_no = 5
@@ -630,7 +628,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         }
 
         //stage 6
-        if(!edit) {
+        if (!edit) {
             task_stage_6.id = UUID.randomUUID().toString()
         }
         task_stage_6.stage_no = 6
@@ -653,7 +651,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
 
         project.proj_name = root.txt_project_name.text.toString()
         project.proj_description = root.txt_project_desc.text.toString()
-        if(!edit){
+        if (!edit) {
             project.proj_id = UUID.randomUUID().toString()
         }
 
@@ -667,8 +665,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
     }
 
 
-
-    fun create_project() {
+    private fun create_project() {
         showLoader(loader, "Loading . . . ", "Creating Project ${project.proj_name} . . . ")
         app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
@@ -710,7 +707,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
             .commit()
     }
 
-    fun page_setup() {
+    private fun page_setup() {
         root.checkboxStage3.isChecked = false
         root.checkboxStage4.isChecked = false
         root.checkboxStage5.isChecked = false
@@ -737,7 +734,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
 
     companion object {
         @JvmStatic
-        fun newInstance(channel: Channel, project: Project , edit : Boolean) =
+        fun newInstance(channel: Channel, project: Project, edit: Boolean) =
             TaskStagesFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("channel_key", channel)

@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
@@ -14,14 +13,11 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
 import ie.wit.teamcom.adapters.LogAdapter
 import ie.wit.teamcom.adapters.LogListener
-import ie.wit.teamcom.adapters.RoleAdapter
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
-import ie.wit.teamcom.models.Role
 import kotlinx.android.synthetic.main.fragment_log.view.*
 import kotlinx.android.synthetic.main.fragment_role_list.view.*
-import kotlinx.android.synthetic.main.fragment_role_list.view.rolesRecyclerView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.util.ArrayList
@@ -116,11 +112,4 @@ class LogFragment : Fragment(), AnkoLogger, LogListener {
             }
     }
 
-    private fun navigateTo(fragment: Fragment) {
-        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
-        fragmentManager.beginTransaction()
-            .replace(R.id.homeFrame, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
 }

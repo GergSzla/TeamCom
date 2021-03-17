@@ -8,19 +8,15 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.teamcom.R
-import ie.wit.teamcom.adapters.ConversationAdapter
-import ie.wit.teamcom.adapters.InviteAdapter
 import ie.wit.teamcom.adapters.MessageAdapter
 import ie.wit.teamcom.adapters.MessageListener
 import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.fragment_conversation.view.*
-import kotlinx.android.synthetic.main.fragment_conversation.view.conversationsRecyclerView
 import kotlinx.android.synthetic.main.fragment_invites_list.view.*
 import kotlinx.android.synthetic.main.fragment_messaging.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -30,7 +26,6 @@ import java.util.*
 class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
 
     lateinit var app: MainApp
-    lateinit var eventListener: ValueEventListener
     lateinit var root: View
     var current_conversation = Conversation()
     var new_message = Message()
@@ -69,8 +64,6 @@ class MessagingFragment : Fragment(), AnkoLogger, MessageListener {
             new_message.msg_time = app.timeAsString
             current_conversation.messages.add(new_message)
             sendMsg()
-            //TODO: Push notification to other participant about new message
-            //pushNotification()
         }
 
         return root

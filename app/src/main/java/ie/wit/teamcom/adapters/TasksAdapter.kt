@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Task
-import ie.wit.teamcom.models.TaskStage
-import kotlinx.android.synthetic.main.card_channel.view.*
 import kotlinx.android.synthetic.main.item_task.view.*
 
 

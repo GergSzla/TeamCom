@@ -10,7 +10,6 @@ import com.squareup.picasso.Picasso
 import ie.wit.teamcom.R
 import ie.wit.teamcom.models.Post
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.android.synthetic.main.card_member.view.*
 import kotlinx.android.synthetic.main.card_post.view.*
 
 

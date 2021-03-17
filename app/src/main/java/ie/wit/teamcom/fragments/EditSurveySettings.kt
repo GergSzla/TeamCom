@@ -4,18 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.SurveyPref
 import kotlinx.android.synthetic.main.fragment_edit_survey_settings.view.*
@@ -94,7 +92,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
     fun save_survey_preference(){
         app.generateDateID("1")
         survey_preference.next_date_id = app.valid_from_cal
-        survey_preference.user_id = app.auth.currentUser!!.uid
+        survey_preference.user_id = auth.currentUser!!.uid
         survey_preference.enabled = root.toggle_survey.isEnabled
         if (!root.toggle_survey.isEnabled){
             survey_preference.frequency = "null"
@@ -131,7 +129,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel.id}/surveys/${app.auth.currentUser!!.uid}/survey_pref/"] = survey_preference
+                    childUpdates["/channels/${currentChannel.id}/surveys/${auth.currentUser!!.uid}/survey_pref/"] = survey_preference
                     app.database.updateChildren(childUpdates)
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
@@ -141,7 +139,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
 
     fun get_survey_pref(){
         app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("surveys")
-            .child(app.auth.currentUser!!.uid).child("survey_pref")
+            .child(auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -155,7 +153,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
                     survey_preference.next_date_id = snapshot.child("next_date_id").value.toString().toLong()
 
                     app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("surveys")
-                        .child(app.auth.currentUser!!.uid).child("survey_pref")
+                        .child(auth.currentUser!!.uid).child("survey_pref")
                         .removeEventListener(this)
                 }
             })
@@ -169,13 +167,5 @@ class EditSurveySettings : Fragment(), AnkoLogger {
                     putParcelable("channel_key", channel)
                 }
             }
-    }
-
-    private fun navigateTo(fragment: Fragment) {
-        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
-        fragmentManager.beginTransaction()
-            .replace(R.id.homeFrame, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 }

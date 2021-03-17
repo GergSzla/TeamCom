@@ -2,8 +2,6 @@ package ie.wit.teamcom.activities
 
 import android.content.Context
 import android.os.Bundle
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -11,6 +9,7 @@ import com.google.firebase.storage.FirebaseStorage
 import ie.wit.teamcom.BuildConfig
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Meeting
 import kotlinx.android.synthetic.main.activity_zoom_meeting.*
 import org.jetbrains.anko.AnkoLogger
@@ -48,12 +47,11 @@ class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_zoom_meeting)
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
         meeting = intent.extras!!.getParcelable<Meeting>("meeting_key")!!
-
 
         initializeSdk(this)
         initViews()
@@ -81,9 +79,6 @@ class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
         join_button.setOnClickListener {
             join_meeting()
         }
-
-
-
     }
 
     /**
@@ -110,8 +105,10 @@ class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun join_meeting() {
-        joinMeeting(this@CreateZoomMeetingActivity, meeting.meeting_id.replace("\\s".toRegex(), ""), meeting.meeting_passcode.replace("\\s".toRegex(), ""))
+        joinMeeting(
+            this@CreateZoomMeetingActivity,
+            meeting.meeting_id.replace("\\s".toRegex(), ""),
+            meeting.meeting_passcode.replace("\\s".toRegex(), "")
+        )
     }
-
-
 }

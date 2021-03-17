@@ -19,10 +19,9 @@ import ie.wit.adventurio.helpers.showImagePicker
 import ie.wit.adventurio.helpers.uploadProfileImageView
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Account
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.android.synthetic.main.activity_channel_create.*
-import kotlinx.android.synthetic.main.activity_channels_list.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.jetbrains.anko.AnkoLogger
 import java.io.IOException
@@ -38,7 +37,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         app = application as MainApp
-        app.auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         app.storage = FirebaseStorage.getInstance().reference
 
@@ -46,8 +45,8 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
         user = intent.extras!!.getParcelable<Account>("user_key")!!
 
         if (user.image == 0) {
-            if (app.auth.currentUser?.photoUrl != null) {
-                Picasso.get().load(app.auth.currentUser?.photoUrl)
+            if (auth.currentUser?.photoUrl != null) {
+                Picasso.get().load(auth.currentUser?.photoUrl)
                     .resize(260, 260)
                     .transform(CropCircleTransformation())
                     .into(profImage_edit_view, object : Callback {
@@ -55,7 +54,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
                             // Drawable is ready
                             uploadProfileImageView(app, profImage_edit_view)
                             user.image = 1
-                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                            updateUserProfile(auth.currentUser!!.uid, user.image)
                         }
 
                         override fun onError(e: Exception) {
@@ -71,7 +70,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
                             // Drawable is ready
                             uploadProfileImageView(app, profImage_edit_view)
                             user.image = 1
-                            updateUserProfile(app.auth.currentUser!!.uid, user.image)
+                            updateUserProfile(auth.currentUser!!.uid, user.image)
                         }
 
                         override fun onError(e: Exception) {}
@@ -79,7 +78,7 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
             }
         } else if (user.image == 1) {
             var ref = FirebaseStorage.getInstance()
-                .getReference("photos/${app.auth.currentUser!!.uid}.jpg")
+                .getReference("photos/${auth.currentUser!!.uid}.jpg")
             ref.downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it)
                     .resize(260, 260)
@@ -104,16 +103,6 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
             user.auto_login = chkAutoLogin.isChecked
             //TODO: user.what_i_do = editTxtDisplayWhatIDo.text.toString()
 
-//
-//            txtDisplayFullName.isVisible = false
-//            txtDisplayEmail.isVisible = false
-//            txtSaveProfile.isVisible = false
-//            txtClickChangeImg.isVisible = false
-//
-//
-//            txtDisplayFullName.isVisible = true
-//            txtDisplayEmail.isVisible = true
-//            txtEditProfile.isVisible = true
             uploadProfileImageView(app, profImage_edit_view)
 
             app.database.child("users").child(user.id)
@@ -135,7 +124,6 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
 
 
                         finish()
-//                        change_user_details_in_channels()
                         app.database.child("users").child(user.id)
                             .removeEventListener(this)
                     }

@@ -47,6 +47,10 @@
 
     <string name="imgPick">Select Image</string>
 
+    <string name="group_assistant">Assistant</string>
+    <string name="menu_assistant">Personal Assistant</string>
+    <string name="menu_notifications">Channel Notifications</string>
+
 
     <string name="account">Done for today?</string>
     <string name="menu_logout">Logout</string>
@@ -93,6 +97,7 @@
     <string name="title_calendar">Team Calendar</string>
     <string name="title_create_conversations">Start a Conversation</string>
     <string name="title_news_feed">News Feed</string>
+    <string name="title_notif">Notifications</string>
     <string name="title_reminders">Reminders</string>
 
     <string name="title">Title</string>
