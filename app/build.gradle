@@ -14,11 +14,17 @@ android {
         applicationId "ie.wit.teamcom"
         minSdkVersion 27
         targetSdkVersion 29
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+
         versionCode 1
         versionName "1.0"
         buildConfigField("String", "ZOOM_APP_KEY", apikeyProperties['ZOOM_APP_KEY'])
         buildConfigField("String", "ZOOM_APP_SECRET", apikeyProperties['ZOOM_APP_SECRET'])
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     compileOptions {
@@ -38,6 +44,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    
 }
 
 androidExtensions {
