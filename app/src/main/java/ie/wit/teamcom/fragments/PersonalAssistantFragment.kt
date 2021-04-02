@@ -51,7 +51,7 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
         meet_frag.getAllMeetings(app.database, true)
         rem_frag.getAllReminders(app.database, true)
         mem_frag.get_all_projects(app.database)
-        if (user_mh.set_of_ans_2_per.toString() != "") {
+        if (user_mh.set_of_ans_2_per != 0.0) {
             mem_frag.get_mh_entry(app.database, true)
             Handler().postDelayed(
                 {
@@ -70,6 +70,19 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
         activity?.title = "Personal Assistant"
         loader = createLoader(requireActivity())
 
+        if (user_mh.set_of_ans_2_per == 0.0){
+            root.txt_mental_health.isVisible = false
+            root.dia_mh.isVisible = false
+            root.txt_mh_ov.isVisible = false
+            root.txt_overall_standing.isVisible = false
+            root.current_mh.isVisible = false
+        } else {
+            root.txt_mental_health.isVisible = true
+            root.dia_mh.isVisible = true
+            root.txt_mh_ov.isVisible = true
+            root.txt_overall_standing.isVisible = true
+            root.current_mh.isVisible = true
+        }
 
         showLoader(loader, "Loading . . .", "Loading Assistant Data . . .")
         if (survey_enabled) {
@@ -202,20 +215,24 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
                 {
                     desc_meeting_str += "- You have a total of ${app.upcoming_meetings} meeting(s) today"
 
-                    var wtf_test = string_range_2.takeLast(1)
-                    wtf_test
-
-                    if (string_range_2 == "range_2" && app.upcoming_meetings >= 2) {
-                        desc_meeting_str += ", we also detect some potential stress! Having a quick stretch " +
-                                "or a breath of fresh air can drastically decrease your stress!"
-                    } else if ((string_range_2.takeLast(1)
-                            .toInt()) > 2 && app.upcoming_meetings >= 2
-                    ) {
-                        desc_meeting_str += ", we also detect some mental health issues. If we're correct " +
-                                "and you're feeling overwhelmed, please take a quick break, have a stretch, get " +
-                                "some fresh air, or go for a calming walk when possible! " +
-                                "\nIf at all possible, check if one of these meetings can be rescheduled."
+                    if (string_range_2 != ""){
+                        if (string_range_2 == "range_2" && app.upcoming_meetings >= 2) {
+                            desc_meeting_str += ", we also detect some potential stress! Having a quick stretch " +
+                                    "or a breath of fresh air can drastically decrease your stress!"
+                        } else if ((string_range_2.takeLast(1)
+                                .toInt()) > 2 && app.upcoming_meetings >= 2
+                        ) {
+                            desc_meeting_str += ", we also detect some mental health issues. If we're correct " +
+                                    "and you're feeling overwhelmed, please take a quick break, have a stretch, get " +
+                                    "some fresh air, or go for a calming walk when possible! " +
+                                    "\nIf at all possible, check if one of these meetings can be rescheduled."
+                        }
+                    } else {
+                        desc_meeting_str = "No mental health survey entries found! For the assistant to give you suggestions, you need to:" +
+                                "\n- Enable Survey" +
+                                "\n- Have At Least One Entry"
                     }
+
 
                     root.txt_meeting_desc.text = desc_meeting_str
 
@@ -241,40 +258,45 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
                                 "\n- $due_in_14_days task(s) due within 14 days."
 
                     var score_2 = String.format("%.1f", user_mh.set_of_ans_2_per)
-                    if (due_in_24_hrs >= 3 && string_range_2 == "range_2") {
-                        desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
-                                "health survey score of $score_2. This score is slightly hinting at some " +
-                                "potential stress, or perhaps something more personal. " +
-                                "\nTry taking a few deep breaths, have a stretch and relax a little bit!"
-                    } else if (((string_range_2.takeLast(1)
-                            .toInt()) > 2 && (string_range_2.takeLast(1)
-                            .toInt()) < 5 ) && due_in_24_hrs >= 3
-                    ) {
-                        desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
-                                "health survey score of $score_2. This score is quite concerning and hints" +
-                                "that you may be stressed and overwhelmed. " +
-                                "\nPlease if and when possible, try a quick breathing exercise and go for " +
-                                "a calming walk." +
-                                "\nIf at all possible, reschedule one or more of these tasks or request it to be rescheduled."
-                    } else if (((string_range_2.takeLast(1)
-                            .toInt()) >= 5 ) && due_in_24_hrs >= 3
-                    ) {
-                        desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
-                                "health survey score of $score_2. This score is very concerning and hints" +
-                                "that you may be stressed, overwhelmed, depressed etc. " +
-                                "\nPlease if and when possible, try a quick breathing exercise and go for " +
-                                "a calming walk." +
-                                "\nIf at all possible, reschedule one or more of these tasks or request it to be rescheduled." +
-                                "\n\nIf you're feeling down and feel like you need to talk to someone, you can feel free to talk to someone here: Samaritans (Freephone: 116 123)" +
-                                "\nDon't worry, everything is going to be okay! :) "
-                    }else if ((string_range_2 == "range_1") && due_in_24_hrs >= 3) {
-                        desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
-                                "health survey score of $score_2. This score is excellent! " +
-                                "\n\nKeep up the great work!"
-                    } else if ((string_range_2 == "range_1")){
-                        desc_tasks_str += "\n- No tasks due within 24 hours! :)"
+                    if (string_range_2 != "") {
+                        if (due_in_24_hrs >= 3 && string_range_2 == "range_2") {
+                            desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
+                                    "health survey score of $score_2. This score is slightly hinting at some " +
+                                    "potential stress, or perhaps something more personal. " +
+                                    "\nTry taking a few deep breaths, have a stretch and relax a little bit!"
+                        } else if (((string_range_2.takeLast(1)
+                                .toInt()) > 2 && (string_range_2.takeLast(1)
+                                .toInt()) < 5) && due_in_24_hrs >= 3
+                        ) {
+                            desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
+                                    "health survey score of $score_2. This score is quite concerning and hints" +
+                                    "that you may be stressed and overwhelmed. " +
+                                    "\nPlease if and when possible, try a quick breathing exercise and go for " +
+                                    "a calming walk." +
+                                    "\nIf at all possible, reschedule one or more of these tasks or request it to be rescheduled."
+                        } else if (((string_range_2.takeLast(1)
+                                .toInt()) >= 5) && due_in_24_hrs >= 3
+                        ) {
+                            desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
+                                    "health survey score of $score_2. This score is very concerning and hints" +
+                                    "that you may be stressed, overwhelmed, depressed etc. " +
+                                    "\nPlease if and when possible, try a quick breathing exercise and go for " +
+                                    "a calming walk." +
+                                    "\nIf at all possible, reschedule one or more of these tasks or request it to be rescheduled." +
+                                    "\n\nIf you're feeling down and feel like you need to talk to someone, you can feel free to talk to someone here: Samaritans (Freephone: 116 123)" +
+                                    "\nDon't worry, everything is going to be okay! :) "
+                        } else if ((string_range_2 == "range_1") && due_in_24_hrs >= 3) {
+                            desc_tasks_str += "\n- You have 3 or more tasks due in 24 Hours with a mental " +
+                                    "health survey score of $score_2. This score is excellent! " +
+                                    "\n\nKeep up the great work!"
+                        } else if ((string_range_2 == "range_1")) {
+                            desc_tasks_str += "\n- No tasks due within 24 hours! :)"
+                        }
+                    } else {
+                        desc_tasks_str = "No mental health survey entries found! For the assistant to give you suggestions, you need to:" +
+                                "\n- Enable Survey" +
+                                "\n- Have At Least One Entry"
                     }
-
                     root.txt_tasks_desc.text = desc_tasks_str
 
                     hideLoader(loader)

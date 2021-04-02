@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:id="@+id/dia_mh"
             >
 
             <ProgressBar
@@ -87,6 +88,7 @@
 
 
         <LinearLayout
+            android:id="@+id/current_mh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

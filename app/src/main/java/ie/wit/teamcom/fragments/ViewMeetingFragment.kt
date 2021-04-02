@@ -63,7 +63,12 @@ class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
     ): View? {
         root = inflater.inflate(R.layout.fragment_view_meeting, container, false)
         activity?.title = selected_meeting.meeting_title
+
         root.meetingMembersRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        (selected_meeting.meeting_title + " @ " + selected_meeting.meeting_date_as_string).also {
+            root.txtChannelNameSettings.text = it
+        }
 
 
         root.linearNotOnline.isVisible = false
@@ -79,7 +84,9 @@ class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
 
         root.textViewTitle.text = selected_meeting.meeting_title
         root.textViewDesc.text = selected_meeting.meeting_desc
-        "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}".also { root.textViewDateAndTime.text = it }
+        "${selected_meeting.meeting_date_as_string} @ ${selected_meeting.meeting_time_as_string}".also {
+            root.textViewDateAndTime.text = it
+        }
 
         if (selected_meeting.online) {
             root.linearOnline.isVisible = true
