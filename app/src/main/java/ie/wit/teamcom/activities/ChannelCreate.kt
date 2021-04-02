@@ -145,6 +145,22 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         roleChildUpdates["/channels/${channel.id}/members/$uid/role"] = roleValues
         app.database.updateChildren(roleChildUpdates)
 
+        val channel_user_upd = HashMap<String, Any>()
+        app.generateDateID("24")
+
+        val survey_pref = SurveyPref(
+            user_id = userValues.id,
+            enabled = true,
+            visible_to_admin = false,
+            frequency = "Daily",
+            next_date_id = app.valid_to_cal
+        )
+
+        channel_user_upd["/channels/${channel.id}/surveys/${userValues.id}/survey_pref/"] =
+            survey_pref
+
+        app.database.updateChildren(channel_user_upd)
+
         var new_member = Member(
             id = uid,
             firstName = userValues.firstName,

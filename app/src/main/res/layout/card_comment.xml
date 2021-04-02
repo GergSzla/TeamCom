@@ -37,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:textColor="@color/color_white"
             android:text="[USER]"
             app:layout_constraintStart_toEndOf="@+id/card_comment_image"
@@ -47,11 +46,11 @@
             android:id="@+id/txtCommentTimeAndDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="[DATE + TIME]"
+            android:layout_marginStart="8dp"
             android:textColor="@color/color_white"
             app:layout_constraintStart_toEndOf="@+id/card_comment_image"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/txtCommentUser" />
 
         <TextView
             android:id="@+id/txtCommentContent"
@@ -60,7 +59,7 @@
             android:textColor="@color/color_white"
             android:layout_marginTop="8dp"
             android:text="[CONTENT CONTENT CONTENT CONTENT]"
-            app:layout_constraintEnd_toEndOf="@+id/editTxtCommentContent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_comment_image" />
 

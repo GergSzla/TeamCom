@@ -593,6 +593,10 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         if (!edit) {
             task_stage_3.id = UUID.randomUUID().toString()
         }
+
+        task_stage_2.stage_no = 3
+
+
         task_stage_3.stage_name = root.txtChannelStage3.text.toString()
         task_stage_3.stage_active = root.checkboxStage3.isChecked
         if (root.txtColorCodeStage3.text.toString().take(1) != "#") {
@@ -605,7 +609,9 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
         if (!edit) {
             task_stage_4.id = UUID.randomUUID().toString()
         }
+
         task_stage_4.stage_no = 4
+
         task_stage_4.stage_name = root.txtChannelStage4.text.toString()
         task_stage_4.stage_active = root.checkboxStage4.isChecked
         if (root.txtColorCodeStage4.text.toString().take(1) != "#") {

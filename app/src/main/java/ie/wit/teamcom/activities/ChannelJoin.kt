@@ -15,6 +15,7 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Log
+import ie.wit.teamcom.models.SurveyPref
 import kotlinx.android.synthetic.main.activity_channel_create.*
 import kotlinx.android.synthetic.main.activity_channel_join.*
 import org.jetbrains.anko.AnkoLogger
@@ -90,15 +91,29 @@ class ChannelJoin : AppCompatActivity(), AnkoLogger {
 
                                             channelList.add(channel!!)
                                             val channelUpd = HashMap<String, Any>()
+                                            val channel_user_upd = HashMap<String, Any>()
+                                            app.generateDateID("24")
+
+                                            val survey_pref = SurveyPref(
+                                                user_id = auth.uid!!,
+                                                enabled = true,
+                                                visible_to_admin = false,
+                                                frequency = "Daily",
+                                                next_date_id = app.valid_to_cal
+                                            )
+
                                             childUpdates["/users/$uid/channels/${channelList[0].id}"] =
                                                 channelList[0]
                                             childUpdates["/channels/${channelList[0].id}/members/$uid"] =
                                                 app.user
                                             channelUpd["/users/$uid/channels/${channelList[0].id}/orderDateId"] =
                                                 app.valid_from_cal
+                                            channel_user_upd["/channels/${channelList[0].id}/surveys/$uid/survey_pref/"] =
+                                                survey_pref
 
                                             app.database.updateChildren(childUpdates)
                                             app.database.updateChildren(channelUpd)
+                                            app.database.updateChildren(channel_user_upd)
 
                                             app.getAllMembers(channelList[0].id)
                                             val logUpdates = HashMap<String, Any>()

@@ -648,7 +648,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             })
         cancel.setOnClickListener {
             dialog.dismiss()
-            check_completed()
         }
         dialog.show()
     }
