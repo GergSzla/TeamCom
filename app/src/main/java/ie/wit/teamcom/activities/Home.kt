@@ -60,6 +60,7 @@ class Home : AppCompatActivity(),
     var user_survey_pref = SurveyPref()
     lateinit var notif_frag: NotificationsFragment
     lateinit var mem_frag: ViewMemberFragment
+    var stop = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +105,7 @@ class Home : AppCompatActivity(),
         ContextCompat.startForegroundService(this, serviceIntent)
     }
 
-    fun stopService(v: View?) {
+    fun stopService() {
         //TODO: enable stop/start service
         val serviceIntent = Intent(this, RecurringServices::class.java)
         stopService(serviceIntent)
@@ -479,14 +480,21 @@ class Home : AppCompatActivity(),
     val h2 = Handler()
     val r2: Runnable = object : Runnable {
         override fun run() {
-            recurring_methods()
-            h2.postDelayed(this, 10000)
+            while (!stop){
+                recurring_methods()
+                h2.postDelayed(this, 10000)
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         h2.postDelayed(r2, 20000);
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stop = true
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -563,6 +571,7 @@ class Home : AppCompatActivity(),
 
 
     private fun signOut() {
+        stopService()
         auth.signOut()
         app.googleSignInClient.signOut()
         finish()
