@@ -477,12 +477,13 @@ class Home : AppCompatActivity(),
     }
 
     val h2 = Handler()
-    val r2: Runnable = object : Runnable {
+    var r2: Runnable = object : Runnable {
         override fun run() {
             recurring_methods()
             h2.postDelayed(this, 10000)
         }
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -563,9 +564,9 @@ class Home : AppCompatActivity(),
 
 
     private fun signOut() {
+        finish()
         auth.signOut()
         app.googleSignInClient.signOut()
-        finish()
         startActivity<LoginRegActivity>()
     }
 

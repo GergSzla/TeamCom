@@ -145,27 +145,28 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
 
     private fun check_next_meeting() {
         if (meetingList.size != 0) {
-            meetingList.sortBy { it.meeting_date_id }
-            meetingList.forEach {
+            val newMeetingList = meetingList.sortedBy { it.meeting_date_id }
+            newMeetingList.forEach {
                 if (it.participants.any { it_ -> it_.id == app.currentActiveMember.id }) {
                     user_meetingList.add(it)
                 }
             }
             if (user_meetingList.size != 0) {
-                root.txtMTitle.text = user_meetingList[0].meeting_title
-                root.txtMDesc.text = user_meetingList[0].meeting_desc
-                (user_meetingList[0].meeting_date_as_string + ", " + user_meetingList[0].meeting_time_as_string).also {
+
+                user_meetingList.sortedBy { it.meeting_date_id }
+
+                root.txtMTitle.text = user_meetingList[user_meetingList.size - 1].meeting_title
+                root.txtMDesc.text = user_meetingList[user_meetingList.size - 1].meeting_desc
+                (user_meetingList[user_meetingList.size - 1].meeting_date_as_string + ", " + user_meetingList[user_meetingList.size - 1].meeting_time_as_string).also {
                     root.txtMDateAndTime.text = it
                 }
-                (user_meetingList[0].meeting_date_as_string_end + ", " + user_meetingList[0].meeting_time_as_string_end).also {
+                (user_meetingList[user_meetingList.size - 1].meeting_date_as_string_end + ", " + user_meetingList[user_meetingList.size - 1].meeting_time_as_string_end).also {
                     root.txtMDateAndTime_end.text = it
                 }
-                if (user_meetingList[0].online) {
-                    root.txtMLocationElsePlatform.text =
-                        "Online via: ${meetingList[0].meeting_platform}"
+                if (user_meetingList[user_meetingList.size - 1].online) {
+                    "Online via: ${user_meetingList[user_meetingList.size - 1].meeting_platform}".also { root.txtMLocationElsePlatform.text = it }
                 } else {
-                    root.txtMLocationElsePlatform.text =
-                        "Location: ${meetingList[0].meeting_location}"
+                    "Location: ${user_meetingList[user_meetingList.size - 1].meeting_location}".also { root.txtMLocationElsePlatform.text = it }
                 }
             } else {
                 root.meetingSect.isVisible = false

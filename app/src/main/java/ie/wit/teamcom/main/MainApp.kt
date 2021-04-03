@@ -440,8 +440,21 @@ class MainApp : Application() {
     var upcoming_meetings = 0
     fun checkUpcoming() {
         upcoming_meetings = 0
+        generateDateID("24")
+        val year = valid_from_String.substring(6, 10)
+        val month = valid_from_String.substring(3, 5)    // 01 2 34 5 6789
+        val day = valid_from_String.substring(0, 2)      // dd / mm / yyyy
+        generate_date_reminder_id(day, month, year, "0", "0", "0")
+        var today = reminder_due_date_id
+
+        val yearEnd = valid_to_String.substring(6, 10)
+        val monthEnd = valid_to_String.substring(3, 5)    // 01 2 34 5 6789
+        val dayEnd = valid_to_String.substring(0, 2)      // dd / mm / yyyy
+        generate_date_reminder_id(dayEnd, monthEnd, yearEnd, "0", "0", "0")
+        var todayEnd = reminder_due_date_id
+
         meetingList.forEach {
-            if (reminder_due_date_id == valid_from_cal) {
+            if (it.meeting_date_id in todayEnd..today) {
                 upcoming_meetings++
             }
             if (upcoming_meetings != 0) {
