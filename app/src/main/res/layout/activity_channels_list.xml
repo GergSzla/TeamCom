@@ -76,21 +76,6 @@
                     app:layout_constraintStart_toEndOf="@+id/profImage"
                     app:layout_constraintTop_toBottomOf="@+id/card_full_name" />
 
-                <TextView
-                    android:id="@+id/card_what_i_do"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="2dp"
-                    android:ellipsize="end"
-                    android:lines="3"
-                    android:textColor="@color/color_white"
-                    android:text="[.  . . . . . . . .  . . . . . .  . . . . .  . . . .  . . .  . . .  . . . . . . . . ]"
-                    android:textDirection="ltr"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/profImage"
-                    app:layout_constraintTop_toBottomOf="@+id/card_email" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>

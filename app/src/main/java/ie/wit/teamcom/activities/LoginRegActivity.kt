@@ -203,7 +203,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     // Sign in success, update UI with the signed-in user's information
                     val user = auth.currentUser
                     app.database = FirebaseDatabase.getInstance().reference
-                    writeNewUserStats(Account(id = auth.currentUser!!.uid, email = auth.currentUser!!.email.toString(), firstName = txtFirstName.text.toString(),
+                    writeNewUserStats(Account(id = auth.currentUser!!.uid, email = txtEmail.text.toString(), firstName = txtFirstName.text.toString(),
                         surname = txtSurname.text.toString(), login_used = "firebaseAuth"))
                     hideLoader(loader)
                 } else {
