@@ -8,6 +8,7 @@ import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -43,6 +44,10 @@ class EditSurveySettings : Fragment(), AnkoLogger {
     ): View? {
         root = inflater.inflate(R.layout.fragment_edit_survey_settings, container, false)
         activity?.title = getString(R.string.title_survey)
+
+        root.btnAddManual.setOnClickListener{
+            navigateTo(SurveyFormFragment.newInstance(currentChannel))
+        }
 
         get_survey_pref()
         root.toggle_survey.isChecked = survey_preference.enabled
@@ -172,5 +177,13 @@ class EditSurveySettings : Fragment(), AnkoLogger {
                     putParcelable("channel_key", channel)
                 }
             }
+    }
+
+    private fun navigateTo(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity?.supportFragmentManager!!
+        fragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

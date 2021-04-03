@@ -138,5 +138,26 @@
         </LinearLayout>
 
     </ScrollView>
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/survey_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        app:fab_addButtonColorNormal="@color/color_1"
+        app:fab_addButtonColorPressed="@color/color_1"
+        app:fab_labelStyle="@style/custom_fab">
 
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddManual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/color_1"
+            app:fab_icon="@drawable/ic_baseline_new_task"
+            app:fab_size="mini"
+            app:fab_title="Add Manual Survey Entry" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </FrameLayout>
