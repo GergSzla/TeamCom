@@ -12,6 +12,8 @@ import android.view.Window
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -655,15 +657,15 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
         dialog.show()
 
-        val h2 = Handler()
-        var check: Runnable = object : Runnable {
-            override fun run() {
-                h2.postDelayed(this, 10000)
-                if (stage_clicked) {
-                    dialog.dismiss()
-                }
-            }
-        }
+//        val h2 = Handler()
+//        var check: Runnable = object : Runnable {
+//            override fun run() {
+//                h2.postDelayed(this, 10000)
+//                if (stage_clicked) {
+//                    dialog.dismiss()
+//                }
+//            }
+//        }
     }
 
 
@@ -747,39 +749,43 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
     override fun onStageClick(stage: TaskStage) {
         val index_of_task = selected_stage.stage_tasks.indexOf(selected_task)
-        selected_stage.stage_tasks.removeAt(index_of_task)
-        selected_task.task_current_stage = stage.stage_name
-        selected_task.task_current_stage_color = stage.stage_color_code
-        if (stage.stage_name == "Completed") {
-            app.generateDateID("1")
-            selected_task.task_completed_date_id = app.valid_to_cal
+        if (selected_task.task_current_stage == selected_stage.stage_name){
+            makeText(context,"Task Already In This Stage", Toast.LENGTH_LONG).show()
+        } else {
+            selected_stage.stage_tasks.removeAt(index_of_task)
+            selected_task.task_current_stage = stage.stage_name
+            selected_task.task_current_stage_color = stage.stage_color_code
+            if (stage.stage_name == "Completed") {
+                app.generateDateID("1")
+                selected_task.task_completed_date_id = app.valid_to_cal
+            }
+            stage.stage_tasks.add(selected_task)
+
+            app.database.child("channels").child(currentChannel.id)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val childUpdates = HashMap<String, Any>()
+                        childUpdates["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/${stage.stage_no - 1}/"] =
+                            stage
+                        app.database.updateChildren(childUpdates)
+
+                        val childUpdates_ = HashMap<String, Any>()
+                        childUpdates_["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/${selected_stage.stage_no - 1}/"] =
+                            selected_stage
+                        app.database.updateChildren(childUpdates_)
+
+                        app.database.child("channels").child(currentChannel.id)
+                            .removeEventListener(this)
+
+                        stage_clicked = true
+
+                        navigateTo(TasksFragment.newInstance(currentChannel, selected_project))
+
+                    }
+                })
         }
-        stage.stage_tasks.add(selected_task)
-
-        app.database.child("channels").child(currentChannel.id)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/${stage.stage_no - 1}/"] =
-                        stage
-                    app.database.updateChildren(childUpdates)
-
-                    val childUpdates_ = HashMap<String, Any>()
-                    childUpdates_["/channels/${currentChannel.id}/projects/${selected_project.proj_id}/proj_task_stages/${selected_stage.stage_no - 1}/"] =
-                        selected_stage
-                    app.database.updateChildren(childUpdates_)
-
-                    app.database.child("channels").child(currentChannel.id)
-                        .removeEventListener(this)
-
-                    stage_clicked = true
-
-                    navigateTo(TasksFragment.newInstance(currentChannel, selected_project))
-
-                }
-            })
     }
 }

@@ -159,22 +159,60 @@ class Home : AppCompatActivity(),
     fun checkSurvey() {
         if (user_survey_pref.enabled) {
             if (app.valid_from_cal <= user_survey_pref.next_date_id) {
-                create_mh_survey_dialog()
+                create_mh_survey_dialog(user_survey_pref)
             }
         }
     }
 
-    fun create_mh_survey_dialog() {
+    fun create_mh_survey_dialog(user_survey_pref: SurveyPref) {
         AlertDialog.Builder(this)
             .setView(R.layout.survey_prompt_dialog)
             .setTitle("Mental Well-being Assessment!")
             .setNegativeButton("Cancel") { dialog, _ ->
+                when (user_survey_pref.frequency) {
+                    "Daily" -> {
+                        app.generateDateID("24")
+                    }
+                    "Weekly" -> {
+                        app.generateDateID("168")
+                    }
+                    "Biweekly" -> {
+                        app.generateDateID("336")
+                    }
+                    "Monthly" -> {
+                        app.generateDateID("720")
+                    }
+                }
+                user_survey_pref.next_date_id = app.valid_to_cal
+
+                update_survey(user_survey_pref)
+
                 dialog.dismiss()
             }
             .setPositiveButton("Proceed") { dialog, _ ->
                 navigateTo(SurveyFormFragment.newInstance(channel))
                 dialog.dismiss()
             }.show()
+    }
+
+    fun update_survey(user_survey_pref: SurveyPref){
+        app.database.child("channels").child(currentChannel.id)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val childUpdates = HashMap<String, Any>()
+
+                    childUpdates["/channels/${currentChannel.id}/surveys/${auth.currentUser!!.uid}/survey_pref/"] =
+                        user_survey_pref
+
+                    app.database.updateChildren(childUpdates)
+
+                    app.database.child("channels").child(currentChannel.id)
+                        .removeEventListener(this)
+                }
+            })
     }
 
     fun checkActiveReminders() {

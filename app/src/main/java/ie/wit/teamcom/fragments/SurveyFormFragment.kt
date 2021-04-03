@@ -320,14 +320,19 @@ class SurveyFormFragment : Fragment(), AnkoLogger {
     }
 
     private fun add_to_db() {
-        if (survey_preference.frequency == "Daily") {
-            app.generateDateID("24")
-        } else if (survey_preference.frequency == "Weekly") {
-            app.generateDateID("168")
-        } else if (survey_preference.frequency == "Biweekly") {
-            app.generateDateID("336")
-        } else if (survey_preference.frequency == "Monthly") {
-            app.generateDateID("720")
+        when (survey_preference.frequency) {
+            "Daily" -> {
+                app.generateDateID("24")
+            }
+            "Weekly" -> {
+                app.generateDateID("168")
+            }
+            "Biweekly" -> {
+                app.generateDateID("336")
+            }
+            "Monthly" -> {
+                app.generateDateID("720")
+            }
         }
 
         survey_preference.next_date_id = app.valid_to_cal
