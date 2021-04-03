@@ -594,7 +594,7 @@ class TaskStagesFragment : Fragment(), AnkoLogger {
             task_stage_3.id = UUID.randomUUID().toString()
         }
 
-        task_stage_2.stage_no = 3
+        task_stage_3.stage_no = 3
 
 
         task_stage_3.stage_name = root.txtChannelStage3.text.toString()

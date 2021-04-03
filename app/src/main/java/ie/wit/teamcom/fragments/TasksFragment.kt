@@ -1,10 +1,10 @@
 package ie.wit.teamcom.fragments
 
+import android.R.attr.fragment
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,12 +27,12 @@ import ie.wit.teamcom.main.MainApp
 import ie.wit.teamcom.models.*
 import kotlinx.android.synthetic.main.fragment_role_list.view.*
 import kotlinx.android.synthetic.main.fragment_tasks.view.*
-import kotlinx.android.synthetic.main.fragment_tasks.view.tasks6RecyclerView
+import kotlinx.android.synthetic.main.popup_change_stage.*
 import kotlinx.android.synthetic.main.popup_change_stage.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
+
 
 class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
@@ -612,7 +613,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
             }
     }
 
-    private fun change_state_dialog(stage: TaskStage, task: Task) {
+    var stage_clicked = false
+    private fun change_state_dialog() {
         task_stage_list = ArrayList<TaskStage>()
         val dialog = Dialog(requireActivity())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -646,11 +648,25 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
                     }
                 }
             })
+
+
         cancel.setOnClickListener {
             dialog.dismiss()
         }
         dialog.show()
+
+        val h2 = Handler()
+        var check: Runnable = object : Runnable {
+            override fun run() {
+                h2.postDelayed(this, 10000)
+                if (stage_clicked) {
+                    dialog.dismiss()
+                }
+            }
+        }
     }
+
+
 
 
     private fun getCurrentTaskStage(task: Task) {
@@ -698,9 +714,15 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         taskName.text = task.task_msg
         taskDesc.text = task.task_desc
-        (task.task_creator.firstName + " " + task.task_creator.surname).also { taskCreator.text = it }
-        (task.task_assignee.firstName + " " + task.task_assignee.surname).also { taskAssignee.text = it }
-        (task.task_due_date_as_string + ", " + task.task_due_time_as_string).also { taskDueDate.text = it }
+        (task.task_creator.firstName + " " + task.task_creator.surname).also {
+            taskCreator.text = it
+        }
+        (task.task_assignee.firstName + " " + task.task_assignee.surname).also {
+            taskAssignee.text = it
+        }
+        (task.task_due_date_as_string + ", " + task.task_due_time_as_string).also {
+            taskDueDate.text = it
+        }
 
         if (task.task_current_stage_color.take(1) != "#") {
             taskStage.setBackgroundColor(Color.parseColor("#" + task.task_current_stage_color))
@@ -710,7 +732,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
         taskStage.setOnClickListener {
             dialog.dismiss()
-            change_state_dialog(selected_stage, task)
+            change_state_dialog()
         }
 
         progressBar.progress = task.task_importance
@@ -752,7 +774,9 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
-                    check_completed()
+
+                    stage_clicked = true
+
                     navigateTo(TasksFragment.newInstance(currentChannel, selected_project))
 
                 }

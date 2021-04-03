@@ -19,6 +19,14 @@
         android:layout_gravity="right"
         app:srcCompat="@drawable/ic_cancel" />
 
+<!--    <TextView-->
+<!--        android:id="@+id/task_status"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        android:textSize="13sp"-->
+<!--        android:textAlignment="center"/>-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stage_rec"
         android:layout_gravity="center"
