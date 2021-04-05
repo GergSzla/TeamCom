@@ -74,6 +74,10 @@ These invitation codes can then be copied by long-pressing the invitation card.
 
 ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617294923/Fourth%20Year%20Project/item_invite_copied.jpg)
 
+#### Members
+Users can view their profiles or other channel users' profiles. This page shows all relevant details about the member being viewed. The statistics and mental health section as shown in the Gif below can only be viewed by users with Admin roles and only if the user in question gives permission. 
+
+![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617617220/Fourth%20Year%20Project/item_view_mem_gif.gif) 
 
 ##### Survey Settings
 Users can opt into a survey via *Settings>Survey* which will ask the user a series of questions about how they are feeling to assess their mental well-being. The results of this recurring survey (frequency can be defined by user here), allows the Personal Assistant ***(see Personal Assistant section)*** to come up with better suggestions for the users.
@@ -82,15 +86,23 @@ Users can opt into a survey via *Settings>Survey* which will ask the user a seri
 
 
 ### Logs
+Channel logs are just a list of channel events that took place, or changes that were made in the channel.
+
 ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617294887/Fourth%20Year%20Project/item_logs.jpg)
 
 
 ### Personal Assistant
 To balance work-life pressures, a personal assistant option is available to analyse the number of tasks a user has due and make suggestions to the task assigner to perhaps reschedule to a different date to relieve the assignee from pressure. In case of meetings, the assistant will ask the user if they wish to reschedule.
 
-
-![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617294889/Fourth%20Year%20Project/item_assistant_notification.jpg) ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617301475/Fourth%20Year%20Project/item_assistant_notification_2.jpg)
+![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617294889/Fourth%20Year%20Project/item_assistant_notification.jpg) ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617301475/Fourth%20Year%20Project/item_assistant_notification_2.jpg) ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617617078/Fourth%20Year%20Project/item_pa_gif.gif) 
 
 
 ### Notifications
-![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617294886/Fourth%20Year%20Project/item_notifications.jpg)
+Users can check their channel notifications within the channel by opening the menu and navigating to the notifications tab. This tab notifies users about upcoming or ongoing events in the channel like meetings, new incoming messages, tasks, reminders or events. 
+
+![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617294886/Fourth%20Year%20Project/item_notifications.jpg) 
+
+### Watch Capabilities
+The app pushes notifications not just within the app but also externally ***(see Personal Assistant sect.)***. The app is capable of sending these notifications to Samsung Smartwatches too ***(Not tested with any other smart watch)***. 
+
+![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617616776/Fourth%20Year%20Project/watch_convo_notif.jpg) ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_170/v1617616777/Fourth%20Year%20Project/watch_meetings_notif.jpg) 

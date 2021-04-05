@@ -15,21 +15,27 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.requestFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         setContentView(R.layout.activity_splash)
 
         val animIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         splashLayout.startAnimation(animIn) // 1 .. 2 ..
 
         Handler().postDelayed({
-            val animOut = AnimationUtils.loadAnimation(this,R.anim.fade_out)
+            val animOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
             splashLayout.startAnimation(animOut)
-        },3000) // 3.. 4..
+        }, 3000) // 3.. 4..
+
+//        },100) // 3.. 4..
 
         Handler().postDelayed({
             startActivity(Intent(this@SplashActivity, LoginRegActivity::class.java))
             finish()
-        },4500) // 4.5 ..
+        }, 4500) // 4.5 ..
+        //       },200) // 4.5 ..
 
     }
 }

@@ -80,12 +80,12 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
             showLoader(loader, "Loading . . .","Validating . . .")
             validateForm(true)
             hideLoader(loader)
-            if(!(txtEmail.text.toString() == "" ||
+            if(!(txtEmail_logreg.text.toString() == "" ||
                         txtFirstName.text.toString() == "" ||
                         txtSurname.text.toString() == "" ||
                         txtPassword.text.toString() == "")){
 
-                    createAccount(txtEmail.text.toString(),txtPassword.text.toString())
+                    createAccount(txtEmail_logreg.text.toString(),txtPassword.text.toString())
 
             }
 
@@ -104,8 +104,8 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
         btnLogin.setOnClickListener {
             validateForm(false)
-            if(!(txtEmail.text.toString() == "" || txtPassword.text.toString() == "")){
-                auth.signInWithEmailAndPassword(txtEmail.text.toString(), txtPassword.text.toString())
+            if(!(txtEmail_logreg.text.toString() == "" || txtPassword.text.toString() == "")){
+                auth.signInWithEmailAndPassword(txtEmail_logreg.text.toString(), txtPassword.text.toString())
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             val user = auth.currentUser
@@ -152,12 +152,12 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                 txtSurname.error = null
             }
 
-            val email = txtEmail.text.toString()
+            val email = txtEmail_logreg.text.toString()
             if (TextUtils.isEmpty(email)) {
-                txtEmail.error = "Email Required."
+                txtEmail_logreg.error = "Email Required."
                 valid = false
             } else {
-                txtEmail.error = null
+                txtEmail_logreg.error = null
             }
 
             val password = txtPassword.text.toString()
@@ -169,12 +169,12 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
             }
 
         } else {
-            val email = txtEmail.text.toString()
+            val email = txtEmail_logreg.text.toString()
             if (TextUtils.isEmpty(email)) {
-                txtEmail.error = "Email Required."
+                txtEmail_logreg.error = "Email Required."
                 valid = false
             } else {
-                txtEmail.error = null
+                txtEmail_logreg.error = null
             }
 
             val password = txtPassword.text.toString()
@@ -203,7 +203,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                     // Sign in success, update UI with the signed-in user's information
                     val user = auth.currentUser
                     app.database = FirebaseDatabase.getInstance().reference
-                    writeNewUserStats(Account(id = auth.currentUser!!.uid, email = txtEmail.text.toString(), firstName = txtFirstName.text.toString(),
+                    writeNewUserStats(Account(id = auth.currentUser!!.uid, email = txtEmail_logreg.text.toString(), firstName = txtFirstName.text.toString(),
                         surname = txtSurname.text.toString(), login_used = "firebaseAuth"))
                     hideLoader(loader)
                 } else {
