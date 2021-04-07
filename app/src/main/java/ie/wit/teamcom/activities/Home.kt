@@ -169,30 +169,35 @@ class Home : AppCompatActivity(),
             .setView(R.layout.survey_prompt_dialog)
             .setTitle("Mental Well-being Assessment!")
             .setNegativeButton("Cancel") { dialog, _ ->
-                when (user_survey_pref.frequency) {
-                    "Daily" -> {
-                        app.generateDateID("24")
-                    }
-                    "Weekly" -> {
-                        app.generateDateID("168")
-                    }
-                    "Biweekly" -> {
-                        app.generateDateID("336")
-                    }
-                    "Monthly" -> {
-                        app.generateDateID("720")
-                    }
-                }
-                user_survey_pref.next_date_id = app.valid_to_cal
-
-                update_survey(user_survey_pref)
 
                 dialog.dismiss()
             }
             .setPositiveButton("Proceed") { dialog, _ ->
+
                 navigateTo(SurveyFormFragment.newInstance(channel))
                 dialog.dismiss()
             }.show()
+        dialog_shown_update()
+    }
+
+    fun dialog_shown_update(){
+        when (user_survey_pref.frequency) {
+            "Daily" -> {
+                app.generateDateID("24")
+            }
+            "Weekly" -> {
+                app.generateDateID("168")
+            }
+            "Biweekly" -> {
+                app.generateDateID("336")
+            }
+            "Monthly" -> {
+                app.generateDateID("720")
+            }
+        }
+        user_survey_pref.next_date_id = app.valid_to_cal
+
+        update_survey(user_survey_pref)
     }
 
     fun update_survey(user_survey_pref: SurveyPref){

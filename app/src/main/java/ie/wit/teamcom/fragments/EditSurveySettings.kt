@@ -161,6 +161,22 @@ class EditSurveySettings : Fragment(), AnkoLogger {
                     survey_preference.frequency = snapshot.child("frequency").value.toString()
                     survey_preference.next_date_id = snapshot.child("next_date_id").value.toString().toLong()
 
+                    root.toggle_survey.isChecked = survey_preference.enabled
+                    root.toggle_public.isChecked = survey_preference.visible_to_admin
+                    when (survey_preference.frequency) {
+                        "Daily" -> {
+                            root.radioButton3.isChecked = true
+                        }
+                        "Weekly" -> {
+                            root.radioButton4.isChecked = true
+                        }
+                        "Biweekly" -> {
+                            root.radioButton5.isChecked = true
+                        }
+                        "Monthly" -> {
+                            root.radioButton6.isChecked = true
+                        }
+                    }
 
                     app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("surveys")
                         .child(auth.currentUser!!.uid).child("survey_pref")
