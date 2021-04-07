@@ -78,28 +78,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
         <TextView
-            android:id="@+id/txt_wid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="What I Do"
-            android:textColor="@color/color_white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
-
-        <TextView
-            android:id="@+id/txtViewWhatIDo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="What I Do"
-            android:textColor="@color/color_white"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
-
-        <TextView
             android:id="@+id/txt_role"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

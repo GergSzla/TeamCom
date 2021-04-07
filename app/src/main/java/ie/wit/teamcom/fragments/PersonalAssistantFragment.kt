@@ -14,6 +14,7 @@ import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
 import ie.wit.teamcom.R
 import ie.wit.teamcom.main.MainApp
+import ie.wit.teamcom.main.auth
 import ie.wit.teamcom.models.Channel
 import ie.wit.teamcom.models.Meeting
 import kotlinx.android.synthetic.main.fragment_personal_assistant.view.*
@@ -50,12 +51,12 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
 
         meet_frag.getAllMeetings(app.database, true)
         rem_frag.getAllReminders(app.database, true)
-        mem_frag.get_all_projects(app.database)
+        mem_frag.get_all_projects(app.database, auth.currentUser!!.uid)
+        mem_frag.get_mh_entry(app.database, true, auth.currentUser!!.uid)
         if (user_mh.set_of_ans_2_per != 0.0) {
-            mem_frag.get_mh_entry(app.database, true)
             Handler().postDelayed(
                 {
-                    mem_frag.check_pref(app.database, true)
+                    mem_frag.check_pref(app.database, true, auth.currentUser!!.uid)
                 },
                 2000 // value in milliseconds
             )
@@ -70,7 +71,7 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
         activity?.title = "Personal Assistant"
         loader = createLoader(requireActivity())
 
-        if (user_mh.set_of_ans_2_per == 0.0){
+        if (user_mh.set_of_ans_2_per == 0.0) {
             root.txt_mental_health.isVisible = false
             root.dia_mh.isVisible = false
             root.txt_mh_ov.isVisible = false
@@ -164,9 +165,13 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
                     root.txtMDateAndTime_end.text = it
                 }
                 if (user_meetingList[user_meetingList.size - 1].online) {
-                    "Online via: ${user_meetingList[user_meetingList.size - 1].meeting_platform}".also { root.txtMLocationElsePlatform.text = it }
+                    "Online via: ${user_meetingList[user_meetingList.size - 1].meeting_platform}".also {
+                        root.txtMLocationElsePlatform.text = it
+                    }
                 } else {
-                    "Location: ${user_meetingList[user_meetingList.size - 1].meeting_location}".also { root.txtMLocationElsePlatform.text = it }
+                    "Location: ${user_meetingList[user_meetingList.size - 1].meeting_location}".also {
+                        root.txtMLocationElsePlatform.text = it
+                    }
                 }
             } else {
                 root.meetingSect.isVisible = false
@@ -216,7 +221,7 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
                 {
                     desc_meeting_str += "- You have a total of ${app.upcoming_meetings} meeting(s) today"
 
-                    if (string_range_2 != ""){
+                    if (string_range_2 != "") {
                         if (string_range_2 == "range_2" && app.upcoming_meetings >= 2) {
                             desc_meeting_str += ", we also detect some potential stress! Having a quick stretch " +
                                     "or a breath of fresh air can drastically decrease your stress!"
@@ -229,9 +234,10 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
                                     "\nIf at all possible, check if one of these meetings can be rescheduled."
                         }
                     } else {
-                        desc_meeting_str = "No mental health survey entries found! For the assistant to give you suggestions, you need to:" +
-                                "\n- Enable Survey" +
-                                "\n- Have At Least One Entry"
+                        desc_meeting_str =
+                            "No mental health survey entries found! For the assistant to give you suggestions, you need to:" +
+                                    "\n- Enable Survey" +
+                                    "\n- Have At Least One Entry"
                     }
 
 
@@ -294,9 +300,10 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
                             desc_tasks_str += "\n- No tasks due within 24 hours! :)"
                         }
                     } else {
-                        desc_tasks_str = "No mental health survey entries found! For the assistant to give you suggestions, you need to:" +
-                                "\n- Enable Survey" +
-                                "\n- Have At Least One Entry"
+                        desc_tasks_str =
+                            "No mental health survey entries found! For the assistant to give you suggestions, you need to:" +
+                                    "\n- Enable Survey" +
+                                    "\n- Have At Least One Entry"
                     }
                     root.txt_tasks_desc.text = desc_tasks_str
 

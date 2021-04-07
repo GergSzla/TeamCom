@@ -104,6 +104,8 @@ class EditSurveySettings : Fragment(), AnkoLogger {
         survey_preference.next_date_id = app.valid_from_cal
         survey_preference.user_id = auth.currentUser!!.uid
         survey_preference.enabled = root.toggle_survey.isEnabled
+        survey_preference.visible_to_admin = root.toggle_public.isEnabled
+
         if (!root.toggle_survey.isEnabled){
             survey_preference.frequency = "null"
         } else {

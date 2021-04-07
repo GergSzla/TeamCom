@@ -146,6 +146,8 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         app.database.updateChildren(roleChildUpdates)
 
         val channel_user_upd = HashMap<String, Any>()
+        val channel_user_mh_entry_upd = HashMap<String, Any>()
+
         app.generateDateID("24")
 
         val survey_pref = SurveyPref(
@@ -156,10 +158,19 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
             next_date_id = app.valid_to_cal
         )
 
+        val survey_empty_entry = UserMHModel(
+            user_id = auth.uid!!,
+            set_of_ans_1_per = 0.0,
+            set_of_ans_2_per = 0.0
+        )
+
         channel_user_upd["/channels/${channel.id}/surveys/${userValues.id}/survey_pref/"] =
             survey_pref
+        channel_user_mh_entry_upd["/channels/${channel.id}/surveys/$uid/entry/"] =
+            survey_empty_entry
 
         app.database.updateChildren(channel_user_upd)
+        app.database.updateChildren(channel_user_mh_entry_upd)
 
         var new_member = Member(
             id = uid,

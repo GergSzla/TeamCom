@@ -295,7 +295,7 @@ class Home : AppCompatActivity(),
     }
 
     fun getTasks(db : DatabaseReference) {
-        mem_frag.get_all_projects(db)
+        mem_frag.get_all_projects(db, auth.currentUser!!.uid)
         Handler().postDelayed(
             {
                 checkUpcomingTasks(db)

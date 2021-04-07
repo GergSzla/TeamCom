@@ -88,9 +88,9 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
         val chart = root.findViewById(R.id.pie_tasks) as PieChart
 
-        root.txt_mem_name.text = selected_member.firstName + " " + selected_member.surname
+        (selected_member.firstName + " " + selected_member.surname).also { root.txt_mem_name.text = it }
+        (selected_member.firstName + " " + selected_member.surname).also { root.txtViewName.text = it }
         root.txtViewEmail.text = selected_member.email
-        //TODO root.txtViewWhatIDo.text = selected_member.whatIDo
         root.txtViewRole.text = selected_member.role.role_name
 
         user_stats.user_id = selected_member.id
@@ -117,11 +117,11 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         loader = createLoader(requireActivity())
 
         showLoader(loader, "Loading . . . ", "Loading Page . . . ")
-        get_all_projects(app.database)
+        get_all_projects(app.database, selected_member.id)
 
         Handler().postDelayed(
             {
-                check_pref(app.database, false)
+                check_pref(app.database, false, selected_member.id)
             },
             2000 // value in milliseconds
         )
@@ -143,9 +143,10 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 //        root.textView20.text = "Are You Sure You Wish To Proceed and Kick This User?"
     }
 
-    fun get_mh_entry(db: DatabaseReference, pa: Boolean) {
+    fun get_mh_entry(db: DatabaseReference, pa: Boolean, userID : String) {
+//        TODO: CHANGE TO SELECTED USER ID NOT CURRENT
         db.child("channels").child(currentChannel.id).child("surveys")
-            .child(auth.currentUser!!.uid).child("entry")
+            .child(userID).child("entry")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -159,7 +160,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     user_mh.user_id = snapshot.child("user_id").value.toString()
 
                     db.child("channels").child(currentChannel.id).child("surveys")
-                        .child(auth.currentUser!!.uid).child("entry")
+                        .child(userID).child("entry")
                         .removeEventListener(this)
                     analyse_data(db, pa)
                 }
@@ -287,7 +288,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             hideLoader(loader)
             if (allow_admin) {
                 root.mem_mental_health.isVisible = true
-                get_mh_entry(app.database, false)
+                get_mh_entry(app.database, false, selected_member.id)
             } else {
                 root.mem_mental_health.isVisible = false
             }
@@ -298,13 +299,17 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
 
     fun analyse_data(db: DatabaseReference, pa: Boolean) {
+        if(user_mh.set_of_ans_2_per == 0.0 || user_mh.set_of_ans_1_per == 0.0){
+            root.mem_mental_health.isVisible = false
+        }
+
 
         if (!pa) {
             root.progressBar_mh.progress = user_mh.set_of_ans_2_per.toInt()
             root.txt_percentage.text = String.format("%.1f", user_mh.set_of_ans_2_per)
         }
 
-
+        string_mh_desc = ""
         if (user_mh.set_of_ans_2_per > 85) {
             string_range_2 = "range_1"
         } else if (user_mh.set_of_ans_2_per > 70 && user_mh.set_of_ans_2_per <= 85) {
@@ -349,7 +354,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         } else if (string_range_1 == "range_4") {
             string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued."
         } else if (string_range_1 == "range_5") {
-            string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued.\nand feels overwhelmed and unsupported."
+            string_mh_desc += "-Perhaps does not feel valued or feels their work is not valued \nand feels overwhelmed and unsupported."
         }
 
         if (string_range_2 == "range_1") {
@@ -404,7 +409,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             .commit()
     }
 
-    fun get_all_projects(db: DatabaseReference) {
+    fun get_all_projects(db: DatabaseReference, userID : String) {
 
         //clear global vars
         completed.clear()
@@ -436,12 +441,12 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                             .child("projects")
                             .removeEventListener(this)
                     }
-                    get_all_tasks(db, currentChannel.id)
+                    get_all_tasks(db, currentChannel.id, userID)
                 }
             })
     }
 
-    fun get_all_tasks(db: DatabaseReference, channel_id: String) {
+    fun get_all_tasks(db: DatabaseReference, channel_id: String, userID : String) {
         projects.forEach {
             project = it
             db.child("channels").child(channel_id)
@@ -462,15 +467,20 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
-                                if (task.task_status == "Ongoing") {
-                                    ongoing.add(task)
-                                } else if (task.task_status == "Completed") {
-                                    completed.add(task)
-                                } else if (task.task_status == "Completed Overdue") {
-                                    completed_overdue.add(task)
-                                } else if (task.task_status == "Overdue") {
-                                    overdue.add(task)
+                            if (task!!.task_assignee.id == userID) {
+                                when (task.task_status) {
+                                    "Ongoing" -> {
+                                        ongoing.add(task)
+                                    }
+                                    "Completed" -> {
+                                        completed.add(task)
+                                    }
+                                    "Completed Overdue" -> {
+                                        completed_overdue.add(task)
+                                    }
+                                    "Overdue" -> {
+                                        overdue.add(task)
+                                    }
                                 }
                             }
 
@@ -506,15 +516,20 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
-                                if (task.task_status == "Ongoing") {
-                                    ongoing.add(task)
-                                } else if (task.task_status == "Completed") {
-                                    completed.add(task)
-                                } else if (task.task_status == "Completed Overdue") {
-                                    completed_overdue.add(task)
-                                } else if (task.task_status == "Overdue") {
-                                    overdue.add(task)
+                            if (task!!.task_assignee.id == userID) {
+                                when (task.task_status) {
+                                    "Ongoing" -> {
+                                        ongoing.add(task)
+                                    }
+                                    "Completed" -> {
+                                        completed.add(task)
+                                    }
+                                    "Completed Overdue" -> {
+                                        completed_overdue.add(task)
+                                    }
+                                    "Overdue" -> {
+                                        overdue.add(task)
+                                    }
                                 }
                             }
 
@@ -547,15 +562,20 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
-                                if (task.task_status == "Ongoing") {
-                                    ongoing.add(task)
-                                } else if (task.task_status == "Completed") {
-                                    completed.add(task)
-                                } else if (task.task_status == "Completed Overdue") {
-                                    completed_overdue.add(task)
-                                } else if (task.task_status == "Overdue") {
-                                    overdue.add(task)
+                            if (task!!.task_assignee.id == userID) {
+                                when (task.task_status) {
+                                    "Ongoing" -> {
+                                        ongoing.add(task)
+                                    }
+                                    "Completed" -> {
+                                        completed.add(task)
+                                    }
+                                    "Completed Overdue" -> {
+                                        completed_overdue.add(task)
+                                    }
+                                    "Overdue" -> {
+                                        overdue.add(task)
+                                    }
                                 }
                             }
                             db.child("channels")
@@ -584,15 +604,20 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
-                                if (task.task_status == "Ongoing") {
-                                    ongoing.add(task)
-                                } else if (task.task_status == "Completed") {
-                                    completed.add(task)
-                                } else if (task.task_status == "Completed Overdue") {
-                                    completed_overdue.add(task)
-                                } else if (task.task_status == "Overdue") {
-                                    overdue.add(task)
+                            if (task!!.task_assignee.id == userID) {
+                                when (task.task_status) {
+                                    "Ongoing" -> {
+                                        ongoing.add(task)
+                                    }
+                                    "Completed" -> {
+                                        completed.add(task)
+                                    }
+                                    "Completed Overdue" -> {
+                                        completed_overdue.add(task)
+                                    }
+                                    "Overdue" -> {
+                                        overdue.add(task)
+                                    }
                                 }
                             }
 
@@ -621,15 +646,20 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
-                                if (task.task_status == "Ongoing") {
-                                    ongoing.add(task)
-                                } else if (task.task_status == "Completed") {
-                                    completed.add(task)
-                                } else if (task.task_status == "Completed Overdue") {
-                                    completed_overdue.add(task)
-                                } else if (task.task_status == "Overdue") {
-                                    overdue.add(task)
+                            if (task!!.task_assignee.id == userID) {
+                                when (task.task_status) {
+                                    "Ongoing" -> {
+                                        ongoing.add(task)
+                                    }
+                                    "Completed" -> {
+                                        completed.add(task)
+                                    }
+                                    "Completed Overdue" -> {
+                                        completed_overdue.add(task)
+                                    }
+                                    "Overdue" -> {
+                                        overdue.add(task)
+                                    }
                                 }
                             }
                             db.child("channels")
@@ -657,15 +687,20 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                         children.forEach {
                             val task = it.getValue<Task>(Task::class.java)
 
-                            if (task!!.task_assignee.id == auth.currentUser!!.uid) {
-                                if (task.task_status == "Ongoing") {
-                                    ongoing.add(task)
-                                } else if (task.task_status == "Completed") {
-                                    completed.add(task)
-                                } else if (task.task_status == "Completed Overdue") {
-                                    completed_overdue.add(task)
-                                } else if (task.task_status == "Overdue") {
-                                    overdue.add(task)
+                            if (task!!.task_assignee.id == userID) {
+                                when (task.task_status) {
+                                    "Ongoing" -> {
+                                        ongoing.add(task)
+                                    }
+                                    "Completed" -> {
+                                        completed.add(task)
+                                    }
+                                    "Completed Overdue" -> {
+                                        completed_overdue.add(task)
+                                    }
+                                    "Overdue" -> {
+                                        overdue.add(task)
+                                    }
                                 }
                             }
                             db.child("channels")
@@ -680,9 +715,9 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         }
     }
 
-    fun check_pref(db: DatabaseReference, pa: Boolean) {
+    fun check_pref(db: DatabaseReference, pa: Boolean, userID : String) {
         db.child("channels").child(currentChannel.id).child("surveys")
-            .child(auth.currentUser!!.uid).child("survey_pref")
+            .child(userID).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -694,7 +729,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
                     survey_enabled = snapshot.child("enabled").value.toString().toBoolean()
 
                     db.child("channels").child(currentChannel.id).child("surveys")
-                        .child(auth.currentUser!!.uid).child("survey_pref")
+                        .child(userID).child("survey_pref")
                         .removeEventListener(this)
 
                     if (!pa) {

@@ -262,7 +262,7 @@ class RemindersFragment : Fragment(), AnkoLogger, ReminderListener {
     fun getAllReminders(db : DatabaseReference, pa : Boolean) {
         reminderList = ArrayList<Reminder>()
         db.child("channels").child(currentChannel.id).child("reminders")
-            .child(auth.currentUser.uid)
+            .child(auth.currentUser!!.uid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase nf error : ${error.message}")
