@@ -77,6 +77,16 @@
                     android:tint="@color/color_white" />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/txtGeneral"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="General"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permAdmin"
                 android:layout_width="match_parent"
@@ -89,6 +99,18 @@
                 android:textSize="20dp"
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
+
+
+
+            <TextView
+                android:id="@+id/txtLogs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Logs"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permViewLogs"
@@ -104,6 +126,16 @@
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
 
+            <TextView
+                android:id="@+id/txtRoles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Roles"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permManageRoles"
                 android:layout_width="match_parent"
@@ -118,6 +150,94 @@
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateRoles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/createRoles"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permViewRoles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/viewRoles"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permAssignRoles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/content_layout_backg"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/assignRoles"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <TextView
+                android:id="@+id/txtProjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Projects"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateProjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+
+                android:text="@string/permCreateProjects"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permManageProjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+
+                android:text="@string/permManageProjects"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <TextView
+                android:id="@+id/txtTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Tasks"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permViewTasks"
                 android:layout_width="match_parent"
@@ -147,9 +267,32 @@
                 app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/permCreateInvite"
+                android:id="@+id/permAssignTasksToMembers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/permAssignTasksToMembers"
                 android:background="@drawable/content_layout_backg"
 
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <TextView
+                android:id="@+id/txtChannel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Channel"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateInvite"
+                android:background="@drawable/content_layout_backg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -161,6 +304,42 @@
                 app:track="@drawable/new_switch" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permViewInvites"
+                android:background="@drawable/content_layout_backg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/viewInvites"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permEditChannel"
+                android:background="@drawable/content_layout_backg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/editChannel"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <TextView
+                android:id="@+id/txtConversations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Conversations"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permCreateGroupChats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -169,34 +348,6 @@
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/createGC"
-                android:textColor="@color/color_white"
-                android:textSize="20dp"
-                android:thumb="@drawable/thumb_switch"
-                app:track="@drawable/new_switch" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/permKickUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:background="@drawable/content_layout_backg"
-
-                android:text="@string/permKickUser"
-                android:textColor="@color/color_white"
-                android:textSize="20dp"
-                android:thumb="@drawable/thumb_switch"
-                app:track="@drawable/new_switch" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/permPostOnFeed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/content_layout_backg"
-
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:text="@string/permPostOnFeed"
                 android:textColor="@color/color_white"
                 android:textSize="20dp"
                 android:thumb="@drawable/thumb_switch"
@@ -216,19 +367,39 @@
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/permAssignTasksToMembers"
+            <TextView
+                android:id="@+id/txtNewsFeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:text="@string/permAssignTasksToMembers"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="News Feed"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permPostOnFeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/content_layout_backg"
 
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="@string/permPostOnFeed"
                 android:textColor="@color/color_white"
                 android:textSize="20dp"
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
+
+            <TextView
+                android:id="@+id/txtMeetings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Meetings"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/permCreateMeetings"
@@ -258,6 +429,96 @@
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
 
+            <TextView
+                android:id="@+id/txtEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Events"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permCreateEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+
+                android:text="@string/permCreateEvents"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+
+
+            <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/permViewEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:background="@drawable/content_layout_backg"
+
+            android:text="@string/permViewEvents"
+            android:textColor="@color/color_white"
+            android:textSize="20dp"
+            android:thumb="@drawable/thumb_switch"
+            app:track="@drawable/new_switch" />
+
+            <TextView
+                android:id="@+id/txtMembers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="Members"
+                android:textColor="@color/color_white"
+                android:textSize="25sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permKickUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+
+                android:text="@string/permKickUser"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permViewMembers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+                android:text="@string/permViewMembers"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permViewMembersStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/content_layout_backg"
+                android:padding="10dp"
+                android:text="@string/permViewMembersStats"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
 
             <RelativeLayout
                 android:id="@+id/editPressed"

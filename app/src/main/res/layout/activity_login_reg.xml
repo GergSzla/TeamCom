@@ -138,6 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:layout_marginTop="5dp"
             android:textAlignment="textEnd"
             android:textColor="@color/zm_ui_kit_color_red_FF4242"
             android:textStyle="bold"

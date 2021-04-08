@@ -74,7 +74,7 @@ class ViewMeetingFragment : Fragment(), AnkoLogger, MembersListener {
         root.linearNotOnline.isVisible = false
         root.linearOnline.isVisible = false
 
-        if (selected_meeting.meeting_creator.id == app.currentActiveMember.id) {
+        if (selected_meeting.meeting_creator.id == app.currentActiveMember.id || app.currentActiveMember.role.perm_admin) {
             root.btnCancelMeeting.isVisible = true
             root.btnUpdateMeeting.isVisible = true
         } else {

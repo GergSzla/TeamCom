@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -93,11 +94,15 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnChangePassword.setOnClickListener {
-            startActivity<ChangePasswordActivity>()
+            if (user.login_used != "google"){
+                startActivity<ChangePasswordActivity>()
+            } else {
+                Toast.makeText(this,"Passwords cannot be changed if registration is done through Google", Toast.LENGTH_LONG).show()
+            }
         }
 
         txtDisplayFullName.setText(user.firstName + " " + user.surname)
-        txtDisplayEmail.setText(user.email)
+        txtDisplayEmail.text = user.email
 //        txtDisplayWhatIDo.setText()
         chkAutoLogin.isChecked = user.auto_login
 

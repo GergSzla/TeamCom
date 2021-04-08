@@ -5,6 +5,8 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -55,8 +57,12 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
 
         root.imgBtnSend.setOnClickListener {
             validateForm()
-            if (validateForm()){
-                sendPost()
+            if (validateForm()) {
+                if (app.currentActiveMember.role.perm_create_posts || app.currentActiveMember.role.perm_admin) {
+                    sendPost()
+                } else {
+                    Toast.makeText(context, "You do not have the permissions to do this!", LENGTH_LONG).show()
+                }
             }
         }
         setSwipeRefresh()
@@ -77,7 +83,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         return valid
     }
 
-    private fun sendPost(){
+    private fun sendPost() {
         app.generateDateID("1")
         new_post.post_content = root.editTextPost.text.toString()
         new_post.id = UUID.randomUUID().toString()
@@ -89,7 +95,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
         root.editTextPost.setText("")
     }
 
-    private fun createPost(){
+    private fun createPost() {
         app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -127,13 +133,15 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
             getAllPosts()
         }
     }
+
     fun checkSwipeRefresh() {
         if (root.swiperefreshPosts.isRefreshing) root.swiperefreshPosts.isRefreshing = false
     }
 
     fun getAllPosts() {
         postList = ArrayList<Post>()
-        app.database.child("channels").child(currentChannel.id).child("posts").orderByChild("post_date_id")
+        app.database.child("channels").child(currentChannel.id).child("posts")
+            .orderByChild("post_date_id")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     info("Firebase nf error : ${error.message}")
@@ -150,7 +158,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
                             this@NewsFeedFragment
                         )
                         root.postsRecyclerView.adapter?.notifyDataSetChanged()
-                        if (postList.size > 0 ) {
+                        if (postList.size > 0) {
                             root.txtEmpty_posts.isVisible = false
                         }
                         checkSwipeRefresh()
@@ -195,7 +203,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger, PostListener {
 
 
     var alreadyLiked: Boolean = false
-    fun getAllPostLikes(post: Post){
+    fun getAllPostLikes(post: Post) {
         likesList = ArrayList<String>()
         app.database.child("channels").child(currentChannel.id).child("posts").child(post.id).child(
             "liked_by"

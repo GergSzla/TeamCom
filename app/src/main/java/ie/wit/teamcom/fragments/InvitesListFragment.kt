@@ -58,7 +58,13 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
         activity?.title = getString(R.string.title_invites_settings)
 
         root.btnAddNewInvite.setOnClickListener {
-            showDialog()
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_create_invites){
+                showDialog()
+            } else {
+                Toast.makeText(context, "You do not have the permissions to create channel invites!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         root.invitesRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -110,36 +116,44 @@ class InvitesListFragment : Fragment(), AnkoLogger, InviteListener {
     }
 
     fun getAllChannelInvites() {
-        invitesList = ArrayList<Invite>()
-        app.database.child("channels").child(currentChannel!!.id).child("invites")
-            .orderByChild("valid_from")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    info("Firebase invites error : ${error.message}")
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val children = snapshot.children
-                    children.forEach {
-                        val invite = it.getValue<Invite>(Invite::class.java)
-                        invitesList.add(invite!!)
-                        root.invitesRecyclerView.adapter = InviteAdapter(
-                            invitesList,
-                            this@InvitesListFragment
-                        )
-                        root.invitesRecyclerView.adapter?.notifyDataSetChanged()
-                        if (invitesList.size > 0) {
-                            root.txtEmpty_invs.isVisible = false
-                        }
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("invites")
-                            .orderByChild(
-                                "valid_from"
-                            )
-                            .removeEventListener(this)
+        if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_invites){
+            invitesList = ArrayList<Invite>()
+            app.database.child("channels").child(currentChannel!!.id).child("invites")
+                .orderByChild("valid_from")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        info("Firebase invites error : ${error.message}")
                     }
-                }
-            })
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val children = snapshot.children
+                        children.forEach {
+                            val invite = it.getValue<Invite>(Invite::class.java)
+                            invitesList.add(invite!!)
+                            root.invitesRecyclerView.adapter = InviteAdapter(
+                                invitesList,
+                                this@InvitesListFragment
+                            )
+                            root.invitesRecyclerView.adapter?.notifyDataSetChanged()
+                            if (invitesList.size > 0) {
+                                root.txtEmpty_invs.isVisible = false
+                            }
+                            checkSwipeRefresh()
+                            app.database.child("channels").child(currentChannel!!.id).child("invites")
+                                .orderByChild(
+                                    "valid_from"
+                                )
+                                .removeEventListener(this)
+                        }
+                    }
+                })
+        } else {
+            Toast.makeText(context, "You do not have the permissions to view channel invites!",
+                Toast.LENGTH_LONG
+            ).show()
+
+        }
+
     }
 
     fun setSwipeRefresh() {

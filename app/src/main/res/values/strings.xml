@@ -146,9 +146,14 @@
     <string name="permAdmin">Admin</string>
     <string name="viewalllogs">View All Logs</string>
     <string name="manageRoles">Manage Roles</string>
+    <string name="createRoles">Create Roles</string>
+    <string name="viewRoles">View Roles</string>
+    <string name="assignRoles">Assign Roles</string>
     <string name="viewTasks">View Tasks</string>
     <string name="createTasks">Create Tasks</string>
     <string name="createInvite">Create Channel Invites</string>
+    <string name="viewInvites">View Channel Invites</string>
+    <string name="editChannel">Edit Channel</string>
 
     <string name="createInvite1">Create New Invite</string>
     <string name="createGC">Create Groupchats</string>
@@ -158,6 +163,12 @@
     <string name="permAssignTasksToMembers">Assign Tasks To Members</string>
     <string name="permCreateMeetings">Create Meetings</string>
     <string name="permRequestMeetings">Request Meetings</string>
+    <string name="permCreateProjects">Create Projects</string>
+    <string name="permManageProjects">Manage Projects</string>
+    <string name="permViewEvents">View Events</string>
+    <string name="permCreateEvents">Create Events</string>
+    <string name="permViewMembers">View Members Profiles</string>
+    <string name="permViewMembersStats">View Members Statistics</string>
     <string name="addnewrole">Add Role</string>
     <string name="editRole">Save Changes</string>
     <string name="deleteRole">Delete Role</string>

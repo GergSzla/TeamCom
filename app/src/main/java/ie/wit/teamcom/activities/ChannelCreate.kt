@@ -118,7 +118,8 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
         var role = Role(
             id = UUID.randomUUID().toString(),
             role_name = "Admin",
-            permission_code = "10000000000000",
+//            permission_code = "10000000000000",
+            perm_admin = true,
             color_code = "b20202",
             isDefault = true
         )

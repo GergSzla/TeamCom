@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -577,7 +578,14 @@ class Home : AppCompatActivity(),
             }
 
             R.id.nav_log -> {
-                navigateTo(LogFragment.newInstance(channel))
+                if(app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_logs){
+                    navigateTo(LogFragment.newInstance(channel))
+                } else {
+                    Toast.makeText(
+                        this, "You do not have the permissions to view channel Logs!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
 
             R.id.nav_members -> {

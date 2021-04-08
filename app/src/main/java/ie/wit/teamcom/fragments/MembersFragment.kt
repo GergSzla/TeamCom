@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
@@ -121,6 +122,13 @@ class MembersFragment : Fragment() , AnkoLogger, MembersListener {
     }
 
     override fun onMemberClick(member: Member) {
-        navigateTo(ViewMemberFragment.newInstance(member, currentChannel))
+        if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_members){
+            navigateTo(ViewMemberFragment.newInstance(member, currentChannel))
+        } else {
+            Toast.makeText(
+                context, "You do not have the permissions to do this!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }

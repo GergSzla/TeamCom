@@ -49,16 +49,36 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddNewMeeting"
-        android:layout_width="wrap_content"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/meeting"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/color_1"
-        android:tint="@color/color_white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_float_plus_45" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        app:fab_addButtonColorNormal="@color/color_1"
+        app:fab_addButtonColorPressed="@color/color_1"
+        app:fab_labelStyle="@style/custom_fab">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddNewMeeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/color_1"
+            android:tint="@color/color_white"
+            app:fab_icon="@drawable/ic_float_plus_45"
+            app:fab_size="mini"
+            app:fab_title="Create A Meeting" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnRequestMeeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/color_1"
+            app:fab_icon="@drawable/ic_baseline_new_task"
+            app:fab_size="mini"
+            app:fab_title="Request A Meeting" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

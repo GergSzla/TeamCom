@@ -108,13 +108,31 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
 
 
         root.btn_change_role.setOnClickListener {
-            navigateTo(AssignRolesFragment.newInstance(selected_member, currentChannel))
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_assign_roles) {
+                navigateTo(AssignRolesFragment.newInstance(selected_member, currentChannel))
+            } else {
+                makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         root.btn_kick_user.setOnClickListener {
-            show_warning_dialog()
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_kick_users) {
+                show_warning_dialog()
+            } else {
+                makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
         loader = createLoader(requireActivity())
+
+        if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_member_stats){
+            root.mem_stats.isVisible = false
+        }
 
         showLoader(loader, "Loading . . . ", "Loading Page . . . ")
         get_all_projects(app.database, selected_member.id)
@@ -286,22 +304,22 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
             root.txtCompletedOverdueTasks.text = completed_overdue.size.toString()
 
             hideLoader(loader)
-            if (allow_admin) {
+            if (allow_admin && app.currentActiveMember.role.perm_admin) {
                 root.mem_mental_health.isVisible = true
                 get_mh_entry(app.database, false, selected_member.id)
             } else {
                 root.mem_mental_health.isVisible = false
             }
-
+            if(user_mh.set_of_ans_2_per == 0.0 || user_mh.set_of_ans_1_per == 0.0){
+                root.mem_mental_health.isVisible = false
+            }
         }
 
     }
 
 
     fun analyse_data(db: DatabaseReference, pa: Boolean) {
-        if(user_mh.set_of_ans_2_per == 0.0 || user_mh.set_of_ans_1_per == 0.0){
-            root.mem_mental_health.isVisible = false
-        }
+
 
 
         if (!pa) {

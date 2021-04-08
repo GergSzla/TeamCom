@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
@@ -50,7 +51,14 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
         activity?.title = getString(R.string.title_roles_settings)
 
         root.btnAddNewRole.setOnClickListener {
-            navigateTo(RoleCreateFragment.newInstance(currentChannel))
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_create_roles) {
+                navigateTo(RoleCreateFragment.newInstance(currentChannel))
+            } else {
+                Toast.makeText(
+                    context, "You do not have the permissions to create roles!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         root.rolesRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -72,30 +80,37 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
     }
 
     fun getAllChannelRoles(roleId: String?) {
-        rolesList = ArrayList<Role>()
-        app.database.child("channels").child(currentChannel!!.id).child("roles")
-            .orderByChild("permission_code")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    info("Firebase roles error : ${error.message}")
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    //hideLoader(loader)
-                    val children = snapshot.children
-                    children.forEach {
-                        val role = it.getValue<Role>(Role::class.java)
-                        rolesList.add(role!!)
-                        root.rolesRecyclerView.adapter =
-                            RoleAdapter(rolesList, this@RoleListFragment)
-                        root.rolesRecyclerView.adapter?.notifyDataSetChanged()
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel!!.id).child("roles")
-                            .orderByChild("permission_code")
-                            .removeEventListener(this)
+        if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_roles){
+            rolesList = ArrayList<Role>()
+            app.database.child("channels").child(currentChannel!!.id).child("roles")
+                .orderByChild("permission_code")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        info("Firebase roles error : ${error.message}")
                     }
-                }
-            })
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        //hideLoader(loader)
+                        val children = snapshot.children
+                        children.forEach {
+                            val role = it.getValue<Role>(Role::class.java)
+                            rolesList.add(role!!)
+                            root.rolesRecyclerView.adapter =
+                                RoleAdapter(rolesList, this@RoleListFragment)
+                            root.rolesRecyclerView.adapter?.notifyDataSetChanged()
+                            checkSwipeRefresh()
+                            app.database.child("channels").child(currentChannel!!.id).child("roles")
+                                .orderByChild("permission_code")
+                                .removeEventListener(this)
+                        }
+                    }
+                })
+        } else {
+            Toast.makeText(
+                context, "You do not have the permissions to view roles!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     fun setSwipeRefresh() {
@@ -129,6 +144,13 @@ class RoleListFragment : Fragment(), AnkoLogger, RoleListener {
     }
 
     override fun onRoleClick(role: Role) {
-        navigateTo(RoleCreateFragment.editInstance(role, currentChannel))
+        if(app.currentActiveMember.role.perm_admin|| app.currentActiveMember.role.perm_manage_roles){
+            navigateTo(RoleCreateFragment.editInstance(role, currentChannel))
+        } else {
+            Toast.makeText(
+                context, "You do not have the permissions to edit roles!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }

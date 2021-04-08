@@ -75,15 +75,20 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
         dateDialog.minDate = Calendar.getInstance().timeInMillis
 
         root.btn_add_event.setOnClickListener {
-            date_convert(dateDialog.year, dateDialog.month, dateDialog.dayOfMonth, true)
+            if(app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_create_events){
+                date_convert(dateDialog.year, dateDialog.month, dateDialog.dayOfMonth, true)
+            } else {
+                Toast.makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         date_convert(dateDialog.year, dateDialog.month, dateDialog.dayOfMonth, false)
 
         dateDialog.setOnDateChangedListener { datePicker, yyyy, mm, dd ->
-
             date_convert(yyyy, mm, dd, false)
-
         }
 
         root.btn_scroll_to_events.setOnClickListener {
@@ -275,38 +280,44 @@ class CalendarFragment : Fragment(), AnkoLogger, EventListener_ {
     }
 
     fun getCurDateEvents(yyyy: String, mm: String, dd: String) {
-        eventsList = ArrayList<Event>()
-        app.database.child("channels").child(currentChannel.id).child("events").child(yyyy)
-            .child(mm).child(dd)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    info("Firebase events error : ${error.message}")
-                }
+        if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_events){
+            eventsList = ArrayList<Event>()
+            app.database.child("channels").child(currentChannel.id).child("events").child(yyyy)
+                .child(mm).child(dd)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        info("Firebase events error : ${error.message}")
+                    }
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val children = snapshot.children
-                    root.calendarRecyclerView.adapter = EventAdapter(
-                        eventsList,
-                        this@CalendarFragment
-                    )
-                    root.calendarRecyclerView.adapter?.notifyDataSetChanged()
-                    children.forEach {
-                        val event = it.getValue<Event>(Event::class.java)
-                        eventsList.add(event!!)
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val children = snapshot.children
                         root.calendarRecyclerView.adapter = EventAdapter(
                             eventsList,
                             this@CalendarFragment
                         )
                         root.calendarRecyclerView.adapter?.notifyDataSetChanged()
-                        checkSwipeRefresh()
-                        app.database.child("channels").child(currentChannel.id).child("events")
-                            .child(yyyy).child(mm).child(dd)
-                            .removeEventListener(this)
+                        children.forEach {
+                            val event = it.getValue<Event>(Event::class.java)
+                            eventsList.add(event!!)
+                            root.calendarRecyclerView.adapter = EventAdapter(
+                                eventsList,
+                                this@CalendarFragment
+                            )
+                            root.calendarRecyclerView.adapter?.notifyDataSetChanged()
+                            checkSwipeRefresh()
+                            app.database.child("channels").child(currentChannel.id).child("events")
+                                .child(yyyy).child(mm).child(dd)
+                                .removeEventListener(this)
+                        }
+                        root.btn_scroll_to_events.text = "Show Events (${eventsList.size})"
                     }
-                    root.btn_scroll_to_events.text = "Show Events (${eventsList.size})"
-                }
-            })
-
+                })
+        } else {
+            Toast.makeText(
+                context, "You do not have the permissions to view events!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     companion object {

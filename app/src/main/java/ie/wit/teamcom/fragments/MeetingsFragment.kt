@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,7 +51,25 @@ class MeetingsFragment : Fragment(), AnkoLogger, MeetingListener {
         root.meetingsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         root.btnAddNewMeeting.setOnClickListener {
-            navigateTo(CreateMeetingFragment.newInstance(currentChannel))
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_create_meetings) {
+                navigateTo(CreateMeetingFragment.newInstance(currentChannel))
+            } else {
+                Toast.makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        root.btnRequestMeeting.setOnClickListener {
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_request_meetings) {
+                //TODO: ADD REQUEST MEETINGS
+            } else {
+                Toast.makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         setSwipeRefresh()

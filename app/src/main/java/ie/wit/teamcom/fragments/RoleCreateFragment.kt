@@ -30,7 +30,8 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
     lateinit var app: MainApp
     lateinit var root: View
     var currentChannel: Channel? = null
-    var permissionCode: String =""
+
+    //    var permissionCode: String = ""
     var role = Role()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
         app = activity?.application as MainApp
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")
-            if (currentChannel == null){
+            if (currentChannel == null) {
                 currentChannel = it.getParcelable("channel_key_edit")
                 role = it.getParcelable("role_key_edit")!!
             }
@@ -55,55 +56,105 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
 
         root.editPressed.isVisible = false
 
-        if(role.id != ""){
+        if (role.id != "") {
             root.editPressed.isVisible = true
             root.btnCreateNewRole.isVisible = false
             root.editRoleName.setText(role.role_name)
             root.txtColorCode.setText(role.color_code)
-            root.permAdmin.isChecked = role.permission_code.elementAt(0).toString() == "1"
-            root.permViewLogs.isChecked = role.permission_code.elementAt(1).toString() == "1"
-            root.permManageRoles.isChecked = role.permission_code.elementAt(2).toString() == "1"
-            root.permViewTasks.isChecked = role.permission_code.elementAt(3).toString() == "1"
-            root.permCreateTasks.isChecked = role.permission_code.elementAt(4).toString() == "1"
-            root.permCreateInvite.isChecked = role.permission_code.elementAt(5).toString() == "1"
-            root.permCreateGroupChats.isChecked = role.permission_code.elementAt(6).toString() == "1"
-            root.permKickUser.isChecked = role.permission_code.elementAt(7).toString() == "1"
-            root.permPostOnFeed.isChecked = role.permission_code.elementAt(8).toString() == "1"
-            root.permCreateGCInvite.isChecked = role.permission_code.elementAt(9).toString() == "1"
-            root.permAssignTasksToMembers.isChecked = role.permission_code.elementAt(10).toString() == "1"
-            root.permCreateMeetings.isChecked = role.permission_code.elementAt(11).toString() == "1"
-            root.permRequestMeetings.isChecked = role.permission_code.elementAt(12).toString() == "1"
+//            root.permAdmin.isChecked = role.permission_code.elementAt(0).toString() == "1"
+//            root.permViewLogs.isChecked = role.permission_code.elementAt(1).toString() == "1"
+//            root.permManageRoles.isChecked = role.permission_code.elementAt(2).toString() == "1"
+//            root.permViewTasks.isChecked = role.permission_code.elementAt(3).toString() == "1"
+//            root.permCreateTasks.isChecked = role.permission_code.elementAt(4).toString() == "1"
+//            root.permCreateInvite.isChecked = role.permission_code.elementAt(5).toString() == "1"
+//            root.permCreateGroupChats.isChecked = role.permission_code.elementAt(6).toString() == "1"
+//            root.permKickUser.isChecked = role.permission_code.elementAt(7).toString() == "1"
+//            root.permPostOnFeed.isChecked = role.permission_code.elementAt(8).toString() == "1"
+//            root.permCreateGCInvite.isChecked = role.permission_code.elementAt(9).toString() == "1"
+//            root.permAssignTasksToMembers.isChecked = role.permission_code.elementAt(10).toString() == "1"
+//            root.permCreateMeetings.isChecked = role.permission_code.elementAt(11).toString() == "1"
+//            root.permRequestMeetings.isChecked = role.permission_code.elementAt(12).toString() == "1"
+            root.permAdmin.isChecked = role.perm_admin
+            root.permViewLogs.isChecked = role.perm_view_logs
+            root.permManageRoles.isChecked = role.perm_manage_roles
+            root.permViewTasks.isChecked = role.perm_view_tasks
+            root.permCreateTasks.isChecked = role.perm_create_tasks
+            root.permCreateInvite.isChecked = role.perm_create_invites
+            root.permCreateGroupChats.isChecked = role.perm_create_group_chats
+            root.permKickUser.isChecked = role.perm_kick_users
+            root.permPostOnFeed.isChecked = role.perm_create_posts
+            root.permCreateGCInvite.isChecked = role.perm_create_group_chat_invite
+            root.permAssignTasksToMembers.isChecked = role.perm_assign_tasks
+            root.permCreateMeetings.isChecked = role.perm_create_meetings
+            root.permRequestMeetings.isChecked = role.perm_request_meetings
+            root.permCreateProjects.isChecked = role.perm_create_projects
+            root.permManageProjects.isChecked = role.perm_manage_projects
+            root.permViewEvents.isChecked = role.perm_view_events
+            root.permCreateEvents.isChecked = role.perm_create_events
+            root.permCreateRoles.isChecked = role.perm_create_roles
+            root.permViewRoles.isChecked = role.perm_view_roles
+            root.permEditChannel.isChecked = role.perm_edit_channel
+            root.permViewMembers.isChecked = role.perm_view_members
+            root.permViewMembersStats.isChecked = role.perm_view_member_stats
+            root.permAssignRoles.isChecked = role.perm_assign_roles
+            root.permViewInvites.isChecked = role.perm_view_invites
+
         }
 
         root.btnEditRole.setOnClickListener {
-            if(root.editRoleName.text.toString() != ""){
-                permissionCode = ""
-                permissionCode += if(root.permAdmin.isChecked) "1" else "0"
-                permissionCode += if(root.permViewLogs.isChecked) "1" else "0"
-                permissionCode += if(root.permManageRoles.isChecked) "1" else "0"
-                permissionCode += if(root.permViewTasks.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateTasks.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateInvite.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateGroupChats.isChecked) "1" else "0"
-                permissionCode += if(root.permKickUser.isChecked) "1" else "0"
-                permissionCode += if(root.permPostOnFeed.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateGCInvite.isChecked) "1" else "0"
-                permissionCode += if(root.permAssignTasksToMembers.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateMeetings.isChecked) "1" else "0"
-                permissionCode += if(root.permRequestMeetings.isChecked) "1" else "0"
+            if (root.editRoleName.text.toString() != "") {
+//                permissionCode = ""
+//                permissionCode += if(root.permAdmin.isChecked) "1" else "0"
+//                permissionCode += if(root.permViewLogs.isChecked) "1" else "0"
+//                permissionCode += if(root.permManageRoles.isChecked) "1" else "0"
+//                permissionCode += if(root.permViewTasks.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateTasks.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateInvite.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateGroupChats.isChecked) "1" else "0"
+//                permissionCode += if(root.permKickUser.isChecked) "1" else "0"
+//                permissionCode += if(root.permPostOnFeed.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateGCInvite.isChecked) "1" else "0"
+//                permissionCode += if(root.permAssignTasksToMembers.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateMeetings.isChecked) "1" else "0"
+//                permissionCode += if(root.permRequestMeetings.isChecked) "1" else "0"
+                role.perm_admin = root.permAdmin.isChecked
+                role.perm_view_logs = root.permViewLogs.isChecked
+                role.perm_manage_roles = root.permManageRoles.isChecked
+                role.perm_view_tasks = root.permViewTasks.isChecked
+                role.perm_create_tasks = root.permCreateTasks.isChecked
+                role.perm_create_invites = root.permCreateInvite.isChecked
+                role.perm_create_group_chats = root.permCreateGroupChats.isChecked
+                role.perm_kick_users = root.permKickUser.isChecked
+                role.perm_create_posts = root.permPostOnFeed.isChecked
+                role.perm_create_group_chat_invite = root.permCreateGCInvite.isChecked
+                role.perm_assign_tasks = root.permAssignTasksToMembers.isChecked
+                role.perm_create_meetings = root.permCreateMeetings.isChecked
+                role.perm_request_meetings = root.permRequestMeetings.isChecked
+                role.perm_create_projects = root.permCreateProjects.isChecked
+                role.perm_manage_projects = root.permManageProjects.isChecked
+                role.perm_view_events = root.permViewEvents.isChecked
+                role.perm_create_events = root.permCreateEvents.isChecked
+                role.perm_create_roles = root.permCreateRoles.isChecked
+                role.perm_view_roles = root.permViewRoles.isChecked
+                role.perm_edit_channel = root.permEditChannel.isChecked
+                role.perm_view_members = root.permViewMembers.isChecked
+                role.perm_view_member_stats = root.permViewMembersStats.isChecked
+                role.perm_assign_roles = root.permAssignRoles.isChecked
+                role.perm_view_invites = root.permViewInvites.isChecked
 
                 role.role_name = editRoleName.text.toString()
-                role.permission_code = permissionCode
+//                role.permission_code = permissionCode
                 role.color_code = txtColorCode.text.toString()
                 writeNewRole(role)
             }
         }
 
         root.btnDeleteRole.setOnClickListener {
-            if(!role.isDefault){
+            if (!role.isDefault) {
                 deleteRole(role.id)
             } else {
-                Toast.makeText(activity, "Cannot delete default Admin role!", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Cannot delete default Admin role!", Toast.LENGTH_LONG)
+                    .show()
             }
         }
 
@@ -115,7 +166,9 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
                 .setOnColorSelectedListener { selectedColor ->
-                    root.txtColorCode.setText(Integer.toHexString(selectedColor).replaceRange(0,2, ""))
+                    root.txtColorCode.setText(
+                        Integer.toHexString(selectedColor).replaceRange(0, 2, "")
+                    )
                 }
                 .setPositiveButton(
                     "ok"
@@ -130,42 +183,64 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
 
 
         root.btnCreateNewRole.setOnClickListener {
-            if(root.editRoleName.text.toString() != ""){
-                permissionCode += if(root.permAdmin.isChecked) "1" else "0"
-                permissionCode += if(root.permViewLogs.isChecked) "1" else "0"
-                permissionCode += if(root.permManageRoles.isChecked) "1" else "0"
-                permissionCode += if(root.permViewTasks.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateTasks.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateInvite.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateGroupChats.isChecked) "1" else "0"
-                permissionCode += if(root.permKickUser.isChecked) "1" else "0"
-                permissionCode += if(root.permPostOnFeed.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateGCInvite.isChecked) "1" else "0"
-                permissionCode += if(root.permAssignTasksToMembers.isChecked) "1" else "0"
-                permissionCode += if(root.permCreateMeetings.isChecked) "1" else "0"
-                permissionCode += if(root.permRequestMeetings.isChecked) "1" else "0"
+            if (root.editRoleName.text.toString() != "") {
+//                permissionCode += if(root.permAdmin.isChecked) "1" else "0"
+//                permissionCode += if(root.permViewLogs.isChecked) "1" else "0"
+//                permissionCode += if(root.permManageRoles.isChecked) "1" else "0"
+//                permissionCode += if(root.permViewTasks.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateTasks.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateInvite.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateGroupChats.isChecked) "1" else "0"
+//                permissionCode += if(root.permKickUser.isChecked) "1" else "0"
+//                permissionCode += if(root.permPostOnFeed.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateGCInvite.isChecked) "1" else "0"
+//                permissionCode += if(root.permAssignTasksToMembers.isChecked) "1" else "0"
+//                permissionCode += if(root.permCreateMeetings.isChecked) "1" else "0"
+//                permissionCode += if(root.permRequestMeetings.isChecked) "1" else "0"
+                role.perm_admin = root.permAdmin.isChecked
+                role.perm_view_logs = root.permViewLogs.isChecked
+                role.perm_manage_roles = root.permManageRoles.isChecked
+                role.perm_view_tasks = root.permViewTasks.isChecked
+                role.perm_create_tasks = root.permCreateTasks.isChecked
+                role.perm_create_invites = root.permCreateInvite.isChecked
+                role.perm_create_group_chats = root.permCreateGroupChats.isChecked
+                role.perm_kick_users = root.permKickUser.isChecked
+                role.perm_create_posts = root.permPostOnFeed.isChecked
+                role.perm_create_group_chat_invite = root.permCreateGCInvite.isChecked
+                role.perm_assign_tasks = root.permAssignTasksToMembers.isChecked
+                role.perm_create_meetings = root.permCreateMeetings.isChecked
+                role.perm_request_meetings = root.permRequestMeetings.isChecked
+                role.perm_create_projects = root.permCreateProjects.isChecked
+                role.perm_manage_projects = root.permManageProjects.isChecked
+                role.perm_view_events = root.permViewEvents.isChecked
+                role.perm_create_events = root.permCreateEvents.isChecked
+                role.perm_create_roles = root.permCreateRoles.isChecked
+                role.perm_view_roles = root.permViewRoles.isChecked
+                role.perm_edit_channel = root.permEditChannel.isChecked
+                role.perm_view_members = root.permViewMembers.isChecked
+                role.perm_view_member_stats = root.permViewMembersStats.isChecked
+                role.perm_assign_roles = root.permAssignRoles.isChecked
+                role.perm_view_invites = root.permViewInvites.isChecked
 
                 role.role_name = editRoleName.text.toString()
-                role.permission_code = permissionCode
+//                role.permission_code = permissionCode
                 role.color_code = txtColorCode.text.toString()
                 role.id = UUID.randomUUID().toString()
                 writeNewRole(role)
             }
         }
 
-
-
         return root
     }
 
     override fun onResume() {
         super.onResume()
-        app.activityResumed(currentChannel!!,app.currentActiveMember)
+        app.activityResumed(currentChannel!!, app.currentActiveMember)
     }
 
     override fun onPause() {
         super.onPause()
-        app.activityPaused(currentChannel!!,app.currentActiveMember)
+        app.activityPaused(currentChannel!!, app.currentActiveMember)
     }
 
     private fun deleteRole(roleId: String?) {
@@ -196,7 +271,13 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
 
                     app.generateDateID("1")
                     val logUpdates = HashMap<String, Any>()
-                    val new_log = Log(log_id = app.valid_from_cal, log_triggerer = app.currentActiveMember, log_date = app.dateAsString, log_time = app.timeAsString, log_content = "New Role [${role.role_name}] created.")
+                    val new_log = Log(
+                        log_id = app.valid_from_cal,
+                        log_triggerer = app.currentActiveMember,
+                        log_date = app.dateAsString,
+                        log_time = app.timeAsString,
+                        log_content = "New Role [${role.role_name}] created."
+                    )
                     logUpdates["/channels/${currentChannel!!.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
@@ -215,6 +296,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                     putParcelable("channel_key", channel)
                 }
             }
+
         fun editInstance(role: Role, channel: Channel) =
             RoleCreateFragment().apply {
                 arguments = Bundle().apply {

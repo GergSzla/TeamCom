@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -58,7 +59,20 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
         activity?.title = getString(R.string.title_project_settings)
 
         root.btn_add_project.setOnClickListener {
-            navigateTo(TaskStagesFragment.newInstance(currentChannel,project = Project(),false))
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_create_projects) {
+                navigateTo(
+                    TaskStagesFragment.newInstance(
+                        currentChannel,
+                        project = Project(),
+                        false
+                    )
+                )
+            } else {
+                Toast.makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         root.projectsRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -69,7 +83,7 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = root.projectsRecyclerView.adapter as ProjectsAdapter
                 delete_project_confirmation((viewHolder.itemView.tag as Project))
-                if (delete){
+                if (delete) {
                     adapter.removeAt(viewHolder.adapterPosition)
                 }
             }
@@ -92,23 +106,30 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
     }
 
     override fun onProjClick(project: Project) {
-        navigateTo(TasksFragment.newInstance(currentChannel,project))
+        if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_tasks) {
+            navigateTo(TasksFragment.newInstance(currentChannel, project))
+        } else {
+            Toast.makeText(
+                context, "You do not have the permissions to do this!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
-    fun delete_project_confirmation(project: Project){
+    fun delete_project_confirmation(project: Project) {
         dialog = Dialog(requireContext())
         dialog!!.setContentView(R.layout.confirmation_dialog)
 
         val btn_conf: Button = dialog!!.findViewById<Button>(R.id.btn_proceed)
         val btn_cancel: Button = dialog!!.findViewById<Button>(R.id.btn_cancel)
 
-        btn_conf.setOnClickListener{
+        btn_conf.setOnClickListener {
             delete_project(project)
             delete = true
             dialog!!.cancel()
         }
 
-        btn_cancel.setOnClickListener{
+        btn_cancel.setOnClickListener {
             dialog!!.cancel()
             getAllProjects()
         }
@@ -117,8 +138,9 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
         dialog!!.show()
     }
 
-    private fun delete_project(project : Project){
-        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("projects")
+    private fun delete_project(project: Project) {
+        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            .child("projects")
             .child(project.proj_id)
             .addListenerForSingleValueEvent(
                 object : ValueEventListener {
@@ -148,7 +170,7 @@ class ProjectListFragment : Fragment(), AnkoLogger, ProjectListener {
                         root.projectsRecyclerView.adapter =
                             ProjectsAdapter(projectList, this@ProjectListFragment)
                         root.projectsRecyclerView.adapter?.notifyDataSetChanged()
-                        if (projectList.size > 0 ) {
+                        if (projectList.size > 0) {
                             root.txtEmpty_projects.isVisible = false
                         }
                         checkSwipeRefresh()

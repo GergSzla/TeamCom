@@ -64,14 +64,25 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         activity?.title = getString(R.string.title_news_feed)
         root.commentsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        (currentPost.post_author.firstName + " " + currentPost.post_author.surname).also { root.txtPostUserView.text = it }
-        (currentPost.post_date + " @ " + currentPost.post_time).also { root.txtPostTimeAndDateView.text = it }
+        (currentPost.post_author.firstName + " " + currentPost.post_author.surname).also {
+            root.txtPostUserView.text = it
+        }
+        (currentPost.post_date + " @ " + currentPost.post_time).also {
+            root.txtPostTimeAndDateView.text = it
+        }
         root.txtPostContentView.text = currentPost.post_content
 
         root.imgBtnPostComment.setOnClickListener {
             validateForm()
             if (validateForm()) {
-                sendComment()
+                if (app.currentActiveMember.role.perm_create_posts || app.currentActiveMember.role.perm_admin) {
+                    sendComment()
+                } else {
+                    makeText(
+                        context, "You do not have the permissions to do this!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
 
@@ -87,7 +98,8 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchDeleteHelper.attachToRecyclerView(root.commentsRecyclerView)
 
-        var ref = FirebaseStorage.getInstance().getReference("photos/${currentPost.post_author.id}.jpg")
+        var ref =
+            FirebaseStorage.getInstance().getReference("photos/${currentPost.post_author.id}.jpg")
         ref.downloadUrl.addOnSuccessListener {
             Picasso.get().load(it)
                 .resize(260, 260)
@@ -95,7 +107,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
                 .into(root.card_post_pic)
         }
 
-        if(currentPost.post_author.role.color_code.take(1) != "#"){
+        if (currentPost.post_author.role.color_code.take(1) != "#") {
             root.txtPostUserView.setTextColor(Color.parseColor("#" + currentPost.post_author.role.color_code))
         } else {
             root.txtPostUserView.setTextColor(Color.parseColor(currentPost.post_author.role.color_code))
@@ -104,8 +116,8 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
         return root
     }
 
-    fun delete_comment( comment: Comment) {
-        if ( comment.comment_author.id == auth.currentUser!!.uid){
+    fun delete_comment(comment: Comment) {
+        if (comment.comment_author.id == auth.currentUser!!.uid) {
             val i = commentsList.indexOf(comment)
             app.database.child("channels").child(currentChannel.id).child("posts")
                 .child(currentPost.id).child("post_comments").child("$i")
@@ -119,7 +131,11 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
                         }
                     })
         } else {
-            makeText(context, "Comment Can Only Be Deleted By Its Owner or Members With The Appropriate Permissions.", Toast.LENGTH_LONG).show()
+            makeText(
+                context,
+                "Comment Can Only Be Deleted By Its Owner or Members With The Appropriate Permissions.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -198,7 +214,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
                     logUpdates["/channels/${currentChannel.id}/logs/${new_log.log_id}"] = new_log
                     app.database.updateChildren(logUpdates)
 
-                    navigateTo(PostCommentsFragment.newInstance(currentChannel,currentPost))
+                    navigateTo(PostCommentsFragment.newInstance(currentChannel, currentPost))
 
                     app.database.child("channels").child(currentChannel!!.id).child("posts")
                         .child(currentPost.id)
@@ -263,7 +279,7 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
 
     override fun onCommentEditClicked(comment: Comment) {
         val i = commentsList.indexOf(comment)
-        
+
         app.database.child("channels").child(currentChannel.id).child("posts")
             .child(currentPost.id).child("post_comments").child("$i")
             .addValueEventListener(object : ValueEventListener {
@@ -272,7 +288,8 @@ class PostCommentsFragment : Fragment(), AnkoLogger, CommentListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel.id}/posts/${currentPost.id}/post_comments/$i/comment_content/"] = comment.comment_content
+                    childUpdates["/channels/${currentChannel.id}/posts/${currentPost.id}/post_comments/$i/comment_content/"] =
+                        comment.comment_content
                     app.database.updateChildren(childUpdates)
 
                     app.database.child("channels").child(currentChannel.id).child("posts")

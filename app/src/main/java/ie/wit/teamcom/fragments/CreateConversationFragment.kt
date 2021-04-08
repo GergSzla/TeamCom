@@ -58,29 +58,37 @@ class CreateConversationFragment : Fragment(), AnkoLogger, ConvoMembersListener 
         root.selectMemsConvoRecyclerView.layoutManager = LinearLayoutManager(activity)
         root.selectedMemsConvoRecyclerView.layoutManager = LinearLayoutManager(activity)
 
+        root.txtGCName.isVisible = false
+
         root.btnCreateConvo.setOnClickListener {
             if (selected_members.size > 2 && root.editTxtGroupChatName.text.toString() != "") {
-                app.generateDateID("1")
-                new_conversation.conv_date_order = app.valid_from_cal
-                new_conversation.gc_name = root.editTxtGroupChatName.text.toString()
+                if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_create_group_chats) {
+                    app.generateDateID("1")
+                    new_conversation.conv_date_order = app.valid_from_cal
+                    new_conversation.gc_name = root.editTxtGroupChatName.text.toString()
 
-                new_conversation.id = UUID.randomUUID().toString()
-                new_conversation.participants = selected_members
-                new_conversation.participants.add(app.currentActiveMember)
-                createNewConvo(new_conversation)
-                navigateTo(ConversationFragment.newInstance(currentChannel))
+                    new_conversation.id = UUID.randomUUID().toString()
+                    new_conversation.participants = selected_members
+                    new_conversation.participants.add(app.currentActiveMember)
+                    createNewConvo(new_conversation)
+                    navigateTo(ConversationFragment.newInstance(currentChannel))
+                } else {
+                    Toast.makeText(
+                        context, "You do not have the permissions to do this!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             } else if (selected_members.size > 2 && root.editTxtGroupChatName.text.toString() == "") {
-                Toast.makeText(context, "Group Chat Name Is Required!", Toast.LENGTH_LONG)
-            } else if(selected_members.size == 1){
-                app.generateDateID("1")
-                new_conversation.conv_date_order = app.valid_from_cal
-                new_conversation.gc_name = ""
-
-                new_conversation.id = UUID.randomUUID().toString()
-                new_conversation.participants = selected_members
-                new_conversation.participants.add(app.currentActiveMember)
-                createNewConvo(new_conversation)
-                navigateTo(ConversationFragment.newInstance(currentChannel))
+                Toast.makeText(context, "Group Chat Name Is Required!", Toast.LENGTH_LONG).show()
+            } else if (selected_members.size == 1) {
+                    app.generateDateID("1")
+                    new_conversation.conv_date_order = app.valid_from_cal
+                    new_conversation.gc_name = ""
+                    new_conversation.id = UUID.randomUUID().toString()
+                    new_conversation.participants = selected_members
+                    new_conversation.participants.add(app.currentActiveMember)
+                    createNewConvo(new_conversation)
+                    navigateTo(ConversationFragment.newInstance(currentChannel))
             }
         }
 

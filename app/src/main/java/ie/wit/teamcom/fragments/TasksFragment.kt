@@ -82,11 +82,25 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         loader = createLoader(requireActivity())
 
         root.btnCreateTask.setOnClickListener {
-            navigateTo(CreateTaskFragment.newInstance(currentChannel, selected_project))
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_create_tasks) {
+                navigateTo(CreateTaskFragment.newInstance(currentChannel, selected_project))
+            } else {
+                makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         root.btnEditProject.setOnClickListener {
-            navigateTo(TaskStagesFragment.newInstance(currentChannel, selected_project, true))
+            if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_manage_projects) {
+                navigateTo(TaskStagesFragment.newInstance(currentChannel, selected_project, true))
+            } else {
+                makeText(
+                    context, "You do not have the permissions to do this!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         setSwipeRefresh()
@@ -669,8 +683,6 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     }
 
 
-
-
     private fun getCurrentTaskStage(task: Task) {
         app.database.child("channels").child(currentChannel!!.id).child("projects")
             .child(selected_project.proj_id).child("proj_task_stages")
@@ -697,6 +709,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
     }
 
     override fun onTaskClicked(task: Task) {
+
         getCurrentTaskStage(task)
         selected_task = task
 
@@ -733,8 +746,13 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
         }
 
         taskStage.setOnClickListener {
-            dialog.dismiss()
-            change_state_dialog()
+            if (app.currentActiveMember.role.perm_admin || task.task_assignee.id == app.currentActiveMember.id){
+                dialog.dismiss()
+                change_state_dialog()
+            } else {
+                makeText(context, "You don't have permissions to make changes to this task!", Toast.LENGTH_LONG).show()
+            }
+
         }
 
         progressBar.progress = task.task_importance
@@ -749,8 +767,8 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
     override fun onStageClick(stage: TaskStage) {
         val index_of_task = selected_stage.stage_tasks.indexOf(selected_task)
-        if (selected_task.task_current_stage == selected_stage.stage_name){
-            makeText(context,"Task Already In This Stage", Toast.LENGTH_LONG).show()
+        if (selected_task.task_current_stage == selected_stage.stage_name) {
+            makeText(context, "Task Already In This Stage", Toast.LENGTH_LONG).show()
         } else {
             selected_stage.stage_tasks.removeAt(index_of_task)
             selected_task.task_current_stage = stage.stage_name
