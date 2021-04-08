@@ -98,6 +98,8 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
             root.permViewMembersStats.isChecked = role.perm_view_member_stats
             root.permAssignRoles.isChecked = role.perm_assign_roles
             root.permViewInvites.isChecked = role.perm_view_invites
+            root.permApproveMeetings.isChecked = role.perm_approve_meetings
+
 
         }
 
@@ -141,6 +143,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                 role.perm_view_member_stats = root.permViewMembersStats.isChecked
                 role.perm_assign_roles = root.permAssignRoles.isChecked
                 role.perm_view_invites = root.permViewInvites.isChecked
+                role.perm_approve_meetings = root.permApproveMeetings.isChecked
 
                 role.role_name = editRoleName.text.toString()
 //                role.permission_code = permissionCode
@@ -221,6 +224,7 @@ class RoleCreateFragment : Fragment(), AnkoLogger {
                 role.perm_view_member_stats = root.permViewMembersStats.isChecked
                 role.perm_assign_roles = root.permAssignRoles.isChecked
                 role.perm_view_invites = root.permViewInvites.isChecked
+                role.perm_approve_meetings = root.permApproveMeetings.isChecked
 
                 role.role_name = editRoleName.text.toString()
 //                role.permission_code = permissionCode

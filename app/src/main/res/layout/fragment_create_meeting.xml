@@ -378,6 +378,13 @@
                     android:backgroundTint="@color/color_1"
                     android:text="Create Meeting"
                     android:textColor="@color/color_white" />
+                <Button
+                    android:id="@+id/btnRequestMeeting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/color_1"
+                    android:text="Request Meeting"
+                    android:textColor="@color/color_white" />
             </LinearLayout>
 
         </LinearLayout>

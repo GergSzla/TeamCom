@@ -163,6 +163,7 @@
     <string name="permAssignTasksToMembers">Assign Tasks To Members</string>
     <string name="permCreateMeetings">Create Meetings</string>
     <string name="permRequestMeetings">Request Meetings</string>
+    <string name="permApproveMeetings">Approve/Reject Meetings</string>
     <string name="permCreateProjects">Create Projects</string>
     <string name="permManageProjects">Manage Projects</string>
     <string name="permViewEvents">View Events</string>

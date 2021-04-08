@@ -55,6 +55,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
     var channel_members = ArrayList<Member>()
     var selected_members = ArrayList<Member>()
     lateinit var loader: androidx.appcompat.app.AlertDialog
+    var req_meeting = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +64,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
         arguments?.let {
             currentChannel = it.getParcelable("channel_key")!!
+            req_meeting = it.getBoolean("meeting_req")!!
         }
         app.getAllMembers(currentChannel.id)
     }
@@ -80,6 +82,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         loader = createLoader(requireActivity())
 
         showLoader(loader, "Loading . . . ", "Loading Page . . . ")
+
 
         val date = Calendar.getInstance()
 
@@ -257,7 +260,17 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         root.btnCreateNewMeeting.setOnClickListener {
             createWarningDialog()
         }
+        root.btnRequestMeeting.setOnClickListener {
+            createMeeting(true)
+        }
 
+        if (req_meeting) {
+            root.btnCreateNewMeeting.isVisible = false
+            root.btnRequestMeeting.isVisible = true
+        } else {
+            root.btnCreateNewMeeting.isVisible = true
+            root.btnRequestMeeting.isVisible = false
+        }
         root.btnRefr.setOnClickListener {
             root.swiperefreshCreateMeeting_1.isRefreshing = true
             root.swiperefreshCreateMeeting_2.isRefreshing = true
@@ -399,7 +412,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
                 validateForm()
                 hideLoader(loader)
                 if (validateForm()) {
-                    createMeeting()
+                    createMeeting(false)
                 }
             }.show()
     }
@@ -491,7 +504,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         app.activityPaused(currentChannel, app.currentActiveMember)
     }
 
-    fun createMeeting() {
+    fun createMeeting(request: Boolean) {
         showLoader(loader, "Loading . . . ", "Creating Meeting ${new_meeting.meeting_title} . . .")
         new_meeting.meeting_date_as_string = "$dd/$mm/$yyyy"
         new_meeting.meeting_time_as_string = "$h:$m"
@@ -520,6 +533,9 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
         new_meeting.meeting_date_as_string_end =
             app.rem_dateAsString //"${cal.dayOfMonth}/${cal.monthValue}/${cal.year}"
         new_meeting.meeting_time_as_string_end = app.rem_timeAsString//"${cal.hour}:${cal.minute}"
+
+        new_meeting.requested_meeting = request
+
 
         new_meeting.meeting_title = root.editTxtTitle.text.toString()
         new_meeting.meeting_desc = root.editTxtDesc.text.toString()
@@ -555,7 +571,7 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
                     app.generateDateID("1")
                     val logUpdates = HashMap<String, Any>()
-                    var new_log = ie.wit.teamcom.models.Log(
+                    var new_log = Log(
                         log_id = app.valid_from_cal,
                         log_triggerer = app.currentActiveMember,
                         log_date = app.dateAsString,
@@ -584,10 +600,11 @@ class CreateMeetingFragment : Fragment(), AnkoLogger, MeetingMembersListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(channel: Channel) =
+        fun newInstance(channel: Channel, req: Boolean) =
             CreateMeetingFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("channel_key", channel)
+                    putBoolean("meeting_req", req)
                 }
             }
     }

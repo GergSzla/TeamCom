@@ -429,6 +429,19 @@
                 android:thumb="@drawable/thumb_switch"
                 app:track="@drawable/new_switch" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/permApproveMeetings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@drawable/content_layout_backg"
+                android:text="@string/permApproveMeetings"
+                android:textColor="@color/color_white"
+                android:textSize="20dp"
+                android:thumb="@drawable/thumb_switch"
+                app:track="@drawable/new_switch" />
+
             <TextView
                 android:id="@+id/txtEvents"
                 android:layout_width="match_parent"

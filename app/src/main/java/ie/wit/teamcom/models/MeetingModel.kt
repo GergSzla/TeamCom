@@ -19,6 +19,7 @@ data class Meeting (
     var meeting_desc: String = "",
     var participants: ArrayList<Member> = ArrayList<Member>(),
     var online:Boolean = true,
+    var requested_meeting:Boolean = false,
     var meeting_creator: Member = Member(),
 ////IF ONLINE
     var meeting_id: String = "",
@@ -39,7 +40,7 @@ data class Meeting (
             "meeting_time_as_string" to meeting_time_as_string,
             "meeting_passcode" to meeting_passcode,
             "meeting_creator" to meeting_creator,
-
+            "requested_meeting" to requested_meeting,
             "meeting_desc" to meeting_desc,
             "participants" to participants,
             "meeting_platform" to meeting_platform,
