@@ -4,10 +4,14 @@
     <!--activity_login_reg-->
     <string name="btnLogin">Login With Email</string>
     <string name="btnRegister">Register With Email</string>
+    <string name="btnReset">Reset Password</string>
+    <string name="btnCheck">Check Authentication</string>
     <string name="btnShowReg">Create An Account</string>
     <string name="btnShowLogin">Login To Your Account</string>
     <string name="hintLgnEmail">Email</string>
     <string name="hintPassword">Password</string>
+    <string name="hintConfPassword">Confirm Password</string>
+    <string name="hintNewPassword">New Password</string>
     <string name="hintFirstname">First Name</string>
     <string name="hintSurname">Surname</string>
 

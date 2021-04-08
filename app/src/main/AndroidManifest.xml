@@ -45,6 +45,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.ChangePasswordActivity"
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.ChannelCreate"
             tools:ignore="LockedOrientationActivity"
             android:screenOrientation="portrait"

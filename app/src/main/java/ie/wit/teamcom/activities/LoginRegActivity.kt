@@ -29,6 +29,7 @@ import ie.wit.teamcom.models.Account
 import kotlinx.android.synthetic.main.activity_login_reg.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.util.*
 
@@ -89,6 +90,10 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
 
             }
 
+        }
+
+        txtBtnForgotPassword.setOnClickListener {
+            startActivity<ForgotPasswordActivity>()
         }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

@@ -24,6 +24,7 @@ import ie.wit.teamcom.models.Account
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.startActivity
 import java.io.IOException
 
 class ProfileActivity : AppCompatActivity(), AnkoLogger {
@@ -89,6 +90,10 @@ class ProfileActivity : AppCompatActivity(), AnkoLogger {
 
         txtClickChangeImg.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
+        }
+
+        btnChangePassword.setOnClickListener {
+            startActivity<ChangePasswordActivity>()
         }
 
         txtDisplayFullName.setText(user.firstName + " " + user.surname)
