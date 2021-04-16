@@ -105,7 +105,7 @@ class Home : AppCompatActivity(),
         ContextCompat.startForegroundService(this, serviceIntent)
     }
 
-    fun stopService(v: View?) {
+    fun stopService() {
         //TODO: enable stop/start service
         val serviceIntent = Intent(this, RecurringServices::class.java)
         stopService(serviceIntent)
@@ -597,6 +597,7 @@ class Home : AppCompatActivity(),
             /////////////////////////
             R.id.nav_logout -> {
                 signOut()
+                stop()
             }
 
         }
@@ -604,6 +605,9 @@ class Home : AppCompatActivity(),
         return true
     }
 
+    fun stop(){
+        h2.removeCallbacks(r2)
+    }
 
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START))

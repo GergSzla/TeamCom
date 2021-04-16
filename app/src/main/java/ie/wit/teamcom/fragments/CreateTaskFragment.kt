@@ -359,8 +359,10 @@ class CreateTaskFragment : Fragment(), AnkoLogger {
                         if (member!!.id == app.currentActiveMember.id) {
                             members.add(member.firstName + " " + member.surname + " (Me)")
                             members_list.add(member)
+                        } else {
+                            members.add(member.firstName + " " + member.surname)
+                            members_list.add(member)
                         }
-
                         app.database.child("channel").child(currentChannel.id).child("members")
                             .removeEventListener(this)
                     }

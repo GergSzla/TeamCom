@@ -767,7 +767,7 @@ class TasksFragment : Fragment(), AnkoLogger, TaskListener, StagesListener {
 
     override fun onStageClick(stage: TaskStage) {
         val index_of_task = selected_stage.stage_tasks.indexOf(selected_task)
-        if (selected_task.task_current_stage == selected_stage.stage_name) {
+        if (selected_task.task_current_stage == stage.stage_name) {
             makeText(context, "Task Already In This Stage", Toast.LENGTH_LONG).show()
         } else {
             selected_stage.stage_tasks.removeAt(index_of_task)

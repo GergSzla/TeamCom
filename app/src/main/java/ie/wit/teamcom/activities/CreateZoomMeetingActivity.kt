@@ -22,8 +22,8 @@ import us.zoom.sdk.*
 
 class CreateZoomMeetingActivity : AppCompatActivity(), AnkoLogger {
     lateinit var app: MainApp
-    var zoom_app_key: String = BuildConfig.ZOOM_APP_KEY
-    var zoom_app_secret: String = BuildConfig.ZOOM_APP_SECRET
+    var zoom_app_key: String =""// BuildConfig.ZOOM_APP_KEY
+    var zoom_app_secret: String ="" //BuildConfig.ZOOM_APP_SECRET
     var meeting = Meeting()
 
     private val authListener = object : ZoomSDKAuthenticationListener {
