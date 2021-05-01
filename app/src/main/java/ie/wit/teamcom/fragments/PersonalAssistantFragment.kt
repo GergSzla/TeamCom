@@ -9,6 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import ie.wit.adventurio.helpers.createLoader
 import ie.wit.adventurio.helpers.hideLoader
 import ie.wit.adventurio.helpers.showLoader
@@ -37,6 +41,8 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
     lateinit var meet_frag: MeetingsFragment
     lateinit var rem_frag: RemindersFragment
     lateinit var loader: androidx.appcompat.app.AlertDialog
+    var set_of_ans_1 = 0.0
+    var set_of_ans_2 = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +59,12 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
         rem_frag.getAllReminders(app.database, true)
         mem_frag.get_all_projects(app.database, auth.currentUser!!.uid)
         mem_frag.get_mh_entry(app.database, true, auth.currentUser!!.uid)
-        if (user_mh.set_of_ans_2_per != 0.0) {
             Handler().postDelayed(
                 {
-                    mem_frag.check_pref(app.database, true, auth.currentUser!!.uid)
+                    check_pref(app.database, auth.currentUser!!.uid)
                 },
                 2000 // value in milliseconds
             )
-        }
     }
 
     override fun onCreateView(
@@ -315,6 +319,49 @@ class PersonalAssistantFragment : Fragment(), AnkoLogger {
         }
     }
 
+    fun check_pref(db: DatabaseReference, userID : String) {
+        db.child("channels").child(currentChannel.id).child("surveys")
+            .child(userID).child("survey_pref")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    allow_admin = snapshot.child("visible_to_admin").value.toString().toBoolean()
+                    survey_freq = snapshot.child("frequency").value.toString()
+                    survey_enabled = snapshot.child("enabled").value.toString().toBoolean()
+
+                    db.child("channels").child(currentChannel.id).child("surveys")
+                        .child(userID).child("survey_pref")
+                        .removeEventListener(this)
+
+                    check_entries(userID)
+                }
+            })
+    }
+
+    fun check_entries( userID : String) {
+        app.database.child("channels").child(currentChannel.id).child("surveys")
+            .child(userID).child("entry")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    if(survey_enabled){
+                        set_of_ans_1 = snapshot.child("set_of_ans_1_per").value.toString().toDouble()
+                        set_of_ans_2 = snapshot.child("set_of_ans_2_per").value.toString().toDouble()
+                    }
+
+                    app.database.child("channels").child(currentChannel.id).child("surveys")
+                        .child(userID).child("survey_pref")
+                        .removeEventListener(this)
+
+                }
+            })
+    }
 
     private fun analyse_reminders() {
         showLoader(loader, "Analysing . . .", "Analysing Reminders  . . .")

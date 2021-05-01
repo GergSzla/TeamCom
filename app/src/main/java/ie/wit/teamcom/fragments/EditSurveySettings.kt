@@ -45,7 +45,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
         root = inflater.inflate(R.layout.fragment_edit_survey_settings, container, false)
         activity?.title = getString(R.string.title_survey)
 
-        root.btnAddManual.setOnClickListener{
+        root.btnAddManual.setOnClickListener {
             navigateTo(SurveyFormFragment.newInstance(currentChannel))
         }
 
@@ -67,16 +67,16 @@ class EditSurveySettings : Fragment(), AnkoLogger {
             }
         }
 
-        root.btn_info_dialog.setOnClickListener{
+        root.btn_info_dialog.setOnClickListener {
             show_info()
         }
 
-        root.btn_save_survey_pref.setOnClickListener{
+        root.btn_save_survey_pref.setOnClickListener {
             save_survey_preference()
         }
 
         root.toggle_survey.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
+            if (isChecked) {
                 root.textView24.isVisible = true
                 root.radio_group.isVisible = true
                 root.toggle_public.isVisible = true
@@ -90,7 +90,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
         return root
     }
 
-    fun show_info(){
+    fun show_info() {
         AlertDialog.Builder(requireContext())
             .setView(R.layout.survey_info_dialog)
             .setTitle("Survey Information")
@@ -99,27 +99,26 @@ class EditSurveySettings : Fragment(), AnkoLogger {
             }.show()
     }
 
-    fun save_survey_preference(){
+    fun save_survey_preference() {
         app.generateDateID("1")
         survey_preference.next_date_id = app.valid_from_cal
         survey_preference.user_id = auth.currentUser!!.uid
-        survey_preference.enabled = root.toggle_survey.isEnabled
-        survey_preference.visible_to_admin = root.toggle_public.isEnabled
+        survey_preference.enabled = root.toggle_survey.isChecked
+        survey_preference.visible_to_admin = root.toggle_public.isChecked
 
-        if (!root.toggle_survey.isEnabled){
+        if (!root.toggle_survey.isChecked) {
             survey_preference.frequency = "null"
+            survey_preference.visible_to_admin = false
+            survey_preference.enabled = root.toggle_survey.isChecked
+            survey_preference.next_date_id = 0
         } else {
             var selected_freq_id = root.radio_group.checkedRadioButtonId
-            if (selected_freq_id != -1){
+            if (selected_freq_id != -1) {
                 var selected_freq = root.findViewById<RadioButton>(selected_freq_id)
                 survey_preference.frequency = selected_freq.text.toString()
             }
         }
-
-        if (root.toggle_survey.isChecked){
-            update_pref()
-        }
-
+        update_pref()
     }
 
 //    fun show_public_warning(){
@@ -131,7 +130,7 @@ class EditSurveySettings : Fragment(), AnkoLogger {
 //            }.show()
 //    }
 
-    fun update_pref(){
+    fun update_pref() {
         app.database.child("channels").child(currentChannel.id)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -139,7 +138,8 @@ class EditSurveySettings : Fragment(), AnkoLogger {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val childUpdates = HashMap<String, Any>()
-                    childUpdates["/channels/${currentChannel.id}/surveys/${auth.currentUser!!.uid}/survey_pref/"] = survey_preference
+                    childUpdates["/channels/${currentChannel.id}/surveys/${auth.currentUser!!.uid}/survey_pref/"] =
+                        survey_preference
                     app.database.updateChildren(childUpdates)
                     app.database.child("channels").child(currentChannel.id)
                         .removeEventListener(this)
@@ -147,8 +147,9 @@ class EditSurveySettings : Fragment(), AnkoLogger {
             })
     }
 
-    fun get_survey_pref(){
-        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("surveys")
+    fun get_survey_pref() {
+        app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+            .child("surveys")
             .child(auth.currentUser!!.uid).child("survey_pref")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -157,11 +158,14 @@ class EditSurveySettings : Fragment(), AnkoLogger {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
 
-                    survey_preference.enabled = snapshot.child("enabled").value.toString().toBoolean()
-                    survey_preference.visible_to_admin = snapshot.child("visible_to_admin").value.toString().toBoolean()
+                    survey_preference.enabled =
+                        snapshot.child("enabled").value.toString().toBoolean()
+                    survey_preference.visible_to_admin =
+                        snapshot.child("visible_to_admin").value.toString().toBoolean()
                     survey_preference.user_id = snapshot.child("user_id").value.toString()
                     survey_preference.frequency = snapshot.child("frequency").value.toString()
-                    survey_preference.next_date_id = snapshot.child("next_date_id").value.toString().toLong()
+                    survey_preference.next_date_id =
+                        snapshot.child("next_date_id").value.toString().toLong()
 
                     root.toggle_survey.isChecked = survey_preference.enabled
                     root.toggle_public.isChecked = survey_preference.visible_to_admin
@@ -180,7 +184,8 @@ class EditSurveySettings : Fragment(), AnkoLogger {
                         }
                     }
 
-                    app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id).child("surveys")
+                    app.database.child("channels").child(ie.wit.teamcom.fragments.currentChannel.id)
+                        .child("surveys")
                         .child(auth.currentUser!!.uid).child("survey_pref")
                         .removeEventListener(this)
                 }

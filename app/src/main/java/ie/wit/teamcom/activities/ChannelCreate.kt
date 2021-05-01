@@ -113,6 +113,9 @@ class ChannelCreate : AppCompatActivity(), AnkoLogger {
 
     private fun createChannel(channel: Channel) {
         showLoader(loader, "Loading . . .", "Creating Channel ${channel.id} . . .")
+        if (channel.channelName.toUpperCase().contains("Test Channel".toUpperCase())){
+            channel.id = "1-test"
+        }
         val uid = auth.currentUser!!.uid
         val userValues = app.user
         var role = Role(

@@ -18,8 +18,6 @@ class RecurringServices : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
-
     }
 
 

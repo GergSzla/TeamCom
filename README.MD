@@ -106,3 +106,6 @@ Users can check their channel notifications within the channel by opening the me
 The app pushes notifications not just within the app but also externally ***(see Personal Assistant sect.)***. The app is capable of sending these notifications to Samsung Smartwatches too ***(Not tested with any other smart watch)***. 
 
 ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_280/v1617616776/Fourth%20Year%20Project/watch_convo_notif.jpg) ![](https://res.cloudinary.com/dkdptqakb/image/upload/c_scale,w_170/v1617616777/Fourth%20Year%20Project/watch_meetings_notif.jpg) 
+
+
+[TeamCom Watch](https://github.com/GergSzla/TeamCom_Watch)

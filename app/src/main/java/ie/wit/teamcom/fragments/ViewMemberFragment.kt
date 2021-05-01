@@ -130,9 +130,7 @@ class ViewMemberFragment : Fragment(), AnkoLogger {
         }
         loader = createLoader(requireActivity())
 
-        if (app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_member_stats){
-            root.mem_stats.isVisible = false
-        }
+        root.mem_stats.isVisible = app.currentActiveMember.role.perm_admin || app.currentActiveMember.role.perm_view_member_stats
 
         showLoader(loader, "Loading . . . ", "Loading Page . . . ")
         get_all_projects(app.database, selected_member.id)

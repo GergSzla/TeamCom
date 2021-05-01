@@ -38,7 +38,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     lateinit var app: MainApp
     lateinit var eventListener : ValueEventListener
     lateinit var loader : AlertDialog
-
+var email = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_reg)
@@ -116,6 +116,7 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
                             val user = auth.currentUser
                             app.database = FirebaseDatabase.getInstance().reference
 //                            startActivity(intentFor<ChannelsListActivity>().putExtra("user_key",user))
+                            email = txtEmail_logreg.text.toString()
                             getUser(false)
                         } else {
                             Toast.makeText(baseContext, "Authentication failed.",
@@ -222,16 +223,15 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     fun writeNewUserStats(user: Account) {
         showLoader(loader, "Loading . . .", "Adding User to Firebase")
 
-        val uid = auth.currentUser!!.uid
         app.database.child("users")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (!snapshot.hasChild(uid)){
+                    if (!snapshot.hasChild(user.id)){
                         val childUpdates = HashMap<String, Any>()
-                        childUpdates["/users/$uid"] = user
+                        childUpdates["/users/${user.id}"] = user
                         app.database.updateChildren(childUpdates)
                         hideLoader(loader)
                     }
@@ -245,7 +245,8 @@ class LoginRegActivity : AppCompatActivity(), AnkoLogger {
     var user = Account()
     fun getUser(v : Boolean){
         showLoader(loader, "Loading . . .", "Loading User Data . . . ")
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        var uid = FirebaseAuth.getInstance().currentUser!!.uid
+
         val rootRef = FirebaseDatabase.getInstance().reference
         val uidRef = rootRef.child("users").child(uid)
         eventListener = object : ValueEventListener {
